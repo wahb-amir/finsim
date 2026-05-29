@@ -1,18 +1,25 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
-// const dbConnection = require("./utils/dbConnection");
 const dbConnection = require("./src/utils/dbConnection")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const Auth = require("./src/controllers/auth");
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
 
 //Middleware
-dotenv.config();
-app.use(cors())
-app.use(cookieParser())
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(cookieParser());
+app.use(express.json());
 
 //RateLimit
 const limiter = rateLimit({
@@ -25,10 +32,12 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(limiter);
 
 //Mongoose
 dbConnection();
+
+//Routes
+app.use("/api/auth", limiter, Auth);
 
 //Server Listen
 app.listen(PORT, (err)=>{
