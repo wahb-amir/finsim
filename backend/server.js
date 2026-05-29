@@ -36,6 +36,9 @@ const limiter = rateLimit({
 //Mongoose
 dbConnection();
 
+//Routes
+app.use("/api/auth", limiter, Auth);
+
 //Server Listen
 app.listen(PORT, (err)=>{
     if(err){
