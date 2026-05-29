@@ -1,15 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { GameProvider, useGame } from "@/context/GameContext";
+import { useGame } from "@/context/GameContext";
 import { MOCK_LEADERBOARD } from "@/lib/api";
 
 function LeaderboardContent() {
   const router = useRouter();
   const { playerName, metrics, resetGame } = useGame();
 
-  const netWorth =
-    metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt;
+  const netWorth = metrics.netWorth ?? (metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt);
 
   const handlePlayAgain = () => {
     resetGame();
@@ -88,7 +87,7 @@ function LeaderboardContent() {
 
         {/* Rows */}
         <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] overflow-hidden">
-          {leaderboard.map((player, i) => {
+          {leaderboard.map((player) => {
             const isCurrentPlayer = player.isCurrentPlayer;
             const isTop3 = player.rank <= 3;
 
@@ -199,9 +198,5 @@ function LeaderboardContent() {
 }
 
 export default function LeaderboardPage() {
-  return (
-    <GameProvider>
-      <LeaderboardContent />
-    </GameProvider>
-  );
+  return <LeaderboardContent />;
 }
