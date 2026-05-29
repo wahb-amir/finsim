@@ -1,0 +1,82 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "backend/**"
+      - "ecosystem.config.cjs"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/deploy-backend.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout (for workflow metadata only)
+        uses: actions/checkout@v4
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          DEPLOY_DIR: ${{ secrets.VPS_DEPLOY_DIR }}
+          REPO_URL: ${{ secrets.VPS_REPO_URL }}
+          GIT_REF: ${{ github.ref_name }}
+          PM2_APP_NAME: finsim-api
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT != '' && secrets.VPS_SSH_PORT || '22' }}
+          command_timeout: 12m
+          envs: DEPLOY_DIR,REPO_URL,GIT_REF,PM2_APP_NAME
+          script: |
+            set -euo pipefail
+
+            if [[ -z "${DEPLOY_DIR:-}" ]]; then
+              echo "::error::Secret VPS_DEPLOY_DIR is not set"
+              exit 1
+            fi
+            if [[ -z "${REPO_URL:-}" ]]; then
+              echo "::error::Secret VPS_REPO_URL is not set (HTTPS or SSH clone URL with deploy access)"
+              exit 1
+            fi
+
+            # Ensure deploy script is executable after first clone
+            run_deploy() {
+              export DEPLOY_DIR REPO_URL GIT_REF PM2_APP_NAME
+              export NGINX_TEST=1
+              bash "${DEPLOY_DIR}/backend/scripts/deploy.sh"
+            }
+
+            if [[ -d "${DEPLOY_DIR}/.git" ]]; then
+              # Repo exists: pull first so we have the latest deploy script, then run it
+              git -C "${DEPLOY_DIR}" fetch origin --prune || true
+              git -C "${DEPLOY_DIR}" checkout "${GIT_REF}" 2>/dev/null || git -C "${DEPLOY_DIR}" checkout -B "${GIT_REF}" "origin/${GIT_REF}" 2>/dev/null || true
+              git -C "${DEPLOY_DIR}" pull --ff-only origin "${GIT_REF}" 2>/dev/null || true
+              chmod +x "${DEPLOY_DIR}/backend/scripts/"*.sh 2>/dev/null || true
+              run_deploy
+            else
+              # First deploy: clone with depth 1, then run full deploy (install, pm2, checks)
+              mkdir -p "$(dirname "${DEPLOY_DIR}")"
+              git clone --branch "${GIT_REF}" --depth 1 "${REPO_URL}" "${DEPLOY_DIR}"
+              chmod +x "${DEPLOY_DIR}/backend/scripts/"*.sh
+              run_deploy
+            fi
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "### Backend deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Path: \`${{ secrets.VPS_DEPLOY_DIR }}\`" >> "$GITHUB_STEP_SUMMARY"
