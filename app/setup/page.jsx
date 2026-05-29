@@ -117,7 +117,7 @@ function SetupContent() {
                 onKeyDown={(e) => e.key === "Enter" && canProceedStep1 && setStep(2)}
                 placeholder="Enter your name..."
                 autoFocus
-                className="w-full bg-[#0D0D0D] border border-[#2A2A2A] rounded-lg px-4 py-3 text-base text-[#F5F5F5] placeholder-[#3A3A3A] focus:outline-none focus:border-[#F59E0B]/60 transition-colors"
+                className="w-full bg-[#0D0D0D] text-white border border-[#2A2A2A] rounded-lg px-4 py-3 text-base text-[#F5F5F5] placeholder-[#3A3A3A] focus:outline-none focus:border-[#F59E0B]/60 transition-colors"
                 aria-describedby="name-hint"
               />
               <p id="name-hint" className="text-[11px] text-[#4A4A4A] mt-2">
