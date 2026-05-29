@@ -7,7 +7,7 @@ import { MetricCard } from "@/components/ui/MetricCard";
 import { ChoiceCard } from "@/components/ui/ChoiceCard";
 import { AdvisorPanel } from "@/components/ui/AdvisorPanel";
 import { RoundProgress } from "@/components/ui/RoundProgress";
-import { MOCK_ROUNDS, submitChoice } from "@/lib/api";
+import { MOCK_ROUNDS, submitChoice } from "../../lib/api";
 
 function formatCurrency(n) {
   if (n >= 1000) return `$${(n / 1000).toFixed(1)}k`;
@@ -55,10 +55,11 @@ function GameContent() {
   const isCrisis = roundData?.isCrisis || false;
 
   // Redirect to setup if no player name
-  useEffect(() => {
-    if (!playerName) {;
-    }
-  }, [playerName, router]);
+  // useEffect(() => {
+  //   if (!playerName) {
+  //     router.replace("/setup");
+  //   }
+  // }, [playerName, router]);
 
   const handleConfirm = useCallback(async () => {
     if (!selectedChoice || isConfirming) return;

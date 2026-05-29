@@ -2,10 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { getAdvisorMessage } from "@/lib/api";
-import { useGame } from "@/context/GameContext";
 
 export function AdvisorPanel({ round, metrics }) {
-  const { advisorMessages, addAdvisorMessage } = useGame();
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +41,6 @@ export function AdvisorPanel({ round, metrics }) {
       setFollowUpResponse("");
       try {
         const msg = await getAdvisorMessage(round, metrics, {});
-        addAdvisorMessage(msg);
         setIsLoading(false);
         typeMessage(msg);
       } catch {
@@ -61,7 +58,6 @@ export function AdvisorPanel({ round, metrics }) {
 
   const handleFollowUp = async () => {
     if (!followUp.trim() || isFollowUpLoading) return;
-    const question = followUp;
     setFollowUp("");
     setIsFollowUpLoading(true);
 
