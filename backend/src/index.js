@@ -29,7 +29,12 @@ app.use(limiter);
 
 //Mongoose
 dbConnection();
-
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running",
+  });
+});
 //Server Listen
 app.listen(PORT, (err)=>{
     if(err){
