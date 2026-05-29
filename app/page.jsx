@@ -80,7 +80,7 @@ function LandingContent() {
 
         {/* CTA */}
         <button
-          onClick={() => router.push("/setup")}
+          onClick={() => router.push("/auth")}
           className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold text-base transition-all duration-200 animate-fade-in-up focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
           style={{
             background: "#F59E0B",
