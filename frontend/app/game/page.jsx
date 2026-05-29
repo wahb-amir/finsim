@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/context/GameContext";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { SwipeDecisionCard } from "@/components/game/SwipeDecisionCard";
 import { AdvisorPanel } from "@/components/ui/AdvisorPanel";
