@@ -50,6 +50,7 @@ function SetupContent() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [hasSetup, setHasSetup] = useState(false);
 
   const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -73,6 +74,7 @@ function SetupContent() {
 
         if (data.success && data.user) {
           setPlayerName(data.user.name);
+          setHasSetup(data.user.setupExists);
 
           setTimeout(() => {
             setStep(2);
@@ -94,14 +96,32 @@ function SetupContent() {
   const canProceedStep2 = confidence >= 1;
   const canProceedStep3 = goal !== "";
 
-  const handleBegin = async () => {
-    if (!canProceedStep3) return;
+const handleBegin = async () => {
+  if (!canProceedStep3) return;
 
-    setSubmitting(true);
+  setSubmitting(true);
 
-    try {
-      const res = await fetch(`${API}/setup`, {
-        method: "POST",
+  try {
+    const methodToUse = hasSetup ? "PUT" : "POST";
+
+    const res = await fetch(`${API}/setup`, {
+      method: methodToUse,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        name: playerName,
+        confidence,
+        goal,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 409) {
+      const updateRes = await fetch(`${API}/setup`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -113,10 +133,10 @@ function SetupContent() {
         }),
       });
 
-      const data = await res.json();
+      const updateData = await updateRes.json();
 
-      if (data.success) {
-        showToast("success", data.message);
+      if (updateData.success) {
+        showToast("success", updateData.message);
 
         const scenarioByGoal = {
           "avoid-debt": "recession",
@@ -125,7 +145,6 @@ function SetupContent() {
         };
 
         const scenarioId = scenarioByGoal[goal] || "baseline";
-
         const seed = Date.now();
 
         startSimulation(scenarioId, seed);
@@ -134,14 +153,38 @@ function SetupContent() {
           router.push("/game");
         }, 1200);
       } else {
-        showToast("error", data.message || "Failed");
+        showToast("error", updateData.message || "Failed");
       }
-    } catch (err) {
-      showToast("error", "Server Error");
-    } finally {
-      setSubmitting(false);
+
+      return;
     }
-  };
+
+    if (data.success) {
+      showToast("success", data.message);
+
+      const scenarioByGoal = {
+        "avoid-debt": "recession",
+        "build-wealth": confidence >= 4 ? "startup-founder" : "baseline",
+        "understand-basics": "single-parent",
+      };
+
+      const scenarioId = scenarioByGoal[goal] || "baseline";
+      const seed = Date.now();
+
+      startSimulation(scenarioId, seed);
+
+      setTimeout(() => {
+        router.push("/game");
+      }, 1200);
+    } else {
+      showToast("error", data.message || "Failed");
+    }
+  } catch (err) {
+    showToast("error", "Server Error");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   if (loadingUser) {
     return (
@@ -222,16 +265,12 @@ function SetupContent() {
 
           {step === 1 && (
             <div className="animate-fade-in-up">
-              <h2
-                className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
+              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
                 What&apos;s your name?
               </h2>
 
               <p className="text-[#6B6B6B] text-center text-sm mb-8">
-                We&apos;ll track your decisions and results throughout the
-                simulation.
+                We&apos;ll track your decisions and results throughout the simulation.
               </p>
 
               <div className="rounded-xl bg-[#111111] border border-[#242424] p-6">
@@ -251,10 +290,7 @@ function SetupContent() {
 
           {step === 2 && (
             <div className="animate-fade-in-up">
-              <h2
-                className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
+              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
                 How confident are you with money?
               </h2>
 
@@ -292,10 +328,7 @@ function SetupContent() {
 
           {step === 3 && (
             <div className="animate-fade-in-up">
-              <h2
-                className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
+              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
                 What&apos;s your goal?
               </h2>
 
