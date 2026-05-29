@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { GameProvider } from "@/context/GameContext";
 import { StatCard } from "@/components/ui/StatCard";
 
 function LandingContent() {
@@ -163,9 +162,5 @@ function LandingContent() {
 }
 
 export default function LandingPage() {
-  return (
-    <GameProvider>
-      <LandingContent />
-    </GameProvider>
-  );
+  return <LandingContent />;
 }

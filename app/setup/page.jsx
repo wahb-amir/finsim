@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { GameProvider, useGame } from "@/context/GameContext";
+import { useGame } from "@/context/GameContext";
 
 const GOALS = [
   {
@@ -35,7 +35,7 @@ const CONFIDENCE_LABELS = {
 
 function SetupContent() {
   const router = useRouter();
-  const { playerName, setPlayerName, confidence, setConfidence, goal, setGoal } = useGame();
+  const { playerName, setPlayerName, confidence, setConfidence, goal, setGoal, startSimulation } = useGame();
   const [step, setStep] = useState(1);
 
   const canProceedStep1 = playerName.trim().length >= 2;
@@ -44,6 +44,14 @@ function SetupContent() {
 
   const handleBegin = () => {
     if (!canProceedStep3) return;
+    const scenarioByGoal = {
+      "avoid-debt": "recession",
+      "build-wealth": confidence >= 4 ? "startup-founder" : "baseline",
+      "understand-basics": "single-parent",
+    };
+    const scenarioId = scenarioByGoal[goal] || "baseline";
+    const seed = Date.now();
+    startSimulation(scenarioId, seed);
     router.push("/game");
   };
 
@@ -274,9 +282,5 @@ function SetupContent() {
 }
 
 export default function SetupPage() {
-  return (
-    <GameProvider>
-      <SetupContent />
-    </GameProvider>
-  );
+  return <SetupContent />;
 }

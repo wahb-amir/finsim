@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { GameProvider, useGame } from "@/context/GameContext";
+import { useGame } from "@/context/GameContext";
 import { MetricCard } from "@/components/ui/MetricCard";
-import { ChoiceCard } from "@/components/ui/ChoiceCard";
+import { SwipeDecisionCard } from "@/components/game/SwipeDecisionCard";
 import { AdvisorPanel } from "@/components/ui/AdvisorPanel";
+import { BottomSheet } from "@/components/ui/BottomSheet";
 import { RoundProgress } from "@/components/ui/RoundProgress";
-import { MOCK_ROUNDS, submitChoice } from "@/lib/api";
 
 function formatCurrency(n) {
   if (n >= 1000) return `$${(n / 1000).toFixed(1)}k`;
@@ -44,30 +44,43 @@ function GameContent() {
     metrics,
     selectedChoice,
     selectChoice,
-    confirmChoice,
+    applySimChoice,
     setDebriefData,
+    currentEvent,
+    simState,
   } = useGame();
 
   const [isConfirming, setIsConfirming] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
-  const roundData = MOCK_ROUNDS[Math.min(currentRound - 1, MOCK_ROUNDS.length - 1)];
+  const roundData = useMemo(() => {
+    if (!currentEvent || !simState) return null;
+    const ageYears = Math.max(18, Math.floor(simState.ageYears));
+    return {
+      year: `Age ${ageYears}`,
+      title: currentEvent.title,
+      description: currentEvent.description,
+      choices: [currentEvent.left, currentEvent.right],
+      isCrisis: currentEvent.crisis,
+    };
+  }, [currentEvent, simState]);
   const isCrisis = roundData?.isCrisis || false;
 
   // Redirect to setup if no player name
-  useEffect(() => {
-    if (!playerName) {;
-    }
-  }, [playerName, router]);
+  // useEffect(() => {
+  //   if (!playerName) {
+  //     router.replace("/setup");
+  //   }
+  // }, [playerName, router]);
 
   const handleConfirm = useCallback(async () => {
     if (!selectedChoice || isConfirming) return;
     setIsConfirming(true);
 
     try {
-      const updatedMetrics = await submitChoice(currentRound, selectedChoice, metrics);
-      confirmChoice(selectedChoice, updatedMetrics);
-
+      await new Promise((r) => setTimeout(r, 240));
+      applySimChoice(selectedChoice);
       if (currentRound >= 10) {
         setDebriefData(null); // will be fetched on debrief page
         router.push("/debrief");
@@ -77,9 +90,15 @@ function GameContent() {
     } finally {
       setIsConfirming(false);
     }
-  }, [selectedChoice, isConfirming, currentRound, metrics, confirmChoice, setDebriefData, router]);
+  }, [selectedChoice, isConfirming, currentRound, applySimChoice, setDebriefData, router]);
 
-  if (!roundData) return null;
+  useEffect(() => {
+    if (!playerName || !simState || !currentEvent) {
+      router.replace("/setup");
+    }
+  }, [playerName, simState, currentEvent, router]);
+
+  if (!playerName || !simState || !currentEvent || !roundData) return null;
 
   return (
     <div className="h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
@@ -103,16 +122,25 @@ function GameContent() {
           {playerName || "Player"}
         </span>
         <div className="ml-auto">
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2 rounded-lg border border-[#2A2A2A] text-[#6B6B6B]"
-            aria-label="Toggle metrics sidebar"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 3H13M1 7H13M1 11H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setAdvisorOpen(true)}
+              className="lg:hidden px-2.5 py-1.5 rounded-lg border border-[#2A2A2A] text-[#A1A1A1] text-[11px] font-medium"
+              aria-label="Open FinSim Advisor"
+            >
+              Advisor
+            </button>
+            {/* Mobile menu toggle */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 rounded-lg border border-[#2A2A2A] text-[#6B6B6B]"
+              aria-label="Toggle metrics sidebar"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M1 3H13M1 7H13M1 11H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -269,17 +297,19 @@ function GameContent() {
               {roundData.description}
             </div>
 
-            {/* Choice cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              {roundData.choices.map((choice) => (
-                <ChoiceCard
-                  key={choice.id}
-                  choice={choice}
-                  isSelected={selectedChoice === choice.id}
-                  onSelect={selectChoice}
-                  disabled={isConfirming}
-                />
-              ))}
+            {/* Decision card */}
+            <div className="mb-6">
+              <SwipeDecisionCard
+                event={currentEvent}
+                selectedChoice={selectedChoice}
+                disabled={isConfirming}
+                onChoose={selectChoice}
+              />
+              {selectedChoice ? (
+                <p className="mt-3 text-center text-xs text-[#6B6B6B]">
+                  Selected: {selectedChoice === "left" ? currentEvent.left.title : currentEvent.right.title}
+                </p>
+              ) : null}
             </div>
 
             {/* Confirm button */}
@@ -338,14 +368,21 @@ function GameContent() {
           {10 - currentRound + 1} left
         </div>
       </footer>
+
+      <BottomSheet
+        open={advisorOpen}
+        onClose={() => setAdvisorOpen(false)}
+        title="FinSim Advisor"
+        description="Reflect on this round and ask follow-up questions."
+      >
+        <div className="h-[56vh] min-h-[340px]">
+          <AdvisorPanel round={currentRound} metrics={metrics} />
+        </div>
+      </BottomSheet>
     </div>
   );
 }
 
 export default function GamePage() {
-  return (
-    <GameProvider>
-      <GameContent />
-    </GameProvider>
-  );
+  return <GameContent />;
 }
