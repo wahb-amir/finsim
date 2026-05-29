@@ -1,12 +1,15 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
+const path = require("path");
 const dbConnection = require("./src/utils/dbConnection")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const Auth = require("./src/controllers/auth");
 
-dotenv.config();
+dotenv.config({
+  path: path.resolve(__dirname, ".env"),
+});
 
 const app = express();
 const PORT = process.env.PORT;
