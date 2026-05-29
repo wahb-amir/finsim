@@ -1,7 +1,6 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
-// const dbConnection = require("./utils/dbConnection");
 const dbConnection = require("./src/utils/dbConnection")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
