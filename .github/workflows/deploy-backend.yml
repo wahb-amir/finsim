@@ -9,6 +9,7 @@ on:
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - ".github/workflows/deploy-backend.yml"
+
   workflow_dispatch:
 
 concurrency:
@@ -16,13 +17,69 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # =========================
+  # 1. CI VALIDATION LAYER
+  # =========================
+  validate:
+    name: CI Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          echo "Checking required project files..."
+
+          test -f backend/package.json || (echo "❌ Missing backend/package.json" && exit 1)
+          test -f backend/pnpm-lock.yaml || (echo "❌ Missing backend/pnpm-lock.yaml" && exit 1)
+          test -f backend/.env.example || (echo "❌ Missing backend/.env.example" && exit 1)
+          test -f backend/server.js || (echo "❌ Missing backend/server.js" && exit 1)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Validate dependency lockfile
+        working-directory: backend
+        run: |
+          echo "Checking pnpm lock consistency..."
+          pnpm install --frozen-lockfile
+
+      - name: Syntax check backend entry file
+        working-directory: backend
+        run: node -c server.js
+
+      - name: Validate .env.example keys
+        run: |
+          echo "Checking .env.example consistency..."
+
+          REQUIRED_KEYS=("PORT" "JWT_SECRET" "MONGO_URI")
+
+          for key in "${REQUIRED_KEYS[@]}"; do
+            grep -q "$key" backend/.env.example || (
+              echo "❌ Missing $key in .env.example"
+              exit 1
+            )
+          done
+
+  # =========================
+  # 2. DEPLOY LAYER
+  # =========================
   deploy:
     name: Deploy to VPS
+    needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout (for workflow metadata only)
+      - name: Checkout (for metadata only)
         uses: actions/checkout@v4
 
       - name: Deploy over SSH
@@ -46,12 +103,12 @@ jobs:
               echo "::error::Secret VPS_DEPLOY_DIR is not set"
               exit 1
             fi
+
             if [[ -z "${REPO_URL:-}" ]]; then
-              echo "::error::Secret VPS_REPO_URL is not set (HTTPS or SSH clone URL with deploy access)"
+              echo "::error::Secret VPS_REPO_URL is not set"
               exit 1
             fi
 
-            # Ensure deploy script is executable after first clone
             run_deploy() {
               export DEPLOY_DIR REPO_URL GIT_REF PM2_APP_NAME
               export NGINX_TEST=1
@@ -59,24 +116,31 @@ jobs:
             }
 
             if [[ -d "${DEPLOY_DIR}/.git" ]]; then
-              # Repo exists: pull first so we have the latest deploy script, then run it
               git -C "${DEPLOY_DIR}" fetch origin --prune || true
-              git -C "${DEPLOY_DIR}" checkout "${GIT_REF}" 2>/dev/null || git -C "${DEPLOY_DIR}" checkout -B "${GIT_REF}" "origin/${GIT_REF}" 2>/dev/null || true
-              git -C "${DEPLOY_DIR}" pull --ff-only origin "${GIT_REF}" 2>/dev/null || true
+
+              git -C "${DEPLOY_DIR}" checkout "${GIT_REF}" \
+                || git -C "${DEPLOY_DIR}" checkout -B "${GIT_REF}" "origin/${GIT_REF}" \
+                || true
+
+              git -C "${DEPLOY_DIR}" pull --ff-only origin "${GIT_REF}" || true
+
               chmod +x "${DEPLOY_DIR}/backend/scripts/"*.sh 2>/dev/null || true
+
               run_deploy
             else
-              # First deploy: clone with depth 1, then run full deploy (install, pm2, checks)
               mkdir -p "$(dirname "${DEPLOY_DIR}")"
+
               git clone --branch "${GIT_REF}" --depth 1 "${REPO_URL}" "${DEPLOY_DIR}"
+
               chmod +x "${DEPLOY_DIR}/backend/scripts/"*.sh
+
               run_deploy
             fi
 
       - name: Deployment summary
         if: success()
         run: |
-          echo "### Backend deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Backend deployed successfully 🚀" >> "$GITHUB_STEP_SUMMARY"
           echo "- Branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- Commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- Path: \`${{ secrets.VPS_DEPLOY_DIR }}\`" >> "$GITHUB_STEP_SUMMARY"
