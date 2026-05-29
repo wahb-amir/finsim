@@ -39,6 +39,14 @@ dbConnection();
 //Routes
 app.use("/api/auth", limiter, Auth);
 
+//IMPORTANT: DON'T REMOVE THIS ROUTE , IT IS USED FOR CI HEALTH CHECK
+app.use("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running",
+  });
+});
+
 //Server Listen
 app.listen(PORT, (err)=>{
     if(err){
