@@ -34,7 +34,7 @@ jobs:
           echo "Checking required project files..."
 
           test -f backend/package.json || (echo "❌ Missing backend/package.json" && exit 1)
-          test -f backend/pnpm-lock.yaml || (echo "❌ Missing backend/pnpm-lock.yaml" && exit 1)
+          test -f backend/pnpm-lock.json || (echo "❌ Missing backend/pnpm-lock.yaml" && exit 1)
           test -f backend/.env.example || (echo "❌ Missing backend/.env.example" && exit 1)
           test -f backend/server.js || (echo "❌ Missing backend/server.js" && exit 1)
 
