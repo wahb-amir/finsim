@@ -56,8 +56,7 @@ function GameContent() {
 
   // Redirect to setup if no player name
   useEffect(() => {
-    if (!playerName) {
-      router.replace("/setup");
+    if (!playerName) {;
     }
   }, [playerName, router]);
 

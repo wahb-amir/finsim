@@ -95,7 +95,7 @@ function DebriefContent() {
             {playerName || "Your"} net worth at age 31
           </p>
           <p
-            className="text-[#F5F5F5] text-base max-w-md mx-auto leading-relaxed"
+            className="text-[#F5F5F5] max-w-md mx-auto leading-relaxed"
             style={{ fontFamily: "var(--font-display)" }}
           >
             &ldquo;{debrief.verdict}&rdquo;
@@ -156,7 +156,7 @@ function DebriefContent() {
         {/* Chart */}
         <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
           <h2
-            className="text-base font-bold text-[#F5F5F5] mb-1"
+            className="font-bold text-[#F5F5F5] mb-1"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Your Path vs Optimal Path
@@ -168,7 +168,7 @@ function DebriefContent() {
         {/* Decision comparison */}
         <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
           <h2
-            className="text-base font-bold text-[#F5F5F5] mb-1"
+            className="font-bold text-[#F5F5F5] mb-1"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Decision Breakdown
