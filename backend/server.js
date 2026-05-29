@@ -1,13 +1,12 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const dotenv = require("dotenv");
+require('dotenv').config()
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const Auth = require("./src/controllers/auth");
 const {connectDB} = require("./src/utils/dbConnection");
 
-dotenv.config();
 
 const app = express();
 
