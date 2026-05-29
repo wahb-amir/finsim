@@ -14,7 +14,7 @@ const onboardingSchema = new mongoose.Schema(
         type: String,
         enum: ["variable-income", "lifestyle-creep", "paycheck-to-paycheck"],
         required: function () {
-          return this.completed; // Required if onboarding is finished
+          return this.completed; 
         },
       },
       confidenceLevel: {

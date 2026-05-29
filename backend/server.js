@@ -13,6 +13,7 @@ const cookieParser = require("cookie-parser");
 
 const { connectDB } = require("./src/utils/dbConnection");
 const Auth = require("./src/controllers/auth");
+const Setup = require("./src/controllers/setup");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,8 +45,8 @@ connectDB();
 
 // Routes
 app.use("/api/auth", limiter, Auth);
+app.use("/api", limiter, Setup);
 
-// IMPORTANT: DON'T REMOVE THIS ROUTE , IT IS USED FOR CI HEALTH CHECK
 app.use("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
