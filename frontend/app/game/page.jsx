@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/context/GameContext";
+import { useAuth } from "@/context/AuthContext";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { SwipeDecisionCard } from "@/components/game/SwipeDecisionCard";
 import { AdvisorPanel } from "@/components/ui/AdvisorPanel";
@@ -38,6 +39,8 @@ function CreditBadge({ score }) {
 
 function GameContent() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+
   const {
     playerName,
     currentRound,
@@ -54,6 +57,8 @@ function GameContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
 
+  const userName = user?.name || playerName || "Player";
+
   const roundData = useMemo(() => {
     if (!currentEvent || !simState) return null;
     const ageYears = Math.max(18, Math.floor(simState.ageYears));
@@ -65,14 +70,20 @@ function GameContent() {
       isCrisis: currentEvent.crisis,
     };
   }, [currentEvent, simState]);
+
   const isCrisis = roundData?.isCrisis || false;
 
-  // Redirect to setup if no player name
-  // useEffect(() => {
-  //   if (!playerName) {
-  //     router.replace("/setup");
-  //   }
-  // }, [playerName, router]);
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/auth");
+    }
+  }, [authLoading, user, router]);
+
+  useEffect(() => {
+    if (!playerName) {
+      router.replace("/setup");
+    }
+  }, [playerName, router]);
 
   const handleConfirm = useCallback(async () => {
     if (!selectedChoice || isConfirming) return;
@@ -82,7 +93,7 @@ function GameContent() {
       await new Promise((r) => setTimeout(r, 240));
       applySimChoice(selectedChoice);
       if (currentRound >= 10) {
-        setDebriefData(null); // will be fetched on debrief page
+        setDebriefData(null);
         router.push("/debrief");
       }
     } catch (e) {
@@ -98,16 +109,19 @@ function GameContent() {
     }
   }, [playerName, simState, currentEvent, router]);
 
-  if (!playerName || !simState || !currentEvent || !roundData) return null;
+  if (authLoading) return null;
+  if (!user || !playerName || !simState || !currentEvent || !roundData) return null;
 
   return (
     <div className="h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
-      {/* Top bar */}
       <header className="flex-shrink-0 h-12 border-b border-[#1A1A1A] flex items-center px-4 gap-4 bg-[#0A0A0A] z-30">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-[#F59E0B] flex items-center justify-center">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M5 1L6.2 4H9.5L7 5.8L8 9L5 7.2L2 9L3 5.8L0.5 4H3.8L5 1Z" fill="#0A0A0A" />
+              <path
+                d="M5 1L6.2 4H9.5L7 5.8L8 9L5 7.2L2 9L3 5.8L0.5 4H3.8L5 1Z"
+                fill="#0A0A0A"
+              />
             </svg>
           </div>
           <span
@@ -118,9 +132,7 @@ function GameContent() {
           </span>
         </div>
         <div className="h-4 w-px bg-[#2A2A2A]" />
-        <span className="text-[11px] text-[#6B6B6B]">
-          {playerName || "Player"}
-        </span>
+        <span className="text-[11px] text-[#6B6B6B]">{userName}</span>
         <div className="ml-auto">
           <div className="flex items-center gap-2">
             <button
@@ -130,23 +142,25 @@ function GameContent() {
             >
               Advisor
             </button>
-            {/* Mobile menu toggle */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="md:hidden p-2 rounded-lg border border-[#2A2A2A] text-[#6B6B6B]"
               aria-label="Toggle metrics sidebar"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M1 3H13M1 7H13M1 11H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <path
+                  d="M1 3H13M1 7H13M1 11H13"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* LEFT SIDEBAR */}
         <aside
           className={`
             ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -161,20 +175,18 @@ function GameContent() {
             p-3 gap-2
           `}
         >
-          {/* Player + round */}
           <div className="rounded-xl bg-[#111111] border border-[#1F1F1F] p-4 mb-1">
             <div
               className="text-sm font-bold text-[#F5F5F5] truncate mb-0.5"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              {playerName || "Player"}
+              {userName}
             </div>
             <div className="text-[11px] text-[#6B6B6B]">
               {roundData.year} · Round {currentRound} of 10
             </div>
           </div>
 
-          {/* Metrics */}
           <div className="space-y-1.5">
             <MetricCard
               label="Monthly Income"
@@ -189,19 +201,32 @@ function GameContent() {
             <MetricCard
               label="Savings Balance"
               value={formatCurrency(metrics.savingsBalance)}
-              colorCode={metrics.savingsBalance > 5000 ? "#10B981" : metrics.savingsBalance > 1000 ? "#F59E0B" : "#EF4444"}
+              colorCode={
+                metrics.savingsBalance > 5000
+                  ? "#10B981"
+                  : metrics.savingsBalance > 1000
+                  ? "#F59E0B"
+                  : "#EF4444"
+              }
               compact
             />
             <MetricCard
               label="Total Debt"
               value={formatCurrency(metrics.totalDebt)}
-              colorCode={metrics.totalDebt === 0 ? "#10B981" : metrics.totalDebt < 10000 ? "#F59E0B" : "#EF4444"}
+              colorCode={
+                metrics.totalDebt === 0
+                  ? "#10B981"
+                  : metrics.totalDebt < 10000
+                  ? "#F59E0B"
+                  : "#EF4444"
+              }
               compact
             />
 
-            {/* Credit score - special badge */}
             <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-[#111111] border border-[#1F1F1F]">
-              <span className="text-[11px] text-[#6B6B6B] uppercase tracking-wider font-medium">Credit Score</span>
+              <span className="text-[11px] text-[#6B6B6B] uppercase tracking-wider font-medium">
+                Credit Score
+              </span>
               <CreditBadge score={metrics.creditScore} />
             </div>
 
@@ -214,19 +239,19 @@ function GameContent() {
             <MetricCard
               label="Debt-to-Income"
               value={`${Math.round(metrics.debtToIncome)}%`}
-              colorCode={metrics.debtToIncome < 20 ? "#10B981" : metrics.debtToIncome < 40 ? "#F59E0B" : "#EF4444"}
+              colorCode={
+                metrics.debtToIncome < 20
+                  ? "#10B981"
+                  : metrics.debtToIncome < 40
+                  ? "#F59E0B"
+                  : "#EF4444"
+              }
               compact
             />
-            <MetricCard
-              label="Stress Index"
-              value={metrics.stressIndex}
-              isProgress
-              compact
-            />
+            <MetricCard label="Stress Index" value={metrics.stressIndex} isProgress compact />
           </div>
         </aside>
 
-        {/* Mobile overlay */}
         {sidebarOpen && (
           <div
             className="md:hidden fixed inset-0 bg-black/60 z-10 top-12"
@@ -234,7 +259,6 @@ function GameContent() {
           />
         )}
 
-        {/* CENTER PANEL */}
         <main
           className={`
             flex-1 flex flex-col overflow-hidden min-w-0
@@ -242,13 +266,11 @@ function GameContent() {
             ${isCrisis ? "crisis-bg" : ""}
           `}
         >
-          {/* Crisis border */}
           {isCrisis && (
             <div className="flex-shrink-0 h-0.5 bg-gradient-to-r from-transparent via-[#EF4444]/40 to-transparent" />
           )}
 
           <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6">
-            {/* Round header */}
             <div className="flex items-start gap-3 mb-6">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -286,7 +308,6 @@ function GameContent() {
               </div>
             </div>
 
-            {/* Scenario description */}
             <div
               className="rounded-xl p-4 mb-6 text-sm text-[#A1A1A1] leading-relaxed border"
               style={{
@@ -297,7 +318,6 @@ function GameContent() {
               {roundData.description}
             </div>
 
-            {/* Decision card */}
             <div className="mb-6">
               <SwipeDecisionCard
                 event={currentEvent}
@@ -312,7 +332,6 @@ function GameContent() {
               ) : null}
             </div>
 
-            {/* Confirm button */}
             <div className="flex justify-center">
               <button
                 onClick={handleConfirm}
@@ -338,7 +357,13 @@ function GameContent() {
                     {selectedChoice ? "Confirm Decision" : "Select a choice first"}
                     {selectedChoice && (
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M3 7H11M11 7L7 3M11 7L7 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path
+                          d="M3 7H11M11 7L7 3M11 7L7 11"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     )}
                   </>
@@ -348,13 +373,11 @@ function GameContent() {
           </div>
         </main>
 
-        {/* RIGHT PANEL — Advisor */}
         <aside className="hidden lg:flex w-80 flex-shrink-0 border-l border-[#1A1A1A] flex-col p-4 bg-[#0A0A0A] overflow-hidden">
           <AdvisorPanel round={currentRound} metrics={metrics} />
         </aside>
       </div>
 
-      {/* BOTTOM BAR */}
       <footer className="flex-shrink-0 h-14 border-t border-[#1A1A1A] bg-[#0A0A0A] flex items-center justify-center px-4 gap-4">
         <div className="flex items-center gap-2 flex-shrink-0 text-[11px] text-[#4A4A4A]">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

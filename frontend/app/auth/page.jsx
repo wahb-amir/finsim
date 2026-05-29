@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
-const Auth = ({}) => {
+const Auth = () => {
   const router = useRouter();
+  const { user, loading, setUser } = useAuth();
 
   const [isLogin, setIsLogin] = useState(false);
   const [toast, setToast] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -25,28 +28,20 @@ const Auth = ({}) => {
     }, 3000);
   };
 
-  const handleLogin = () => {
-    setIsLogin(!isLogin);
-  };
-
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const res = await fetch(`${API}/auth/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+    if (!loading && user) {
+      router.push("/setup");
+    }
+  }, [loading, user, router]);
 
-        const data = await res.json();
-
-        if (data.success) {
-          router.push("/setup");
-        }
-      } catch (err) {}
-    };
-
-    checkUser();
-  }, []);
+  const toggleMode = () => {
+    setIsLogin((prev) => !prev);
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+    });
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -54,6 +49,7 @@ const Auth = ({}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     const endpoint = isLogin ? "/auth/login" : "/auth/signin";
 
@@ -75,14 +71,29 @@ const Auth = ({}) => {
 
       if (data.success) {
         showToast("success", data.message || "Success");
+
+        if (data.user) {
+          setUser(data.user);
+        }
+
         setTimeout(() => router.push("/setup"), 1200);
       } else {
         showToast("error", data.message || "Failed");
       }
     } catch (err) {
       showToast("error", "Server Error");
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-400">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <>
@@ -168,12 +179,19 @@ const Auth = ({}) => {
             className="w-full max-w-[420px] bg-transparent border border-[rgba(245,158,11,0.20)] focus:border-[#F59E0B] focus:ring-4 focus:ring-[rgba(245,158,11,0.15)] outline-none transition-all duration-300 px-5 py-3 rounded-xl text-white placeholder:text-gray-500 shadow-[0_0_20px_rgba(245,158,11,0.05)]"
           />
 
-          <button className="mt-2 w-full max-w-[420px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black font-semibold py-3 rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(245,158,11,0.35)] hover:scale-[1.02] active:scale-[0.98]">
-            {isLogin ? "Login Account" : "Create Account"}
+          <button
+            disabled={submitting}
+            className="mt-2 w-full max-w-[420px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black font-semibold py-3 rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(245,158,11,0.35)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {submitting
+              ? "Please wait..."
+              : isLogin
+              ? "Login Account"
+              : "Create Account"}
           </button>
 
           <p
-            onClick={handleLogin}
+            onClick={toggleMode}
             className="text-gray-400 hover:text-[#F59E0B] transition-all duration-300 cursor-pointer text-sm mt-2"
           >
             {isLogin
