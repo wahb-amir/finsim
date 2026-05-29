@@ -111,7 +111,7 @@ health_check() {
   source "${DEPLOY_DIR}/backend/.env"
   set +a
 
-  local port="${PORT:-5000}"
+  local port="${PORT:-8081}"
   local url="http://127.0.0.1:${port}${HEALTH_PATH}"
   log "Health check: ${url}"
 
