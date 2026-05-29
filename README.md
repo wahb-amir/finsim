@@ -41,15 +41,16 @@ Play through:
 ## Stack
 
 - **Framework:** Next.js 16 (App Router)
-- **Language:** JavaScript + TypeScript (`lib/sim`, some UI components)
+- **Language:** JavaScript + TypeScript (`frontend/lib/sim`, some UI components)
 - **Styling:** Tailwind CSS v4
 - **Motion:** Framer Motion for swipe interactions
 - **Icons:** Lucide React
 - **Charts:** Recharts
 - **State:** React Context + `useReducer` through `GameProvider` in `AppProviders`
-- **Simulation:** Deterministic PRNG + monthly financial model in `lib/sim`
+- **Simulation:** Deterministic PRNG + monthly financial model in `frontend/lib/sim`
+- **Backend:** Express API in `backend/` (MongoDB via Mongoose; routes ready to extend)
 - **Fonts:** Syne (display) and DM Sans (body)
-- **AI / persistence:** Stubbed in `lib/api.js` and ready to swap for a backend
+- **AI / persistence:** Stubbed in `frontend/lib/api.js` and ready to swap for `@finsim/api`
 
 ## Getting Started
 
@@ -60,19 +61,28 @@ pnpm install
 pnpm dev
 ```
 
-Open:
-
-```bash
-http://localhost:3000
-```
+Open the web app at [http://localhost:3000](http://localhost:3000).
 
 ### Other Scripts
 
+| Command | Description |
+|---|---|
+| `pnpm dev` | Start the Next.js frontend (`@finsim/web`) |
+| `pnpm dev:backend` | Start the Express API (`@finsim/api`) on port 5000 |
+| `pnpm build` | Production build of the frontend |
+| `pnpm start` | Run the production frontend server |
+| `pnpm lint` | Lint the frontend |
+
+Run workspace packages directly if needed:
+
 ```bash
-pnpm build
-pnpm start
-pnpm lint
+pnpm --filter @finsim/web dev
+pnpm --filter @finsim/api dev
 ```
+
+### Backend environment
+
+Copy `backend/.env.example` to `backend/.env` and set `PORT` and `MONGO_URI` before starting the API. A health check is available at `GET http://localhost:5000/api/health`.
 
 ## How the Game Works
 
@@ -95,11 +105,11 @@ Each confirmed choice advances the simulation one step through `applyChoice`. Ev
 ### 4) End
 After 10 rounds, the game moves to debrief. `getFinalDebrief` is mocked for now.
 
-Game state such as `playerName`, `metrics`, `simState`, `currentEvent`, and `roundHistory` lives in `GameContext` and persists across routes because `AppProviders` wraps the app in `app/layout.jsx`.
+Game state such as `playerName`, `metrics`, `simState`, `currentEvent`, and `roundHistory` lives in `GameContext` and persists across routes because `AppProviders` wraps the app in `frontend/app/layout.jsx`.
 
 ## Scenario IDs
 
-Defined in `lib/sim/scenarios.ts`:
+Defined in `frontend/lib/sim/scenarios.ts`:
 
 - `baseline`
 - `recession`
@@ -109,40 +119,60 @@ Defined in `lib/sim/scenarios.ts`:
 
 ## Project Structure
 
+The repo is a **pnpm workspace** with a clear split between the web app and the API.
+
 ```text
 finsim/
-├── app/
-│   ├── page.jsx                    # Landing
-│   ├── setup/page.jsx              # Player setup → startSimulation()
-│   ├── game/page.jsx               # Main game board
-│   ├── debrief/page.jsx            # Final result + chart
-│   ├── leaderboard/page.jsx        # Scores
-│   ├── layout.jsx                  # Root layout + AppProviders
-│   └── globals.css                 # Design tokens + animations
-├── components/
-│   ├── providers/
-│   │   └── AppProviders.jsx        # Global GameProvider wrapper
-│   ├── game/
-│   │   └── SwipeDecisionCard.tsx   # Swipe / click / keyboard choices
-│   └── ui/
-│       ├── MetricCard.jsx
-│       ├── AdvisorPanel.jsx
-│       ├── BottomSheet.tsx
-│       ├── RoundProgress.jsx
-│       ├── NetWorthChart.jsx
-│       ├── StatCard.jsx
-│       └── ChoiceCard.jsx          # Legacy; not used on game page
-├── context/
-│   └── GameContext.jsx             # Reducer + sim wiring
-└── lib/
-    ├── sim/                        # Simulation engine (TypeScript)
-    │   ├── engine.ts               # createNewGame, applyChoice, metrics
-    │   ├── events.ts               # Event cards + generation
-    │   ├── scenarios.ts            # Scenario definitions
-    │   ├── prng.ts                 # Seeded RNG
-    │   └── math.ts                 # Tax, amortization, helpers
-    └── api.js                      # Stubbed advisor, debrief, leaderboard
+├── frontend/                       # @finsim/web — Next.js 16 App Router
+│   ├── app/
+│   │   ├── page.jsx                # Landing (/)
+│   │   ├── setup/page.jsx          # Player setup → startSimulation()
+│   │   ├── game/page.jsx           # Main game board
+│   │   ├── debrief/page.jsx        # Final result + chart
+│   │   ├── leaderboard/page.jsx    # Scores
+│   │   ├── auth/page.jsx           # Auth UI (placeholder)
+│   │   ├── layout.jsx              # Root layout + AppProviders
+│   │   └── globals.css             # Design tokens + animations
+│   ├── components/
+│   │   ├── providers/
+│   │   │   └── AppProviders.jsx    # Global GameProvider wrapper
+│   │   ├── game/
+│   │   │   └── SwipeDecisionCard.tsx
+│   │   └── ui/                     # MetricCard, AdvisorPanel, charts, etc.
+│   ├── context/
+│   │   └── GameContext.jsx         # Reducer + sim wiring
+│   ├── lib/
+│   │   ├── sim/                    # Deterministic simulation engine (TS)
+│   │   │   ├── engine.ts
+│   │   │   ├── events.ts
+│   │   │   ├── scenarios.ts
+│   │   │   ├── prng.ts
+│   │   │   └── math.ts
+│   │   └── api.js                  # Stubbed advisor, debrief, leaderboard
+│   ├── public/                     # Static assets
+│   ├── next.config.ts
+│   ├── tsconfig.json               # Path alias: @/* → frontend root
+│   └── package.json
+│
+├── backend/                        # @finsim/api — Express + Mongoose
+│   ├── src/
+│   │   ├── index.js                # Entry point (listen)
+│   │   ├── app.js                  # Express app wiring
+│   │   ├── config/
+│   │   │   └── database.js         # MongoDB connection
+│   │   ├── middleware/
+│   │   │   └── index.js            # CORS, cookies, rate limiting
+│   │   └── routes/
+│   │       └── index.js            # API routes (e.g. /api/health)
+│   ├── .env.example
+│   └── package.json
+│
+├── package.json                    # Workspace root scripts
+├── pnpm-workspace.yaml
+└── README.md
 ```
+
+**Import convention (frontend):** use the `@/` alias for anything under `frontend/` (for example `@/components/ui/MetricCard`, `@/lib/sim`, `@/context/GameContext`).
 
 ## Simulation Engine
 
@@ -204,9 +234,9 @@ Crisis events show a **CRISIS** badge and a distinct style on the decision card.
 
 ## Connecting a Backend
 
-Gameplay metrics and events are handled by `lib/sim`, so no backend is required for core rounds.
+Gameplay metrics and events are handled by `frontend/lib/sim`, so no backend is required for core rounds. The Express API in `backend/` is scaffolded for persistence, auth, and leaderboard endpoints.
 
-Still stubbed in `lib/api.js`:
+Still stubbed in `frontend/lib/api.js`:
 
 ```js
 // Socratic advisor message used by AdvisorPanel
@@ -219,7 +249,7 @@ getFinalDebrief(roundHistory, finalMetrics) => debriefObject
 MOCK_LEADERBOARD
 ```
 
-`MOCK_ROUNDS` and `submitChoice` remain in `lib/api.js` for reference, but they are not used in the live game flow.
+`MOCK_ROUNDS` and `submitChoice` remain in `frontend/lib/api.js` for reference, but they are not used in the live game flow.
 
 When ready, replace the mock debrief with a streamed LLM using the full `roundHistory` and final `simState`. The debrief page already includes a TODO for that integration.
 
@@ -236,7 +266,7 @@ When ready, replace the mock debrief with a streamed LLM using the full `roundHi
 
 ## Roadmap
 
-- Deterministic simulation engine (`lib/sim`)
+- Deterministic simulation engine (`frontend/lib/sim`)
 - Global game state across routes (`AppProviders`)
 - Dynamic events per round instead of static mock rounds
 - Swipe + click decision UX (`SwipeDecisionCard`)
