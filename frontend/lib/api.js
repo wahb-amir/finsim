@@ -301,16 +301,57 @@ export const MOCK_ADVISOR_MESSAGES = [
 ];
 
 export const MOCK_DEBRIEF = {
-  verdict: "You made some sharp moves. A few emotional calls cost you — but you're building.",
+  verdict:
+    "You made some sharp moves. A few emotional calls cost you — but you're building.",
   optimalPath: [
-    { round: 1, choice: "Build emergency fund", optimal: "Build emergency fund", match: true },
-    { round: 2, choice: "Accept card, pay full", optimal: "Accept card, pay full", match: true },
-    { round: 3, choice: "Finance new car", optimal: "Repair old car", match: false },
-    { round: 4, choice: "Payment plan (0%)", optimal: "Payment plan (0%)", match: true },
-    { round: 5, choice: "Go solo apartment", optimal: "Get new roommate", match: false },
-    { round: 6, choice: "Max the match", optimal: "Max the match", match: true },
-    { round: 7, choice: "Take contract", optimal: "Take contract", match: true },
-    { round: 8, choice: "Take startup job", optimal: "Job search carefully", match: false },
+    {
+      round: 1,
+      choice: "Build emergency fund",
+      optimal: "Build emergency fund",
+      match: true,
+    },
+    {
+      round: 2,
+      choice: "Accept card, pay full",
+      optimal: "Accept card, pay full",
+      match: true,
+    },
+    {
+      round: 3,
+      choice: "Finance new car",
+      optimal: "Repair old car",
+      match: false,
+    },
+    {
+      round: 4,
+      choice: "Payment plan (0%)",
+      optimal: "Payment plan (0%)",
+      match: true,
+    },
+    {
+      round: 5,
+      choice: "Go solo apartment",
+      optimal: "Get new roommate",
+      match: false,
+    },
+    {
+      round: 6,
+      choice: "Max the match",
+      optimal: "Max the match",
+      match: true,
+    },
+    {
+      round: 7,
+      choice: "Take contract",
+      optimal: "Take contract",
+      match: true,
+    },
+    {
+      round: 8,
+      choice: "Take startup job",
+      optimal: "Job search carefully",
+      match: false,
+    },
     { round: 9, choice: "Keep renting", optimal: "Keep renting", match: true },
     { round: 10, choice: "Index funds", optimal: "Index funds", match: true },
   ],
@@ -330,15 +371,33 @@ export const MOCK_DEBRIEF = {
 
 export const MOCK_LEADERBOARD = [
   { rank: 1, name: "Priya S.", netWorth: 72400, creditScore: 798, score: 9420 },
-  { rank: 2, name: "Marcus T.", netWorth: 68100, creditScore: 781, score: 8980 },
+  {
+    rank: 2,
+    name: "Marcus T.",
+    netWorth: 68100,
+    creditScore: 781,
+    score: 8980,
+  },
   { rank: 3, name: "Zoe K.", netWorth: 61300, creditScore: 776, score: 8540 },
   { rank: 4, name: "Aiden R.", netWorth: 58200, creditScore: 760, score: 8210 },
   { rank: 5, name: "Leila M.", netWorth: 52700, creditScore: 744, score: 7890 },
-  { rank: 6, name: "Carlos F.", netWorth: 48900, creditScore: 731, score: 7540 },
+  {
+    rank: 6,
+    name: "Carlos F.",
+    netWorth: 48900,
+    creditScore: 731,
+    score: 7540,
+  },
   { rank: 7, name: "Nina B.", netWorth: 43100, creditScore: 718, score: 7120 },
   { rank: 8, name: "Dev P.", netWorth: 39400, creditScore: 702, score: 6780 },
   { rank: 9, name: "Tomas W.", netWorth: 34700, creditScore: 689, score: 6340 },
-  { rank: 10, name: "Jordan L.", netWorth: 28300, creditScore: 671, score: 5890 },
+  {
+    rank: 10,
+    name: "Jordan L.",
+    netWorth: 28300,
+    creditScore: 671,
+    score: 5890,
+  },
 ];
 
 /**
@@ -354,9 +413,15 @@ export async function submitChoice(round, choiceId, currentMetrics) {
   const isGoodChoice = choiceId === "A";
   const deltaIncome = round === 7 ? (isGoodChoice ? 700 : 0) : 0;
   const deltaDebt = choiceId === "B" && round === 3 ? 21000 : 0;
-  const deltaSavings = isGoodChoice ? Math.floor(Math.random() * 800 + 200) : -Math.floor(Math.random() * 400 + 100);
-  const deltaCreditScore = isGoodChoice ? Math.floor(Math.random() * 15) : -Math.floor(Math.random() * 10);
-  const deltaStress = isGoodChoice ? -Math.floor(Math.random() * 8) : Math.floor(Math.random() * 12);
+  const deltaSavings = isGoodChoice
+    ? Math.floor(Math.random() * 800 + 200)
+    : -Math.floor(Math.random() * 400 + 100);
+  const deltaCreditScore = isGoodChoice
+    ? Math.floor(Math.random() * 15)
+    : -Math.floor(Math.random() * 10);
+  const deltaStress = isGoodChoice
+    ? -Math.floor(Math.random() * 8)
+    : Math.floor(Math.random() * 12);
   const deltaRetirement = round >= 6 && isGoodChoice ? 1200 : 0;
 
   return {
@@ -364,10 +429,19 @@ export async function submitChoice(round, choiceId, currentMetrics) {
     monthlyExpenses: currentMetrics.monthlyExpenses + (deltaDebt > 0 ? 380 : 0),
     savingsBalance: Math.max(0, currentMetrics.savingsBalance + deltaSavings),
     totalDebt: currentMetrics.totalDebt + deltaDebt,
-    creditScore: Math.min(850, Math.max(300, currentMetrics.creditScore + deltaCreditScore)),
+    creditScore: Math.min(
+      850,
+      Math.max(300, currentMetrics.creditScore + deltaCreditScore),
+    ),
     retirementBalance: currentMetrics.retirementBalance + deltaRetirement,
-    debtToIncome: Math.max(0, Math.min(100, currentMetrics.debtToIncome + (isGoodChoice ? -2 : 4))),
-    stressIndex: Math.max(0, Math.min(100, currentMetrics.stressIndex + deltaStress)),
+    debtToIncome: Math.max(
+      0,
+      Math.min(100, currentMetrics.debtToIncome + (isGoodChoice ? -2 : 4)),
+    ),
+    stressIndex: Math.max(
+      0,
+      Math.min(100, currentMetrics.stressIndex + deltaStress),
+    ),
   };
 }
 

@@ -25,7 +25,10 @@ const CustomTooltip = ({ active, payload, label }) => {
         <div className="font-bold text-[#F5F5F5] mb-2">Round {label}</div>
         {payload.map((entry) => (
           <div key={entry.name} className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: entry.color }} />
+            <div
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ background: entry.color }}
+            />
             <span className="text-[#A1A1A1]">{entry.name}:</span>
             <span className="text-[#F5F5F5] font-semibold">
               ${entry.value?.toLocaleString()}
@@ -53,7 +56,13 @@ export default function NetWorthChart({ data }) {
           tick={{ fill: "#6B6B6B", fontSize: 11 }}
           tickLine={false}
           axisLine={false}
-          label={{ value: "Round", position: "insideBottom", offset: -2, fill: "#4A4A4A", fontSize: 10 }}
+          label={{
+            value: "Round",
+            position: "insideBottom",
+            offset: -2,
+            fill: "#4A4A4A",
+            fontSize: 10,
+          }}
         />
         <YAxis
           tick={{ fill: "#6B6B6B", fontSize: 11 }}
@@ -62,7 +71,10 @@ export default function NetWorthChart({ data }) {
           tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
           width={48}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+        <Tooltip
+          content={<CustomTooltip />}
+          cursor={{ fill: "rgba(255,255,255,0.02)" }}
+        />
         <Legend
           wrapperStyle={{ fontSize: 11, color: "#A1A1A1", paddingTop: "12px" }}
           iconType="circle"

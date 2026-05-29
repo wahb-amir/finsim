@@ -186,8 +186,8 @@ const Auth = () => {
             {submitting
               ? "Please wait..."
               : isLogin
-              ? "Login Account"
-              : "Create Account"}
+                ? "Login Account"
+                : "Create Account"}
           </button>
 
           <p

@@ -101,7 +101,14 @@ function GameContent() {
     } finally {
       setIsConfirming(false);
     }
-  }, [selectedChoice, isConfirming, currentRound, applySimChoice, setDebriefData, router]);
+  }, [
+    selectedChoice,
+    isConfirming,
+    currentRound,
+    applySimChoice,
+    setDebriefData,
+    router,
+  ]);
 
   useEffect(() => {
     if (!playerName || !simState || !currentEvent) {
@@ -110,7 +117,8 @@ function GameContent() {
   }, [playerName, simState, currentEvent, router]);
 
   if (authLoading) return null;
-  if (!user || !playerName || !simState || !currentEvent || !roundData) return null;
+  if (!user || !playerName || !simState || !currentEvent || !roundData)
+    return null;
 
   return (
     <div className="h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
@@ -205,8 +213,8 @@ function GameContent() {
                 metrics.savingsBalance > 5000
                   ? "#10B981"
                   : metrics.savingsBalance > 1000
-                  ? "#F59E0B"
-                  : "#EF4444"
+                    ? "#F59E0B"
+                    : "#EF4444"
               }
               compact
             />
@@ -217,8 +225,8 @@ function GameContent() {
                 metrics.totalDebt === 0
                   ? "#10B981"
                   : metrics.totalDebt < 10000
-                  ? "#F59E0B"
-                  : "#EF4444"
+                    ? "#F59E0B"
+                    : "#EF4444"
               }
               compact
             />
@@ -233,7 +241,9 @@ function GameContent() {
             <MetricCard
               label="Retirement"
               value={formatCurrency(metrics.retirementBalance)}
-              colorCode={metrics.retirementBalance > 5000 ? "#10B981" : "#A1A1A1"}
+              colorCode={
+                metrics.retirementBalance > 5000 ? "#10B981" : "#A1A1A1"
+              }
               compact
             />
             <MetricCard
@@ -243,12 +253,17 @@ function GameContent() {
                 metrics.debtToIncome < 20
                   ? "#10B981"
                   : metrics.debtToIncome < 40
-                  ? "#F59E0B"
-                  : "#EF4444"
+                    ? "#F59E0B"
+                    : "#EF4444"
               }
               compact
             />
-            <MetricCard label="Stress Index" value={metrics.stressIndex} isProgress compact />
+            <MetricCard
+              label="Stress Index"
+              value={metrics.stressIndex}
+              isProgress
+              compact
+            />
           </div>
         </aside>
 
@@ -284,7 +299,9 @@ function GameContent() {
                   >
                     ROUND {currentRound}
                   </span>
-                  <span className="text-[11px] text-[#6B6B6B]">{roundData.year}</span>
+                  <span className="text-[11px] text-[#6B6B6B]">
+                    {roundData.year}
+                  </span>
                   {isCrisis && (
                     <span
                       className="text-[11px] font-bold px-2 py-0.5 rounded flex items-center gap-1"
@@ -311,7 +328,9 @@ function GameContent() {
             <div
               className="rounded-xl p-4 mb-6 text-sm text-[#A1A1A1] leading-relaxed border"
               style={{
-                background: isCrisis ? "rgba(239,68,68,0.04)" : "rgba(17,17,17,0.8)",
+                background: isCrisis
+                  ? "rgba(239,68,68,0.04)"
+                  : "rgba(17,17,17,0.8)",
                 borderColor: isCrisis ? "rgba(239,68,68,0.12)" : "#1F1F1F",
               }}
             >
@@ -327,7 +346,10 @@ function GameContent() {
               />
               {selectedChoice ? (
                 <p className="mt-3 text-center text-xs text-[#6B6B6B]">
-                  Selected: {selectedChoice === "left" ? currentEvent.left.title : currentEvent.right.title}
+                  Selected:{" "}
+                  {selectedChoice === "left"
+                    ? currentEvent.left.title
+                    : currentEvent.right.title}
                 </p>
               ) : null}
             </div>
@@ -342,7 +364,9 @@ function GameContent() {
                   color: selectedChoice ? "#0A0A0A" : "#4A4A4A",
                   border: selectedChoice ? "none" : "1px solid #2A2A2A",
                   fontFamily: "var(--font-display)",
-                  boxShadow: selectedChoice ? "0 0 30px rgba(245,158,11,0.15)" : "none",
+                  boxShadow: selectedChoice
+                    ? "0 0 30px rgba(245,158,11,0.15)"
+                    : "none",
                   transition: "all 0.25s ease",
                 }}
                 aria-busy={isConfirming}
@@ -354,9 +378,16 @@ function GameContent() {
                   </>
                 ) : (
                   <>
-                    {selectedChoice ? "Confirm Decision" : "Select a choice first"}
+                    {selectedChoice
+                      ? "Confirm Decision"
+                      : "Select a choice first"}
                     {selectedChoice && (
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                      >
                         <path
                           d="M3 7H11M11 7L7 3M11 7L7 11"
                           stroke="currentColor"
@@ -382,7 +413,12 @@ function GameContent() {
         <div className="flex items-center gap-2 flex-shrink-0 text-[11px] text-[#4A4A4A]">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" />
-            <path d="M6 4V7M6 8.5V9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            <path
+              d="M6 4V7M6 8.5V9"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
           </svg>
           Round progress
         </div>

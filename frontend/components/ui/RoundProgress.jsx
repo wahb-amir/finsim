@@ -23,13 +23,15 @@ export function RoundProgress({ currentRound, totalRounds = 10 }) {
                   isCurrent
                     ? "w-8 h-8 bg-[#F59E0B] animate-amber-pulse"
                     : isCompleted
-                    ? "w-5 h-5 bg-[#2A2A2A] border border-[#10B981]/30"
-                    : "w-5 h-5 bg-[#1A1A1A] border border-[#2A2A2A]"
+                      ? "w-5 h-5 bg-[#2A2A2A] border border-[#10B981]/30"
+                      : "w-5 h-5 bg-[#1A1A1A] border border-[#2A2A2A]"
                 }
               `}
             >
               {isCurrent ? (
-                <span className="text-[10px] font-bold text-black">{roundNum}</span>
+                <span className="text-[10px] font-bold text-black">
+                  {roundNum}
+                </span>
               ) : isCompleted ? (
                 <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
                   <path

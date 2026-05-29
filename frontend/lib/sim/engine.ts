@@ -1,4 +1,11 @@
-import { clamp, paymentAmortized, round2, stepAmortization, taxAnnual, type TaxBracket } from "./math";
+import {
+  clamp,
+  paymentAmortized,
+  round2,
+  stepAmortization,
+  taxAnnual,
+  type TaxBracket,
+} from "./math";
 import type { EventCard, MacroSnapshot, ChoiceId } from "./events";
 import { generateEvent, rollMacro } from "./events";
 import { createRng, hashSeed } from "./prng";
@@ -113,7 +120,13 @@ function computeNetMonthlyIncome({
   return (grossIncomeAnnual - annualTax) / 12;
 }
 
-function stressFromBuffer({ cash, expenses }: { cash: number; expenses: number }): number {
+function stressFromBuffer({
+  cash,
+  expenses,
+}: {
+  cash: number;
+  expenses: number;
+}): number {
   // 0 when buffer >= 6 months, rising sharply below 1 month.
   const months = expenses > 0 ? cash / expenses : 6;
   const normalized = clamp((6 - months) / 6, 0, 1);
@@ -157,8 +170,12 @@ function advisorForState(state: SimState, event: EventCard): string {
   if (event.crisis && state.cash < state.baseExpensesMonthly * 1.2) {
     return "In a crisis, cash runway is oxygen. Protect your next 90 days first.";
   }
-  if (dti > 0.4) return "High DTI is a gatekeeper. Attack APR and monthly obligations before chasing upside.";
-  if (state.portfolio.taxable + state.portfolio.retirement < 500 && state.monthIndex > 6) {
+  if (dti > 0.4)
+    return "High DTI is a gatekeeper. Attack APR and monthly obligations before chasing upside.";
+  if (
+    state.portfolio.taxable + state.portfolio.retirement < 500 &&
+    state.monthIndex > 6
+  ) {
     return "Consistency beats intensity. Automate a small investment you can maintain through stress.";
   }
   return "Ask: does this choice reduce fragility, or increase optionality? The best move is usually one of those.";
@@ -183,11 +200,16 @@ export function createNewGame({
 
   const debts: Debt[] = [];
   if (scenario.start.debt.kind !== "none" && scenario.start.debt.balance > 0) {
-    const kindMap = scenario.start.debt.kind === "student" ? "student" : "credit-card";
+    const kindMap =
+      scenario.start.debt.kind === "student" ? "student" : "credit-card";
     const term = scenario.start.debt.termMonths;
     const min =
       kindMap === "student" && term
-        ? paymentAmortized({ principal: scenario.start.debt.balance, annualRate: scenario.start.debt.apr, termMonths: term })
+        ? paymentAmortized({
+            principal: scenario.start.debt.balance,
+            annualRate: scenario.start.debt.apr,
+            termMonths: term,
+          })
         : Math.max(35, scenario.start.debt.balance * 0.03);
     debts.push({
       id: `d0`,
@@ -233,9 +255,12 @@ export function nextEvent({ state }: { state: SimState }): StepResult {
     creditScore: state.creditScore,
     dti,
     scenarioFlags: {
-      restrictedCredit: getScenario(state.scenarioId).modifiers.restrictedCredit,
-      remittanceMonthly: getScenario(state.scenarioId).modifiers.remittanceMonthly,
-      childcareMonthly: getScenario(state.scenarioId).modifiers.childcareMonthly,
+      restrictedCredit: getScenario(state.scenarioId).modifiers
+        .restrictedCredit,
+      remittanceMonthly: getScenario(state.scenarioId).modifiers
+        .remittanceMonthly,
+      childcareMonthly: getScenario(state.scenarioId).modifiers
+        .childcareMonthly,
     },
     macro: state.macro,
   });
@@ -260,14 +285,19 @@ export function applyChoice({
   choice: ChoiceId;
 }): StepResult {
   const scenario = getScenario(state.scenarioId);
-  const rng = createRng((state.seed ^ (state.monthIndex + 1) * 2246822519) >>> 0);
+  const rng = createRng(
+    (state.seed ^ ((state.monthIndex + 1) * 2246822519)) >>> 0,
+  );
 
   // Annual tax approximation on gross salary; founder w/ 0 salary pays 0.
   const annualTax = taxAnnual({
     taxableIncome: Math.max(0, state.grossIncomeAnnual * 0.9), // rough: standard deduction + pre-tax effects
     brackets: DEFAULT_TAX_BRACKETS_US_SINGLE_2026_APPROX,
   });
-  const netIncomeMonthly = computeNetMonthlyIncome({ grossIncomeAnnual: state.grossIncomeAnnual, annualTax });
+  const netIncomeMonthly = computeNetMonthlyIncome({
+    grossIncomeAnnual: state.grossIncomeAnnual,
+    annualTax,
+  });
 
   // Macro evolves month-to-month (deterministic from seed + stress).
   const nextMacro = rollMacro({
@@ -339,14 +369,18 @@ export function applyChoice({
     if (existingCC && !restrictedCredit) {
       existingCC.balance += spill;
       existingCC.apr = Math.max(existingCC.apr, 0.219);
-      existingCC.minPaymentMonthly = round2(Math.max(35, existingCC.balance * 0.03));
+      existingCC.minPaymentMonthly = round2(
+        Math.max(35, existingCC.balance * 0.03),
+      );
     } else {
       state.debts.push({
         id: `spill:${state.monthIndex}`,
         kind: restrictedCredit ? "medical" : "credit-card",
         balance: spill,
         apr: restrictedCredit ? 0.0 : 0.249,
-        minPaymentMonthly: restrictedCredit ? 50 : round2(Math.max(35, spill * 0.03)),
+        minPaymentMonthly: restrictedCredit
+          ? 50
+          : round2(Math.max(35, spill * 0.03)),
       });
     }
   }
@@ -360,13 +394,23 @@ export function applyChoice({
       const pay = Math.min(d.minPaymentMonthly, cash);
       if (pay + 1e-6 < d.minPaymentMonthly) onTime = false;
       cash -= pay;
-      const stepped = stepAmortization({ balance: d.balance, annualRate: d.apr, payment: pay });
+      const stepped = stepAmortization({
+        balance: d.balance,
+        annualRate: d.apr,
+        payment: pay,
+      });
       return {
         ...d,
         balance: stepped.nextBalance,
         minPaymentMonthly:
           d.termMonths && d.kind !== "credit-card"
-            ? round2(paymentAmortized({ principal: stepped.nextBalance, annualRate: d.apr, termMonths: Math.max(1, d.termMonths - 1) }))
+            ? round2(
+                paymentAmortized({
+                  principal: stepped.nextBalance,
+                  annualRate: d.apr,
+                  termMonths: Math.max(1, d.termMonths - 1),
+                }),
+              )
             : round2(Math.max(35, stepped.nextBalance * 0.03)),
         termMonths: d.termMonths ? Math.max(0, d.termMonths - 1) : undefined,
       };
@@ -395,7 +439,9 @@ export function applyChoice({
   const retirement = state.portfolio.retirement * (1 + marketMonthly);
 
   // Update credit score (utilization approximated from revolving debt / a pseudo-limit).
-  const revolving = nextDebts.filter((d) => d.kind === "credit-card").reduce((s, d) => s + d.balance, 0);
+  const revolving = nextDebts
+    .filter((d) => d.kind === "credit-card")
+    .reduce((s, d) => s + d.balance, 0);
   const pseudoLimit = restrictedCredit ? 1500 : 6000;
   const utilization = pseudoLimit > 0 ? revolving / pseudoLimit : 0;
   const creditScore = bumpCreditScore({
@@ -409,20 +455,42 @@ export function applyChoice({
   const dti = (() => {
     const grossMonthly = state.grossIncomeAnnual / 12;
     const debtPay = sumDebtPayments(nextDebts);
-    return grossMonthly <= 1e-6 ? (debtPay > 0 ? 1 : 0) : clamp(debtPay / grossMonthly, 0, 2);
+    return grossMonthly <= 1e-6
+      ? debtPay > 0
+        ? 1
+        : 0
+      : clamp(debtPay / grossMonthly, 0, 2);
   })();
 
   const bufferStress = stressFromBuffer({ cash, expenses });
   const dtiStress = stressFromDTI(dti);
-  const macroStress = clamp(nextMacro.recessionProbAnnual * 35 + nextMacro.inflationAnnual * 120, 0, 35);
-  const burnout = clamp(state.burnout + scenario.modifiers.burnoutDriftMonthly + (choice === "right" ? 0.3 : -0.1), 0, 100);
-  const stress = clamp(5 + bufferStress + dtiStress + macroStress + burnout * 0.15, 0, 100);
+  const macroStress = clamp(
+    nextMacro.recessionProbAnnual * 35 + nextMacro.inflationAnnual * 120,
+    0,
+    35,
+  );
+  const burnout = clamp(
+    state.burnout +
+      scenario.modifiers.burnoutDriftMonthly +
+      (choice === "right" ? 0.3 : -0.1),
+    0,
+    100,
+  );
+  const stress = clamp(
+    5 + bufferStress + dtiStress + macroStress + burnout * 0.15,
+    0,
+    100,
+  );
 
   // Wage growth drifts; in recession, wage growth can be negative with some probability.
   let grossIncomeAnnual = state.grossIncomeAnnual;
-  const wageMonthly = Math.pow(1 + scenario.modifiers.wageGrowthAnnual, 1 / 12) - 1;
+  const wageMonthly =
+    Math.pow(1 + scenario.modifiers.wageGrowthAnnual, 1 / 12) - 1;
   grossIncomeAnnual = grossIncomeAnnual * (1 + wageMonthly);
-  if (nextMacro.recessionProbAnnual > 0.25 && rng.next() < scenario.modifiers.layoffProbAnnual / 12) {
+  if (
+    nextMacro.recessionProbAnnual > 0.25 &&
+    rng.next() < scenario.modifiers.layoffProbAnnual / 12
+  ) {
     grossIncomeAnnual = Math.max(0, grossIncomeAnnual * 0.5); // partial income shock
   }
 
@@ -436,8 +504,16 @@ export function applyChoice({
     creditScore,
     burnout: round2(burnout),
     stress: round2(stress),
-    debts: nextDebts.map((d) => ({ ...d, balance: round2(d.balance), minPaymentMonthly: round2(d.minPaymentMonthly) })),
-    portfolio: { ...state.portfolio, taxable: round2(taxable), retirement: round2(retirement) },
+    debts: nextDebts.map((d) => ({
+      ...d,
+      balance: round2(d.balance),
+      minPaymentMonthly: round2(d.minPaymentMonthly),
+    })),
+    portfolio: {
+      ...state.portfolio,
+      taxable: round2(taxable),
+      retirement: round2(retirement),
+    },
     macro: nextMacro,
     history: [
       ...state.history,
@@ -461,7 +537,10 @@ export function getVisibleMetrics(state: SimState): VisibleMetrics {
     taxableIncome: Math.max(0, state.grossIncomeAnnual * 0.9),
     brackets: DEFAULT_TAX_BRACKETS_US_SINGLE_2026_APPROX,
   });
-  const monthlyIncomeNet = computeNetMonthlyIncome({ grossIncomeAnnual: state.grossIncomeAnnual, annualTax });
+  const monthlyIncomeNet = computeNetMonthlyIncome({
+    grossIncomeAnnual: state.grossIncomeAnnual,
+    annualTax,
+  });
   const investments = state.portfolio.taxable + state.portfolio.retirement;
   const totalDebt = sumDebt(state.debts);
   const dti = computeDTI(state);
@@ -472,7 +551,9 @@ export function getVisibleMetrics(state: SimState): VisibleMetrics {
     creditScore: state.creditScore,
     dti: round2(dti),
     monthlyIncomeNet: round2(monthlyIncomeNet),
-    monthlyExpenses: round2(state.baseExpensesMonthly + sumDebtPayments(state.debts)),
+    monthlyExpenses: round2(
+      state.baseExpensesMonthly + sumDebtPayments(state.debts),
+    ),
     totalDebt: round2(totalDebt),
     investments: round2(investments),
     inflationAnnual: round2(state.macro.inflationAnnual),

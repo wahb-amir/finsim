@@ -8,7 +8,9 @@ function LeaderboardContent() {
   const router = useRouter();
   const { playerName, metrics, resetGame } = useGame();
 
-  const netWorth = metrics.netWorth ?? (metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt);
+  const netWorth =
+    metrics.netWorth ??
+    metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt;
 
   const handlePlayAgain = () => {
     resetGame();
@@ -36,7 +38,9 @@ function LeaderboardContent() {
       {/* Fixed ambient glow */}
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-48 opacity-[0.06] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, #F59E0B, transparent 70%)" }}
+        style={{
+          background: "radial-gradient(ellipse, #F59E0B, transparent 70%)",
+        }}
       />
 
       <div className="max-w-3xl mx-auto px-4 pt-10 relative z-10">
@@ -79,7 +83,10 @@ function LeaderboardContent() {
         {/* Column headers */}
         <div className="grid grid-cols-[40px_1fr_100px_100px_90px] gap-3 px-4 mb-2">
           {["#", "Player", "Net Worth", "Credit", "Score"].map((h) => (
-            <div key={h} className="text-[10px] text-[#4A4A4A] uppercase tracking-widest font-medium">
+            <div
+              key={h}
+              className="text-[10px] text-[#4A4A4A] uppercase tracking-widest font-medium"
+            >
               {h}
             </div>
           ))}
@@ -116,20 +123,20 @@ function LeaderboardContent() {
                           player.rank === 1
                             ? "rgba(245,158,11,0.15)"
                             : player.rank === 2
-                            ? "rgba(161,161,161,0.12)"
-                            : "rgba(180,100,40,0.12)",
+                              ? "rgba(161,161,161,0.12)"
+                              : "rgba(180,100,40,0.12)",
                         color:
                           player.rank === 1
                             ? "#F59E0B"
                             : player.rank === 2
-                            ? "#A1A1A1"
-                            : "#B46428",
+                              ? "#A1A1A1"
+                              : "#B46428",
                         border: `1px solid ${
                           player.rank === 1
                             ? "rgba(245,158,11,0.3)"
                             : player.rank === 2
-                            ? "rgba(161,161,161,0.25)"
-                            : "rgba(180,100,40,0.25)"
+                              ? "rgba(161,161,161,0.25)"
+                              : "rgba(180,100,40,0.25)"
                         }`,
                       }}
                     >
@@ -159,7 +166,9 @@ function LeaderboardContent() {
                 {/* Net Worth */}
                 <div
                   className="text-sm font-semibold tabular-nums"
-                  style={{ color: player.netWorth >= 0 ? "#10B981" : "#EF4444" }}
+                  style={{
+                    color: player.netWorth >= 0 ? "#10B981" : "#EF4444",
+                  }}
                 >
                   ${player.netWorth.toLocaleString()}
                 </div>
@@ -172,8 +181,8 @@ function LeaderboardContent() {
                       player.creditScore >= 700
                         ? "#10B981"
                         : player.creditScore >= 600
-                        ? "#F59E0B"
-                        : "#EF4444",
+                          ? "#F59E0B"
+                          : "#EF4444",
                   }}
                 >
                   {player.creditScore}

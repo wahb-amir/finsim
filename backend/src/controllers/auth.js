@@ -6,7 +6,6 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-
 const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post("/signin", async (req, res) => {
@@ -47,7 +46,7 @@ router.post("/signin", async (req, res) => {
       JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     res
@@ -67,7 +66,6 @@ router.post("/signin", async (req, res) => {
           email: newUser.email,
         },
       });
-
   } catch (err) {
     console.log("Signup Error:", err);
 
@@ -115,7 +113,7 @@ router.post("/login", async (req, res) => {
       JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     res
@@ -135,7 +133,6 @@ router.post("/login", async (req, res) => {
           email: user.email,
         },
       });
-
   } catch (err) {
     console.log("Login Error:", err);
 
@@ -155,7 +152,6 @@ router.get("/me", authMiddleware, async (req, res) => {
         email: req.user.email,
       },
     });
-
   } catch (err) {
     console.log(err);
 
@@ -174,7 +170,6 @@ router.post("/logout", authMiddleware, async (req, res) => {
       success: true,
       message: "Logged out successfully",
     });
-
   } catch (err) {
     console.log("Logout Error:", err);
 
@@ -184,6 +179,5 @@ router.post("/logout", authMiddleware, async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

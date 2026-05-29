@@ -109,7 +109,11 @@ function gameReducer(state, action) {
         ...state,
         advisorMessages: [
           ...state.advisorMessages,
-          { round: state.currentRound, message: action.payload, timestamp: Date.now() },
+          {
+            round: state.currentRound,
+            message: action.payload,
+            timestamp: Date.now(),
+          },
         ],
       };
     case "SET_DEBRIEF_DATA":
@@ -131,17 +135,37 @@ const GameContext = createContext(null);
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
 
-  const setPlayerName = useCallback((name) => dispatch({ type: "SET_PLAYER_NAME", payload: name }), []);
-  const setConfidence = useCallback((val) => dispatch({ type: "SET_CONFIDENCE", payload: val }), []);
-  const setGoal = useCallback((goal) => dispatch({ type: "SET_GOAL", payload: goal }), []);
+  const setPlayerName = useCallback(
+    (name) => dispatch({ type: "SET_PLAYER_NAME", payload: name }),
+    [],
+  );
+  const setConfidence = useCallback(
+    (val) => dispatch({ type: "SET_CONFIDENCE", payload: val }),
+    [],
+  );
+  const setGoal = useCallback(
+    (goal) => dispatch({ type: "SET_GOAL", payload: goal }),
+    [],
+  );
   const startSimulation = useCallback((scenarioId, seed) => {
     dispatch({ type: "START_SIMULATION", payload: { scenarioId, seed } });
   }, []);
-  const selectChoice = useCallback((id) => dispatch({ type: "SELECT_CHOICE", payload: id }), []);
-  const applySimChoice = useCallback((choice) =>
-    dispatch({ type: "APPLY_SIM_CHOICE", payload: { choice } }), []);
-  const addAdvisorMessage = useCallback((msg) => dispatch({ type: "ADD_ADVISOR_MESSAGE", payload: msg }), []);
-  const setDebriefData = useCallback((data) => dispatch({ type: "SET_DEBRIEF_DATA", payload: data }), []);
+  const selectChoice = useCallback(
+    (id) => dispatch({ type: "SELECT_CHOICE", payload: id }),
+    [],
+  );
+  const applySimChoice = useCallback(
+    (choice) => dispatch({ type: "APPLY_SIM_CHOICE", payload: { choice } }),
+    [],
+  );
+  const addAdvisorMessage = useCallback(
+    (msg) => dispatch({ type: "ADD_ADVISOR_MESSAGE", payload: msg }),
+    [],
+  );
+  const setDebriefData = useCallback(
+    (data) => dispatch({ type: "SET_DEBRIEF_DATA", payload: data }),
+    [],
+  );
   const resetGame = useCallback(() => dispatch({ type: "RESET_GAME" }), []);
 
   return (

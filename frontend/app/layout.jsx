@@ -4,7 +4,8 @@ import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
   title: "FinSim — Live 10 Years in 15 Minutes",
-  description: "A personal finance life simulator. Make real decisions, see real consequences.",
+  description:
+    "A personal finance life simulator. Make real decisions, see real consequences.",
 };
 
 export default function RootLayout({ children }) {
@@ -12,7 +13,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
           rel="stylesheet"

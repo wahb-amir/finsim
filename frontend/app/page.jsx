@@ -22,7 +22,8 @@ function LandingContent() {
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-10 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at center top, #F59E0B, transparent 70%)",
+          background:
+            "radial-gradient(ellipse at center top, #F59E0B, transparent 70%)",
         }}
       />
 
@@ -50,20 +51,18 @@ function LandingContent() {
             animationFillMode: "both",
           }}
         >
-          Live{" "}
-          <span className="text-gradient-amber">10 years</span>
+          Live <span className="text-gradient-amber">10 years</span>
           <br />
           of financial decisions
           <br />
           in{" "}
-          <span
-            className="relative inline-block"
-            style={{ color: "#F5F5F5" }}
-          >
+          <span className="relative inline-block" style={{ color: "#F5F5F5" }}>
             15 minutes.
             <div
               className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full"
-              style={{ background: "linear-gradient(90deg, #F59E0B, transparent)" }}
+              style={{
+                background: "linear-gradient(90deg, #F59E0B, transparent)",
+              }}
             />
           </span>
         </h1>
@@ -73,8 +72,9 @@ function LandingContent() {
           className="text-[#A1A1A1] text-lg md:text-xl max-w-xl leading-relaxed mb-10 animate-fade-in-up"
           style={{ animationDelay: "0.2s", animationFillMode: "both" }}
         >
-          80% of teens enter adulthood without understanding credit scores, compound interest, or
-          how a single decision compounds over decades. We fix that.
+          80% of teens enter adulthood without understanding credit scores,
+          compound interest, or how a single decision compounds over decades. We
+          fix that.
         </p>
 
         {/* CTA */}
@@ -111,9 +111,23 @@ function LandingContent() {
 
         {/* Scroll hint */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
-          <span className="text-[10px] tracking-widest text-[#6B6B6B] uppercase">The problem</span>
-          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" className="animate-bounce">
-            <path d="M6 1V15M6 15L1 10M6 15L11 10" stroke="#6B6B6B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <span className="text-[10px] tracking-widest text-[#6B6B6B] uppercase">
+            The problem
+          </span>
+          <svg
+            width="12"
+            height="16"
+            viewBox="0 0 12 16"
+            fill="none"
+            className="animate-bounce"
+          >
+            <path
+              d="M6 1V15M6 15L1 10M6 15L11 10"
+              stroke="#6B6B6B"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
       </section>
@@ -127,7 +141,9 @@ function LandingContent() {
           >
             The scale of financial illiteracy
           </h2>
-          <p className="text-[#6B6B6B] text-sm">Real numbers. Real consequences.</p>
+          <p className="text-[#6B6B6B] text-sm">
+            Real numbers. Real consequences.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

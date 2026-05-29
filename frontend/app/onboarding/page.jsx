@@ -6,39 +6,103 @@ import { useGame } from "@/context/GameContext";
 
 // Premium Icon Components
 const ShieldIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+    />
   </svg>
 );
 
 const TrendUpIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 005.814-5.519l2.74-1.22m0 0l-5.94-2.281m5.94 2.28l-2.28 5.941" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 005.814-5.519l2.74-1.22m0 0l-5.94-2.281m5.94 2.28l-2.28 5.941"
+    />
   </svg>
 );
 
 const CompassIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 7.5l-2.25 2.25zm0 0l2.25 2.25-2.25-2.25zm0 0l-5.25 5.25 3-3-3 3zm0 0l-3-3 3 3z" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 21a9 9 0 100-18 9 9 0 000 18z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M14.25 9.75L16.5 7.5l-2.25 2.25zm0 0l2.25 2.25-2.25-2.25zm0 0l-5.25 5.25 3-3-3 3zm0 0l-3-3 3 3z"
+    />
   </svg>
 );
 
 const SparklesIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.096L15 15l-5.096.813zM18.25 5.25L17.5 8l-.75-2.75L14 4.5l2.75-.75L17.5 1l.75 2.75L21 4.5l-2.75.75z" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.096L15 15l-5.096.813zM18.25 5.25L17.5 8l-.75-2.75L14 4.5l2.75-.75L17.5 1l.75 2.75L21 4.5l-2.75.75z"
+    />
   </svg>
 );
 
 const WalletIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6A2.25 2.25 0 0118.75 20H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6A2.25 2.25 0 0118.75 20H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
+    />
   </svg>
 );
 
 const ScaleIcon = () => (
-  <svg className="w-5 h-5 text-[#F59E0B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m-9-4h18M4 7h16m-2 0v4a6 6 0 01-12 0V7" />
+  <svg
+    className="w-5 h-5 text-[#F59E0B]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 3v18m-9-4h18M4 7h16m-2 0v4a6 6 0 01-12 0V7"
+    />
   </svg>
 );
 
@@ -46,19 +110,22 @@ const ARCHETYPES = [
   {
     id: "variable-income",
     title: "The Dynamic Earner",
-    description: "Freelancer, founder, or gig worker dealing with fluctuating monthly cash flow.",
+    description:
+      "Freelancer, founder, or gig worker dealing with fluctuating monthly cash flow.",
     icon: <SparklesIcon />,
   },
   {
     id: "lifestyle-creep",
     title: "The High-Spend Professional",
-    description: "Making decent money, but fixed costs and lifestyle upgrades absorb most of it.",
+    description:
+      "Making decent money, but fixed costs and lifestyle upgrades absorb most of it.",
     icon: <ScaleIcon />,
   },
   {
     id: "paycheck-to-paycheck",
     title: "The Lean Optimizer",
-    description: "Tight margins where an unexpected bill or emergency can derail progress easily.",
+    description:
+      "Tight margins where an unexpected bill or emergency can derail progress easily.",
     icon: <WalletIcon />,
   },
 ];
@@ -67,19 +134,22 @@ const GOALS = [
   {
     id: "avoid-debt",
     title: "Avoid Debt Trap",
-    description: "Learn to identify hidden balance risks and insulate your baseline income.",
+    description:
+      "Learn to identify hidden balance risks and insulate your baseline income.",
     icon: <ShieldIcon />,
   },
   {
     id: "build-wealth",
     title: "Accelerate Net Worth",
-    description: "Optimize asset allocation, calculate risk vectors, and scale long-term capital.",
+    description:
+      "Optimize asset allocation, calculate risk vectors, and scale long-term capital.",
     icon: <TrendUpIcon />,
   },
   {
     id: "understand-basics",
     title: "Master Financial Literacy",
-    description: "Demystify macroeconomic baselines, complex interest systems, and real tax implications.",
+    description:
+      "Demystify macroeconomic baselines, complex interest systems, and real tax implications.",
     icon: <CompassIcon />,
   },
 ];
@@ -94,15 +164,15 @@ const CONFIDENCE_LABELS = {
 
 function SetupContent() {
   const router = useRouter();
-  
-  const { 
-    playerName: archetype, 
-    setPlayerName: setArchetype, 
-    confidence, 
-    setConfidence, 
-    goal, 
-    setGoal, 
-    startSimulation 
+
+  const {
+    playerName: archetype,
+    setPlayerName: setArchetype,
+    confidence,
+    setConfidence,
+    goal,
+    setGoal,
+    startSimulation,
   } = useGame();
   const [step, setStep] = useState(1);
 
@@ -112,16 +182,16 @@ function SetupContent() {
 
   const handleBegin = () => {
     if (!canProceedStep3) return;
-    
+
     const scenarioByGoal = {
       "avoid-debt": "recession",
       "build-wealth": confidence >= 4 ? "startup-founder" : "baseline",
       "understand-basics": "single-parent",
     };
-    
+
     const scenarioId = scenarioByGoal[goal] || "baseline";
     const seed = Date.now();
-    
+
     startSimulation(scenarioId, seed);
     router.push("/game");
   };
@@ -131,7 +201,9 @@ function SetupContent() {
       {/* BG ambient glow */}
       <div
         className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-[0.05] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, #F59E0B, transparent 70%)" }}
+        style={{
+          background: "radial-gradient(ellipse, #F59E0B, transparent 70%)",
+        }}
       />
 
       <div className="w-full max-w-lg relative z-10">
@@ -144,13 +216,19 @@ function SetupContent() {
                   s === step
                     ? "bg-[#F59E0B] text-black scale-110"
                     : s < step
-                    ? "bg-[#1A1A1A] border border-[#10B981]/40 text-[#10B981]"
-                    : "bg-[#1A1A1A] border border-[#2A2A2A] text-[#4A4A4A]"
+                      ? "bg-[#1A1A1A] border border-[#10B981]/40 text-[#10B981]"
+                      : "bg-[#1A1A1A] border border-[#2A2A2A] text-[#4A4A4A]"
                 }`}
               >
                 {s < step ? (
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M2 5L4.5 7.5L8 3" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M2 5L4.5 7.5L8 3"
+                      stroke="#10B981"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 ) : (
                   s
@@ -159,7 +237,9 @@ function SetupContent() {
               {s < 3 && (
                 <div
                   className="w-12 h-px"
-                  style={{ background: s < step ? "rgba(16,185,129,0.3)" : "#1F1F1F" }}
+                  style={{
+                    background: s < step ? "rgba(16,185,129,0.3)" : "#1F1F1F",
+                  }}
                 />
               )}
             </div>
@@ -179,9 +259,10 @@ function SetupContent() {
               What baseline dynamic defines your current cash flow?
             </h2>
             <p className="text-[#6B6B6B] text-center text-sm mb-8">
-              This feeds our engine to model scenarios native to your realistic real-world vulnerabilities.
+              This feeds our engine to model scenarios native to your realistic
+              real-world vulnerabilities.
             </p>
-            
+
             <div className="space-y-3">
               {ARCHETYPES.map((arch) => (
                 <button
@@ -204,16 +285,31 @@ function SetupContent() {
                   <div className="flex-1 min-w-0 pt-0.5">
                     <div
                       className="font-semibold text-sm mb-0.5"
-                      style={{ color: archetype === arch.id ? "#F5F5F5" : "#D1D1D1" }}
+                      style={{
+                        color: archetype === arch.id ? "#F5F5F5" : "#D1D1D1",
+                      }}
                     >
                       {arch.title}
                     </div>
-                    <div className="text-[12px] text-[#6B6B6B] leading-relaxed">{arch.description}</div>
+                    <div className="text-[12px] text-[#6B6B6B] leading-relaxed">
+                      {arch.description}
+                    </div>
                   </div>
                   {archetype === arch.id && (
                     <div className="w-5 h-5 rounded-full bg-[#F59E0B] flex-shrink-0 flex items-center justify-center self-center">
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M2 5L4.5 7.5L8 3" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                      >
+                        <path
+                          d="M2 5L4.5 7.5L8 3"
+                          stroke="#0A0A0A"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </div>
                   )}
@@ -230,7 +326,8 @@ function SetupContent() {
               Rate your structural financial confidence
             </h2>
             <p className="text-[#6B6B6B] text-center text-sm mb-8">
-              Determines the starting complexity vectors and stress-test intensity.
+              Determines the starting complexity vectors and stress-test
+              intensity.
             </p>
             <div className="rounded-xl bg-[#111111] border border-[#242424] p-6">
               <div className="flex justify-between text-[11px] text-[#6B6B6B] uppercase tracking-wider mb-6">
@@ -258,7 +355,9 @@ function SetupContent() {
                 <span className="text-2xl font-bold text-[#F59E0B] tracking-tight">
                   Level {confidence}
                 </span>
-                <span className="text-[#A1A1A1] text-sm ml-2.5">— {CONFIDENCE_LABELS[confidence]}</span>
+                <span className="text-[#A1A1A1] text-sm ml-2.5">
+                  — {CONFIDENCE_LABELS[confidence]}
+                </span>
               </div>
             </div>
           </div>
@@ -271,9 +370,10 @@ function SetupContent() {
               What is your primary simulation vector?
             </h2>
             <p className="text-[#6B6B6B] text-center text-sm mb-8">
-              The algorithm evaluates success weights based entirely on this selection.
+              The algorithm evaluates success weights based entirely on this
+              selection.
             </p>
-            
+
             <div className="space-y-3">
               {GOALS.map((g) => (
                 <button
@@ -300,12 +400,25 @@ function SetupContent() {
                     >
                       {g.title}
                     </div>
-                    <div className="text-[12px] text-[#6B6B6B] leading-relaxed">{g.description}</div>
+                    <div className="text-[12px] text-[#6B6B6B] leading-relaxed">
+                      {g.description}
+                    </div>
                   </div>
                   {goal === g.id && (
                     <div className="w-5 h-5 rounded-full bg-[#F59E0B] flex-shrink-0 flex items-center justify-center self-center">
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M2 5L4.5 7.5L8 3" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                      >
+                        <path
+                          d="M2 5L4.5 7.5L8 3"
+                          stroke="#0A0A0A"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </div>
                   )}
@@ -340,7 +453,9 @@ function SetupContent() {
               disabled={!canProceedStep3}
               className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-[#F59E0B] text-[#0A0A0A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
               style={{
-                boxShadow: canProceedStep3 ? "0 0 30px rgba(245,158,11,0.15)" : "none",
+                boxShadow: canProceedStep3
+                  ? "0 0 30px rgba(245,158,11,0.15)"
+                  : "none",
               }}
             >
               Initialize Simulation →

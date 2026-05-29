@@ -1,6 +1,13 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 
 const AuthContext = createContext(null);
 
@@ -13,10 +20,10 @@ export function AuthProvider({ children }) {
       setLoading(true);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/me`, {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -42,16 +49,16 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (payload) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-      method: 'POST',
-      credentials: 'include',
+      method: "POST",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
-      throw new Error('Login failed');
+      throw new Error("Login failed");
     }
 
     const data = await res.json();
@@ -63,23 +70,26 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
       });
     } finally {
       setUser(null);
     }
   }, []);
 
-  const value = useMemo(() => ({
-    user,
-    loading,
-    isAuthenticated: !!user,
-    fetchMe,
-    login,
-    logout,
-    setUser,
-  }), [user, loading, fetchMe, login, logout]);
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthenticated: !!user,
+      fetchMe,
+      login,
+      logout,
+      setUser,
+    }),
+    [user, loading, fetchMe, login, logout],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
@@ -87,7 +97,7 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error('useAuth must be used inside AuthProvider');
+    throw new Error("useAuth must be used inside AuthProvider");
   }
   return ctx;
 }

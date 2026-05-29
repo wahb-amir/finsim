@@ -6,11 +6,21 @@ import { useGame } from "@/context/GameContext";
 import { getFinalDebrief, MOCK_DEBRIEF } from "@/lib/api";
 import dynamic from "next/dynamic";
 
-const NetWorthChart = dynamic(() => import("@/components/ui/NetWorthChart"), { ssr: false });
+const NetWorthChart = dynamic(() => import("@/components/ui/NetWorthChart"), {
+  ssr: false,
+});
 
 function DebriefContent() {
   const router = useRouter();
-  const { playerName, metrics, roundHistory, debriefData, setDebriefData, resetGame, scenarioId } = useGame();
+  const {
+    playerName,
+    metrics,
+    roundHistory,
+    debriefData,
+    setDebriefData,
+    resetGame,
+    scenarioId,
+  } = useGame();
   const [isLoading, setIsLoading] = useState(!debriefData);
   const [copied, setCopied] = useState(false);
 
@@ -26,16 +36,20 @@ function DebriefContent() {
   }, [debriefData, roundHistory, metrics, setDebriefData]);
 
   const debrief = debriefData || MOCK_DEBRIEF;
-  const netWorth = metrics.netWorth ?? (metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt);
+  const netWorth =
+    metrics.netWorth ??
+    metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt;
   const isPositive = netWorth >= 0;
   const optimalMatches = debrief.optimalPath.filter((x) => x.match).length;
-  const matchRate = Math.round((optimalMatches / debrief.optimalPath.length) * 100);
+  const matchRate = Math.round(
+    (optimalMatches / debrief.optimalPath.length) * 100,
+  );
   const macroRiskLabel =
     metrics.recessionProbAnnual > 0.26
       ? "High"
       : metrics.recessionProbAnnual > 0.18
-      ? "Medium"
-      : "Low";
+        ? "Medium"
+        : "Low";
 
   const handleShare = () => {
     const text = `🎮 FinSim Result — ${playerName || "Anonymous"}\n💰 Net Worth: $${netWorth.toLocaleString()}\n📊 Credit Score: ${metrics.creditScore}\n🏦 Retirement: $${metrics.retirementBalance.toLocaleString()}\n\nPlay at finsim.app`;
@@ -59,7 +73,9 @@ function DebriefContent() {
             <div className="w-2 h-2 rounded-full bg-[#F59E0B] dot-2" />
             <div className="w-2 h-2 rounded-full bg-[#F59E0B] dot-3" />
           </div>
-          <p className="text-[#6B6B6B] text-sm">Analyzing your financial journey...</p>
+          <p className="text-[#6B6B6B] text-sm">
+            Analyzing your financial journey...
+          </p>
         </div>
       </div>
     );
@@ -130,13 +146,18 @@ function DebriefContent() {
                 metrics.creditScore >= 700
                   ? "#10B981"
                   : metrics.creditScore >= 600
-                  ? "#F59E0B"
-                  : "#EF4444",
+                    ? "#F59E0B"
+                    : "#EF4444",
             },
             {
               label: "Total Debt",
               value: `$${metrics.totalDebt.toLocaleString()}`,
-              color: metrics.totalDebt === 0 ? "#10B981" : metrics.totalDebt < 20000 ? "#F59E0B" : "#EF4444",
+              color:
+                metrics.totalDebt === 0
+                  ? "#10B981"
+                  : metrics.totalDebt < 20000
+                    ? "#F59E0B"
+                    : "#EF4444",
             },
             {
               label: "Retirement",
@@ -158,7 +179,9 @@ function DebriefContent() {
               >
                 {stat.value}
               </div>
-              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest">{stat.label}</div>
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest">
+                {stat.label}
+              </div>
             </div>
           ))}
         </div>
@@ -171,7 +194,9 @@ function DebriefContent() {
           >
             Your Path vs Optimal Path
           </h2>
-          <p className="text-[11px] text-[#6B6B6B] mb-6">Net worth progression across 10 rounds</p>
+          <p className="text-[11px] text-[#6B6B6B] mb-6">
+            Net worth progression across 10 rounds
+          </p>
           <NetWorthChart data={debrief.netWorthProgression} />
         </div>
 
@@ -183,19 +208,27 @@ function DebriefContent() {
           >
             Decision Breakdown
           </h2>
-          <p className="text-[11px] text-[#6B6B6B] mb-6">What you chose vs. the optimal play</p>
+          <p className="text-[11px] text-[#6B6B6B] mb-6">
+            What you chose vs. the optimal play
+          </p>
 
           <div className="space-y-2">
             {debrief.optimalPath.map((item) => (
               <div
                 key={item.round}
                 className="grid grid-cols-[32px_1fr_1fr] gap-3 items-center py-2.5 px-3 rounded-lg"
-                style={{ background: item.match ? "rgba(16,185,129,0.04)" : "rgba(239,68,68,0.04)" }}
+                style={{
+                  background: item.match
+                    ? "rgba(16,185,129,0.04)"
+                    : "rgba(239,68,68,0.04)",
+                }}
               >
                 <div
                   className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0"
                   style={{
-                    background: item.match ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)",
+                    background: item.match
+                      ? "rgba(16,185,129,0.12)"
+                      : "rgba(239,68,68,0.12)",
                     color: item.match ? "#10B981" : "#EF4444",
                     border: `1px solid ${item.match ? "rgba(16,185,129,0.25)" : "rgba(239,68,68,0.25)"}`,
                   }}
@@ -203,7 +236,9 @@ function DebriefContent() {
                   {item.round}
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">You chose</div>
+                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">
+                    You chose
+                  </div>
                   <div
                     className="text-[12px] font-medium"
                     style={{ color: item.match ? "#10B981" : "#EF4444" }}
@@ -212,8 +247,12 @@ function DebriefContent() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">Optimal</div>
-                  <div className="text-[12px] font-medium text-[#A1A1A1]">{item.optimal}</div>
+                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">
+                    Optimal
+                  </div>
+                  <div className="text-[12px] font-medium text-[#A1A1A1]">
+                    {item.optimal}
+                  </div>
                 </div>
               </div>
             ))}
@@ -221,7 +260,9 @@ function DebriefContent() {
 
           {/* Match rate */}
           <div className="mt-4 pt-4 border-t border-[#1F1F1F] flex items-center justify-between">
-            <span className="text-[11px] text-[#6B6B6B]">Optimal decisions matched</span>
+            <span className="text-[11px] text-[#6B6B6B]">
+              Optimal decisions matched
+            </span>
             <div className="flex items-center gap-2">
               <div className="w-32 h-1.5 rounded-full bg-[#1F1F1F] overflow-hidden">
                 <div
@@ -241,7 +282,10 @@ function DebriefContent() {
 
         {/* Report card */}
         <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
-          <h2 className="font-bold text-[#F5F5F5] mb-1" style={{ fontFamily: "var(--font-display)" }}>
+          <h2
+            className="font-bold text-[#F5F5F5] mb-1"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             Financial Report Card
           </h2>
           <p className="text-[11px] text-[#6B6B6B] mb-6">
@@ -249,32 +293,47 @@ function DebriefContent() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
-              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Resilience</div>
-              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{Math.round(100 - metrics.stressIndex)}/100</div>
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">
+                Resilience
+              </div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
+                {Math.round(100 - metrics.stressIndex)}/100
+              </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Emergency cash buffer and stress profile after 10 rounds.
               </div>
             </div>
             <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
-              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Debt Fitness</div>
-              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{Math.max(0, 100 - Math.round(metrics.debtToIncome))}/100</div>
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">
+                Debt Fitness
+              </div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
+                {Math.max(0, 100 - Math.round(metrics.debtToIncome))}/100
+              </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Derived from debt-to-income and total debt load at finish.
               </div>
             </div>
             <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
-              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Decision Quality</div>
-              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{matchRate}/100</div>
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">
+                Decision Quality
+              </div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
+                {matchRate}/100
+              </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Proxy from optimal-path alignment in this mock debrief.
               </div>
             </div>
           </div>
           <div className="mt-4 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
-            <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-1">Macro Conditions At Finish</div>
+            <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-1">
+              Macro Conditions At Finish
+            </div>
             <div className="text-sm text-[#D1D1D1]">
-              Inflation: {(metrics.inflationAnnual * 100).toFixed(1)}% · Recession risk:{" "}
-              {(metrics.recessionProbAnnual * 100).toFixed(1)}% ({macroRiskLabel})
+              Inflation: {(metrics.inflationAnnual * 100).toFixed(1)}% ·
+              Recession risk: {(metrics.recessionProbAnnual * 100).toFixed(1)}%
+              ({macroRiskLabel})
             </div>
           </div>
         </div>
@@ -306,14 +365,26 @@ function DebriefContent() {
             {copied ? (
               <>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 7L5.5 10.5L12 3" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M2 7L5.5 10.5L12 3"
+                    stroke="#10B981"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Copied!
               </>
             ) : (
               <>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M10 4H4v7h6V4ZM8 2H2v7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M10 4H4v7h6V4ZM8 2H2v7"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Share Result
               </>

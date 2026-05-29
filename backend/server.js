@@ -11,7 +11,7 @@ const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-const {connectDB} = require("./src/utils/dbConnection");
+const { connectDB } = require("./src/utils/dbConnection");
 const Auth = require("./src/controllers/auth");
 
 const app = express();
@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(express.json());

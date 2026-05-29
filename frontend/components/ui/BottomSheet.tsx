@@ -54,7 +54,10 @@ export function BottomSheet({
             onClick={onClose}
             className="fixed inset-0 z-40 bg-black/60"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: reduced ? 0 : 0.16 } }}
+            animate={{
+              opacity: 1,
+              transition: { duration: reduced ? 0 : 0.16 },
+            }}
             exit={{ opacity: 0, transition: { duration: reduced ? 0 : 0.12 } }}
           />
 
@@ -68,13 +71,24 @@ export function BottomSheet({
             animate={{
               y: 0,
               opacity: 1,
-              transition: { type: reduced ? "tween" : "spring", damping: 26, stiffness: 260 },
+              transition: {
+                type: reduced ? "tween" : "spring",
+                damping: 26,
+                stiffness: 260,
+              },
             }}
-            exit={{ y: 40, opacity: 0.9, transition: { duration: reduced ? 0 : 0.16 } }}
+            exit={{
+              y: 40,
+              opacity: 0.9,
+              transition: { duration: reduced ? 0 : 0.16 },
+            }}
           >
             <div className="rounded-t-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[0_-18px_60px_rgba(0,0,0,0.55)]">
               <div className="px-4 pt-3 pb-2">
-                <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/10" aria-hidden="true" />
+                <div
+                  className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/10"
+                  aria-hidden="true"
+                />
                 <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <h2
@@ -85,7 +99,10 @@ export function BottomSheet({
                       {title}
                     </h2>
                     {description ? (
-                      <p id={descId} className="mt-1 text-[11px] text-[color:var(--color-text-muted)]">
+                      <p
+                        id={descId}
+                        className="mt-1 text-[11px] text-[color:var(--color-text-muted)]"
+                      >
                         {description}
                       </p>
                     ) : null}
@@ -102,7 +119,9 @@ export function BottomSheet({
                 </div>
               </div>
 
-              <div className="max-h-[70vh] overflow-y-auto px-4 pb-6 pt-2">{children}</div>
+              <div className="max-h-[70vh] overflow-y-auto px-4 pb-6 pt-2">
+                {children}
+              </div>
             </div>
           </motion.section>
         </>
@@ -110,4 +129,3 @@ export function BottomSheet({
     </AnimatePresence>
   );
 }
-

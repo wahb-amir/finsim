@@ -14,7 +14,13 @@ type Props = {
   onChoose: (choice: ChoiceId) => void;
 };
 
-export function SwipeDecisionCard({ event, selectedChoice = null, disabled, reducedMotionOverride, onChoose }: Props) {
+export function SwipeDecisionCard({
+  event,
+  selectedChoice = null,
+  disabled,
+  reducedMotionOverride,
+  onChoose,
+}: Props) {
   const reduced = useReducedMotion() || !!reducedMotionOverride;
   const [hint, setHint] = React.useState<"left" | "right" | null>(null);
 
@@ -133,7 +139,10 @@ export function SwipeDecisionCard({ event, selectedChoice = null, disabled, redu
               </div>
               <ul className="mt-2 space-y-1">
                 {event.left.bullets.map((b, i) => (
-                  <li key={i} className="text-[11px] leading-snug text-[color:var(--color-text-secondary)]">
+                  <li
+                    key={i}
+                    className="text-[11px] leading-snug text-[color:var(--color-text-secondary)]"
+                  >
                     <span className="mr-2 inline-block h-1 w-1 rounded-full bg-white/25 align-middle" />
                     {b}
                   </li>
@@ -168,7 +177,10 @@ export function SwipeDecisionCard({ event, selectedChoice = null, disabled, redu
               </div>
               <ul className="mt-2 space-y-1">
                 {event.right.bullets.map((b, i) => (
-                  <li key={i} className="text-[11px] leading-snug text-[color:var(--color-text-secondary)]">
+                  <li
+                    key={i}
+                    className="text-[11px] leading-snug text-[color:var(--color-text-secondary)]"
+                  >
                     <span className="mr-2 inline-block h-1 w-1 rounded-full bg-white/25 align-middle" />
                     {b}
                   </li>
@@ -204,4 +216,3 @@ export function SwipeDecisionCard({ event, selectedChoice = null, disabled, redu
     </div>
   );
 }
-

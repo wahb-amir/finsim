@@ -45,7 +45,9 @@ export function AdvisorPanel({ round, metrics }) {
         typeMessage(msg);
       } catch {
         setIsLoading(false);
-        typeMessage("What does this decision say about how you value security versus growth?");
+        typeMessage(
+          "What does this decision say about how you value security versus growth?",
+        );
       }
     };
     loadMessage();
@@ -82,7 +84,10 @@ export function AdvisorPanel({ round, metrics }) {
         <div className="relative">
           <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1L8.5 5H13L9.5 7.5L11 12L7 9.5L3 12L4.5 7.5L1 5H5.5L7 1Z" fill="#F59E0B" />
+              <path
+                d="M7 1L8.5 5H13L9.5 7.5L11 12L7 9.5L3 12L4.5 7.5L1 5H5.5L7 1Z"
+                fill="#F59E0B"
+              />
             </svg>
           </div>
         </div>
@@ -135,9 +140,13 @@ export function AdvisorPanel({ round, metrics }) {
             {followUpResponse && (
               <div className="flex gap-2">
                 <div className="w-5 h-5 rounded flex-shrink-0 mt-0.5 bg-[#F59E0B]/10 border border-[#F59E0B]/20 flex items-center justify-center">
-                  <span className="text-[8px] text-[#F59E0B] font-bold">AI</span>
+                  <span className="text-[8px] text-[#F59E0B] font-bold">
+                    AI
+                  </span>
                 </div>
-                <p className="text-[12px] leading-relaxed text-[#D1D1D1]">{followUpResponse}</p>
+                <p className="text-[12px] leading-relaxed text-[#D1D1D1]">
+                  {followUpResponse}
+                </p>
               </div>
             )}
           </div>
