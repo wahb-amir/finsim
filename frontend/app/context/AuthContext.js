@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/me`, {
         method: 'GET',
         credentials: 'include',
         headers: {
