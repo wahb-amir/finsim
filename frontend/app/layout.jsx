@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
   title: "FinSim — Live 10 Years in 15 Minutes",
@@ -17,15 +18,19 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
+
       <body className="bg-[#0A0A0A] text-[#F5F5F5]">
         <AppProviders>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-[#F59E0B] text-black rounded font-medium"
-          >
-            Skip to main content
-          </a>
-          <main id="main-content">{children}</main>
+          <AuthProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-[#F59E0B] text-black rounded font-medium"
+            >
+              Skip to main content
+            </a>
+
+            <main id="main-content">{children}</main>
+          </AuthProvider>
         </AppProviders>
       </body>
     </html>
