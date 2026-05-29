@@ -1,14 +1,11 @@
 const express = require("express");
 const User = require("../Models/auth");
 const bcrypt = require("bcryptjs");
-const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
