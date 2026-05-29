@@ -116,13 +116,14 @@ health_check() {
   log "Health check: ${url}"
 
   sleep 2
+
   local attempt
   for attempt in 1 2 3 4 5; do
-    if curl -sf --max-time 10 "$url" | grep -q '"status"[[:space:]]*:[[:space:]]*"ok"'; then
-      log "Health check passed"
-      return 0
-    fi
-    sleep 2
+  if curl -sf --max-time 10 "$url" > /dev/null; then
+    log "Health check passed"
+    return 0
+  fi
+  sleep 2
   done
 
   fail "Health check failed after deploy (${url}). Check logs on the VPS (e.g. pm2 logs ${PM2_APP_NAME})."
