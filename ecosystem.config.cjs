@@ -1,10 +1,9 @@
-/** PM2 process file — run from repository root on the VPS. */
 module.exports = {
   apps: [
     {
       name: "finsim-api",
-      cwd: "./backend",
-      script: "src/index.js",
+      cwd: "/root/finsim/backend",
+      script: "server.js",
       instances: 1,
       exec_mode: "fork",
       autorestart: true,
@@ -13,7 +12,8 @@ module.exports = {
       watch: false,
       env: {
         NODE_ENV: "production",
-      },
-    },
-  ],
+        PORT: 8081
+      }
+    }
+  ]
 };
