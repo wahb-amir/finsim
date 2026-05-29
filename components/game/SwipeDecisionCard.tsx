@@ -8,12 +8,13 @@ import type { EventCard, ChoiceId } from "@/lib/sim";
 
 type Props = {
   event: EventCard;
+  selectedChoice?: ChoiceId | null;
   disabled?: boolean;
   reducedMotionOverride?: boolean;
   onChoose: (choice: ChoiceId) => void;
 };
 
-export function SwipeDecisionCard({ event, disabled, reducedMotionOverride, onChoose }: Props) {
+export function SwipeDecisionCard({ event, selectedChoice = null, disabled, reducedMotionOverride, onChoose }: Props) {
   const reduced = useReducedMotion() || !!reducedMotionOverride;
   const [hint, setHint] = React.useState<"left" | "right" | null>(null);
 
@@ -107,10 +108,25 @@ export function SwipeDecisionCard({ event, disabled, reducedMotionOverride, onCh
           <div className="grid grid-cols-2 gap-3">
             <div
               className={`rounded-lg border p-3 transition ${
-                hint === "left"
-                  ? "border-[color:var(--color-amber)]/30 bg-[color:var(--color-amber)]/10"
-                  : "border-white/10 bg-white/5"
-              }`}
+                selectedChoice === "left"
+                  ? "border-[color:var(--color-amber)]/60 bg-[color:var(--color-amber)]/25"
+                  : hint === "left"
+                    ? "border-[color:var(--color-amber)]/30 bg-[color:var(--color-amber)]/10"
+                    : "border-white/10 bg-white/5"
+              } ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer hover:border-[color:var(--color-amber)]/30"}`}
+              role="button"
+              tabIndex={disabled ? -1 : 0}
+              onClick={() => {
+                if (!disabled) onChoose("left");
+              }}
+              onKeyDown={(e) => {
+                if (disabled) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onChoose("left");
+                }
+              }}
+              aria-label="Choose left option"
             >
               <div className="text-[11px] font-semibold text-[color:var(--color-text-primary)]">
                 {event.left.title}
@@ -127,10 +143,25 @@ export function SwipeDecisionCard({ event, disabled, reducedMotionOverride, onCh
 
             <div
               className={`rounded-lg border p-3 transition ${
-                hint === "right"
-                  ? "border-[color:var(--color-amber)]/30 bg-[color:var(--color-amber)]/10"
-                  : "border-white/10 bg-white/5"
-              }`}
+                selectedChoice === "right"
+                  ? "border-[color:var(--color-amber)]/60 bg-[color:var(--color-amber)]/25"
+                  : hint === "right"
+                    ? "border-[color:var(--color-amber)]/30 bg-[color:var(--color-amber)]/10"
+                    : "border-white/10 bg-white/5"
+              } ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer hover:border-[color:var(--color-amber)]/30"}`}
+              role="button"
+              tabIndex={disabled ? -1 : 0}
+              onClick={() => {
+                if (!disabled) onChoose("right");
+              }}
+              onKeyDown={(e) => {
+                if (disabled) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onChoose("right");
+                }
+              }}
+              aria-label="Choose right option"
             >
               <div className="text-[11px] font-semibold text-[color:var(--color-text-primary)]">
                 {event.right.title}

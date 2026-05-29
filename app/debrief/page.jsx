@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { GameProvider, useGame } from "@/context/GameContext";
+import { useGame } from "@/context/GameContext";
 import { getFinalDebrief, MOCK_DEBRIEF } from "@/lib/api";
 import dynamic from "next/dynamic";
 
@@ -10,12 +10,14 @@ const NetWorthChart = dynamic(() => import("@/components/ui/NetWorthChart"), { s
 
 function DebriefContent() {
   const router = useRouter();
-  const { playerName, metrics, roundHistory, debriefData, setDebriefData, resetGame } = useGame();
+  const { playerName, metrics, roundHistory, debriefData, setDebriefData, resetGame, scenarioId } = useGame();
   const [isLoading, setIsLoading] = useState(!debriefData);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!debriefData) {
+      // TODO: Replace mock debrief call with streamed LLM-generated analysis
+      // using full round history + final simulation state.
       getFinalDebrief(roundHistory, metrics).then((data) => {
         setDebriefData(data);
         setIsLoading(false);
@@ -24,8 +26,16 @@ function DebriefContent() {
   }, [debriefData, roundHistory, metrics, setDebriefData]);
 
   const debrief = debriefData || MOCK_DEBRIEF;
-  const netWorth = metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt;
+  const netWorth = metrics.netWorth ?? (metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt);
   const isPositive = netWorth >= 0;
+  const optimalMatches = debrief.optimalPath.filter((x) => x.match).length;
+  const matchRate = Math.round((optimalMatches / debrief.optimalPath.length) * 100);
+  const macroRiskLabel =
+    metrics.recessionProbAnnual > 0.26
+      ? "High"
+      : metrics.recessionProbAnnual > 0.18
+      ? "Medium"
+      : "Low";
 
   const handleShare = () => {
     const text = `🎮 FinSim Result — ${playerName || "Anonymous"}\n💰 Net Worth: $${netWorth.toLocaleString()}\n📊 Credit Score: ${metrics.creditScore}\n🏦 Retirement: $${metrics.retirementBalance.toLocaleString()}\n\nPlay at finsim.app`;
@@ -223,8 +233,48 @@ function DebriefContent() {
                 />
               </div>
               <span className="text-[12px] font-bold text-[#10B981]">
-                {debrief.optimalPath.filter((x) => x.match).length}/{debrief.optimalPath.length}
+                {optimalMatches}/{debrief.optimalPath.length}
               </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Report card */}
+        <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
+          <h2 className="font-bold text-[#F5F5F5] mb-1" style={{ fontFamily: "var(--font-display)" }}>
+            Financial Report Card
+          </h2>
+          <p className="text-[11px] text-[#6B6B6B] mb-6">
+            Scenario: {scenarioId} · Generated from final simulation metrics
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Resilience</div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{Math.round(100 - metrics.stressIndex)}/100</div>
+              <div className="text-[12px] text-[#A1A1A1]">
+                Emergency cash buffer and stress profile after 10 rounds.
+              </div>
+            </div>
+            <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Debt Fitness</div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{Math.max(0, 100 - Math.round(metrics.debtToIncome))}/100</div>
+              <div className="text-[12px] text-[#A1A1A1]">
+                Derived from debt-to-income and total debt load at finish.
+              </div>
+            </div>
+            <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">Decision Quality</div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{matchRate}/100</div>
+              <div className="text-[12px] text-[#A1A1A1]">
+                Proxy from optimal-path alignment in this mock debrief.
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
+            <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-1">Macro Conditions At Finish</div>
+            <div className="text-sm text-[#D1D1D1]">
+              Inflation: {(metrics.inflationAnnual * 100).toFixed(1)}% · Recession risk:{" "}
+              {(metrics.recessionProbAnnual * 100).toFixed(1)}% ({macroRiskLabel})
             </div>
           </div>
         </div>
@@ -276,9 +326,5 @@ function DebriefContent() {
 }
 
 export default function DebriefPage() {
-  return (
-    <GameProvider>
-      <DebriefContent />
-    </GameProvider>
-  );
+  return <DebriefContent />;
 }
