@@ -1,30 +1,32 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
-const path = require("path");
-const dbConnection = require("./src/utils/dbConnection")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const Auth = require("./src/controllers/auth");
 
-dotenv.config({
-  path: path.resolve(__dirname, ".env"),
-});
+const Auth = require("./src/controllers/auth");
+const {connectDB} = require("./src/utils/dbConnection");
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
 
-//Middleware
+const PORT = process.env.PORT || 5000;
+
+connectDB();
+
+// Middleware
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 
-//RateLimit
+// RateLimit
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -36,13 +38,10 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-//Mongoose
-dbConnection();
-
-//Routes
+// Routes
 app.use("/api/auth", limiter, Auth);
 
-//IMPORTANT: DON'T REMOVE THIS ROUTE , IT IS USED FOR CI HEALTH CHECK
+// Health check (CI)
 app.use("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -50,11 +49,7 @@ app.use("/api/health", (req, res) => {
   });
 });
 
-//Server Listen
-app.listen(PORT, (err)=>{
-    if(err){
-        console.err("❌❌ Server Can't Connnected");
-    } else{
-        console.log("✅✅ Server Connected")
-    }
-})
+// Server Listen
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
