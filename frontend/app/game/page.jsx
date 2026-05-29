@@ -193,6 +193,9 @@ function GameContent() {
             <div className="text-[11px] text-[#6B6B6B]">
               {roundData.year} · Round {currentRound} of 10
             </div>
+            <button className="mt-2 text-[16px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black
+            px-4 py-1 font-semibold rounded-[10px]"  onClick={()=>{router.push("/profile")}}>
+            Visit Profile</button>
           </div>
 
           <div className="space-y-1.5">
