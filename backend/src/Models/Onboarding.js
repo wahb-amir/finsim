@@ -1,24 +1,66 @@
-const onboardingSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+import mongoose from "mongoose";
 
-  currentStep: {
-    type: Number,
-    default: 0,
-  },
+const onboardingSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
 
-  answers: {
-    type: Object,
-    default: {},
-  },
+    financialProfile: {
+      archetype: {
+        type: String,
+        enum: ["variable-income", "lifestyle-creep", "paycheck-to-paycheck"],
+        required: function () {
+          return this.completed; // Required if onboarding is finished
+        },
+      },
+      confidenceLevel: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: function () {
+          return this.completed;
+        },
+      },
+      primaryGoal: {
+        type: String,
+        enum: ["avoid-debt", "build-wealth", "understand-basics"],
+        required: function () {
+          return this.completed;
+        },
+      },
+    },
 
-  completed: {
-    type: Boolean,
-    default: false,
+    // Funnel & State Tracking
+    currentStep: {
+      type: Number,
+      min: 1,
+      max: 3,
+      default: 1,
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+    completedAt: {
+      type: Date,
+    },
   },
+  {
+    timestamps: true, 
+  }
+);
 
-  completedAt: Date,
+// Pre-save hook to automatically manage the completedAt timestamp
+onboardingSchema.pre("save", function (next) {
+  if (this.isModified("completed") && this.completed) {
+    this.completedAt = new Date();
+  }
+  next();
 });
+
+const Onboarding = mongoose.models.Onboarding || mongoose.model("Onboarding", onboardingSchema);
+export default Onboarding;
