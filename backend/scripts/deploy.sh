@@ -99,8 +99,7 @@ verify_pm2() {
   pm2 describe "$PM2_APP_NAME" >/dev/null 2>&1 || fail "PM2 app '${PM2_APP_NAME}' is not registered."
 
   if ! pm2 status "$PM2_APP_NAME" 2>/dev/null | grep -qE 'online|│.*online'; then
-    pm2 logs "$PM2_APP_NAME" --lines 30 --nostream || true
-    fail "PM2 app '${PM2_APP_NAME}' is not online."
+    fail "PM2 app '${PM2_APP_NAME}' is not online. Check logs on the VPS (e.g. pm2 logs ${PM2_APP_NAME})."
   fi
   log "PM2 app is online"
 }
@@ -126,8 +125,7 @@ health_check() {
     sleep 2
   done
 
-  pm2 logs "$PM2_APP_NAME" --lines 40 --nostream || true
-  fail "Health check failed after deploy (${url})."
+  fail "Health check failed after deploy (${url}). Check logs on the VPS (e.g. pm2 logs ${PM2_APP_NAME})."
 }
 
 main() {
