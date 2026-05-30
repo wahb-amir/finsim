@@ -10,15 +10,15 @@ export type Scenario = {
   name: string;
   tagline: string;
   modifiers: {
-    wageGrowthAnnual: number; // baseline wage growth
-    inflationAnnual: number; // starting inflation
-    recessionProbAnnual: number; // baseline recession probability
-    layoffProbAnnual: number;
-    burnoutDriftMonthly: number; // baseline burnout drift
+    wageGrowthAnnual: number;
+    inflationAnnual: number;
+    recessionProbAnnual: number;
+    layoffProbAnnual: number;      // now wired into event selection (fix #2)
+    burnoutDriftMonthly: number;
     restrictedCredit: boolean;
     remittanceMonthly: number;
     childcareMonthly: number;
-    healthcareRiskAnnual: number;
+    healthcareRiskAnnual: number;  // now wired into event selection (fix #2)
   };
   start: {
     ageYears: number;
@@ -35,7 +35,7 @@ export type Scenario = {
     investments: {
       taxable: number;
       retirement: number;
-      equity: number; // for founder mode
+      equity: number; // founder equity fraction — now wired into event selection (fix #2)
     };
   };
 };
@@ -113,7 +113,7 @@ export const SCENARIOS: readonly Scenario[] = [
       baseExpensesMonthly: 2200,
       creditScore: 640,
       debt: { kind: "none", balance: 0, apr: 0 },
-      investments: { taxable: 0, retirement: 0, equity: 0.006 }, // 0.6% fully diluted
+      investments: { taxable: 0, retirement: 0, equity: 0.006 }, // 0.6% fully diluted — drives equity events
     },
   },
   {
@@ -169,7 +169,7 @@ export const SCENARIOS: readonly Scenario[] = [
 ] as const;
 
 export function getScenario(id: ScenarioId): Scenario {
-  const s = SCENARIOS.find((x) => x.id === id);
+  const s = SCENARIOS.find(x => x.id === id);
   if (!s) throw new Error(`Unknown scenario: ${id}`);
   return s;
 }
