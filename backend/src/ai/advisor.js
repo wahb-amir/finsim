@@ -1,8 +1,5 @@
 /**
- * src/ai/advisor.js
- *
- * In-game Socratic advisor. Retrieves relevant chunks based on game state,
- * builds the prompt, streams a single Socratic question via Groq.
+ * In-game Socratic advisor — RAG + LLM, server-side context only.
  */
 
 const Groq = require("groq-sdk");
@@ -10,108 +7,120 @@ const { retrieve, formatChunksForPrompt } = require("../rag/retriever");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// ── Query builder — server-side only, never from user input ──────────────────
-
-function buildAdvisorQuery(round, metrics, choiceContext) {
-  const parts = [`Round ${round}: ${choiceContext.title}`];
-
-  if (metrics.creditCardDebt > 0)          parts.push("credit card debt compounding");
-  if (metrics.emergencyFundMonths < 3)      parts.push("insufficient emergency fund");
-  if (metrics.debtToIncome > 0.36)          parts.push("high debt-to-income ratio");
-  if (metrics.stressIndex > 65)             parts.push("high financial stress indicators");
-  if (!metrics.is401kActive)               parts.push("unclaimed employer 401k match");
-  if (metrics.investmentBalance === 0)      parts.push("no investment portfolio established");
-  if (metrics.creditScore && metrics.creditScore < 660) parts.push("low credit score impact");
-
-  parts.push(`career: ${metrics.careerLabel || "general"}`);
-  return parts.join(". ");
+function formatMistakes(mistakes) {
+  if (!mistakes?.length) return "None yet in this game.";
+  return mistakes
+    .map(
+      (m) =>
+        `R${m.round} "${m.title}": chose ${m.choiceMade} (optimal ${m.optimalChoice})${m.patternLabel ? ` — ${m.patternLabel}` : ""}`,
+    )
+    .join("\n");
 }
 
-// ── System prompt ─────────────────────────────────────────────────────────────
+function formatUserProfile(profile) {
+  if (!profile) return "No onboarding profile on file.";
+  const lines = [];
+  const { onboarding, pastGames } = profile;
 
-function buildSystemPrompt(chunks, metrics, round, choiceContext) {
-  return `You are FinSim Advisor — a financial educator who uses the Socratic method exclusively.
+  if (onboarding) {
+    lines.push(
+      `Archetype: ${onboarding.archetype}`,
+      `Confidence: ${onboarding.confidenceLevel}/5`,
+      `Primary goal: ${onboarding.primaryGoal}`,
+    );
+  }
 
-RULES (never break these):
-1. Never state the correct answer. Never say "you should" or "the right choice is."
-2. Ask exactly ONE question per response. Not two. Not a question with a follow-up.
-3. The question must be grounded in the player's actual current financial state.
-4. Use the retrieved context to make the question numerically precise where possible.
-5. Do not explain concepts. Ask a question that makes the player reason through it.
-6. If the player asks you a direct question, respond with a clarifying question instead.
-7. Never be encouraging or discouraging about choices already made. Stay future-facing.
-8. Tone: calm, intelligent, like a professor who has seen every financial mistake and holds none in contempt.
-9. Maximum response length: 2 sentences. One is better.
+  if (pastGames?.gamesCompleted > 0) {
+    lines.push(`Past games completed: ${pastGames.gamesCompleted}`);
+    if (pastGames.dominantPatternLabel) {
+      lines.push(`Recurring mistake pattern: ${pastGames.dominantPatternLabel}`);
+    }
+    if (pastGames.averageScore != null) {
+      lines.push(`Average debrief score: ${pastGames.averageScore}/1000`);
+    }
+  } else {
+    lines.push("First completed game pending — no cross-game history.");
+  }
 
-[CONTEXT — retrieved financial knowledge]
+  return lines.join("\n");
+}
+
+function buildSystemPrompt(chunks, context) {
+  const { round, metrics, choiceContext, currentMistakes, userProfile } = context;
+
+  return `You are FinSim Advisor — a Socratic financial educator inside a 10-round life simulation.
+
+RULES:
+- Ask exactly ONE thoughtful question. No answer reveals. Never say "you should" or name the correct option.
+- Ground the question in the player's real numbers and current decision.
+- If they made suboptimal choices earlier, reference the pattern — not the "right" pick.
+- Use retrieved knowledge for precision, not lectures.
+- Tone: calm, sharp, non-judgmental. Future-facing only.
+- Length: 2-3 sentences max (~200-250 tokens).
+
+[RETRIEVED KNOWLEDGE]
 ${formatChunksForPrompt(chunks)}
-[END CONTEXT]
 
-[PLAYER STATE]
-Round: ${round}
-Career: ${metrics.careerLabel || "N/A"}
+[CURRENT STATE — Round ${round}]
+Career: ${metrics.careerLabel || "N/A"} | Goal: ${metrics.goal || "N/A"}
 Net worth: $${metrics.netWorth?.toLocaleString() ?? "N/A"}
-Credit score: ${metrics.creditScore ?? "N/A"}
-Emergency fund: ${metrics.emergencyFundMonths ?? 0} months
-Total debt: $${metrics.totalDebt?.toLocaleString() ?? "0"}
-Monthly surplus: $${metrics.monthlySurplus?.toLocaleString() ?? "N/A"}
-Stress index: ${metrics.stressIndex ?? 0}/100
-Decision being considered: ${choiceContext.title}
-Option A: ${choiceContext.optionA}
-Option B: ${choiceContext.optionB}
-[END PLAYER STATE]`;
-}
+Credit: ${metrics.creditScore ?? "N/A"} | Debt: $${metrics.totalDebt?.toLocaleString() ?? "0"}
+Emergency fund: ${metrics.emergencyFundMonths ?? 0} mo | Surplus: $${metrics.monthlySurplus?.toLocaleString() ?? "N/A"}/mo
+Stress: ${metrics.stressIndex ?? 0}/100 | 401k active: ${metrics.is401kActive ? "yes" : "no"}
 
-// ── Main export — streams SSE tokens to Express response ─────────────────────
+[DECISION ON TABLE]
+${choiceContext.title}
+A: ${choiceContext.optionA}
+B: ${choiceContext.optionB}
+
+[SUBOPTIMAL CHOICES THIS GAME]
+${formatMistakes(currentMistakes)}
+
+[PLAYER PROFILE]
+${formatUserProfile(userProfile)}`;
+}
 
 /**
- * @param {object} params
- * @param {number} params.round
- * @param {object} params.metrics       - current game metrics from MongoDB
- * @param {object} params.choiceContext - { title, optionA, optionB }
- * @param {object} res                  - Express response object (SSE)
+ * Generate a single advisor insight from server-built context.
+ * @returns {Promise<{ message: string, sources: object[] }>}
  */
-async function streamAdvisorResponse({ round, metrics, choiceContext }, res) {
-  // 1. Build query from game state
-  const query = buildAdvisorQuery(round, metrics, choiceContext);
-
-  // 2. Retrieve relevant chunks with round + career pre-filtering
-  const chunks = await retrieve(query, {
-    topK:   5,
-    rounds: [round],
-    career: metrics.careerLabel || null,
+async function generateAdvisorResponse(context) {
+  const chunks = await retrieve(context.query, {
+    topK: 5,
+    rounds: [context.round],
+    career: context.career,
   });
 
-  // 3. Build prompt
-  const systemPrompt = buildSystemPrompt(chunks, metrics, round, choiceContext);
+  const systemPrompt = buildSystemPrompt(chunks, context);
 
-  // 4. Set SSE headers
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-  res.flushHeaders();
-
-  // 5. Stream from Groq
-  const stream = await groq.chat.completions.create({
-    model:       "llama-3.3-70b-versatile",
-    max_tokens:  120,
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    max_tokens: 250,
     temperature: 0.4,
-    stream:      true,
     messages: [
-      { role: "system",  content: systemPrompt },
-      { role: "user",    content: "What should I consider for this decision?" },
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content:
+          "Generate one Socratic question for the player about their current decision.",
+      },
     ],
   });
 
-  for await (const chunk of stream) {
-    const token = chunk.choices[0]?.delta?.content || "";
-    if (token) {
-      res.write(`data: ${JSON.stringify({ token })}\n\n`);
-    }
+  const message = completion.choices[0]?.message?.content?.trim();
+  if (!message) {
+    throw new Error("Advisor returned an empty response");
   }
 
-  res.write("data: [DONE]\n\n");
-  res.end();
+  return {
+    message,
+    sources: chunks.map((c) => ({
+      id: c.id,
+      source: c.source,
+      topic: c.topic,
+      similarity: c.similarity,
+    })),
+  };
 }
 
-module.exports = { streamAdvisorResponse };
+module.exports = { generateAdvisorResponse };

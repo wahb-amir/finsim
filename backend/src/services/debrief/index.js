@@ -227,6 +227,9 @@ function toPublicSession(session) {
   const doc = session.toObject ? session.toObject() : { ...session };
   delete doc.simState;
   delete doc.simSeed;
+  doc.advisorCallsUsed = doc.advisorCallsUsed || 0;
+  doc.advisorRemainingUses = Math.max(0, 4 - doc.advisorCallsUsed);
+  doc.advisorMessages = doc.advisorMessages || [];
   return doc;
 }
 

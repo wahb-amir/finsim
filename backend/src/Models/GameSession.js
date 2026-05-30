@@ -135,6 +135,18 @@ const gameSessionSchema = new mongoose.Schema(
     aiAdvice: { type: [mongoose.Schema.Types.Mixed], default: [] },
     /** When debrief generation finished (null until generated). */
     debriefGeneratedAt: { type: Date },
+
+    // ── In-game advisor (server-authoritative, max 4 calls per session) ───────
+    /** Number of advisor calls consumed this session (max 4). */
+    advisorCallsUsed: { type: Number, default: 0 },
+    /** History of advisor responses for this session. */
+    advisorMessages: [
+      {
+        round: { type: Number },
+        message: { type: String },
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true },
 );

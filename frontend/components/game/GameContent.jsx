@@ -48,6 +48,10 @@ export function GameContent() {
   const [toast, setToast] = useState(null);
   const [exiting, setExiting] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
+  const [advisorState, setAdvisorState] = useState({
+    advisorMessages: [],
+    advisorCallsUsed: 0,
+  });
 
   const showToast = useCallback((type, message) => {
     setToast({ type, message });
@@ -65,6 +69,21 @@ export function GameContent() {
     setGoal,
     showToast,
   });
+
+  useEffect(() => {
+    if (!session) return;
+    setAdvisorState({
+      advisorMessages: session.advisorMessages || [],
+      advisorCallsUsed: session.advisorCallsUsed || 0,
+    });
+  }, [session]);
+
+  const handleAdvisorUpdate = useCallback((payload) => {
+    setAdvisorState({
+      advisorMessages: payload.advisorMessages || [],
+      advisorCallsUsed: payload.advisorCallsUsed || 0,
+    });
+  }, []);
 
   const userName = user?.name || session?.playerName || playerName || "Player";
 
@@ -244,7 +263,13 @@ export function GameContent() {
         />
 
         <aside className="hidden lg:flex w-80 flex-shrink-0 border-l border-[#1A1A1A] flex-col p-4 bg-[#0A0A0A] overflow-hidden">
-          <AdvisorPanel round={currentRound} metrics={metrics} />
+          <AdvisorPanel
+            sessionId={sessionId}
+            round={currentRound}
+            advisorMessages={advisorState.advisorMessages}
+            advisorCallsUsed={advisorState.advisorCallsUsed}
+            onAdvisorUpdate={handleAdvisorUpdate}
+          />
         </aside>
       </div>
 
@@ -254,10 +279,16 @@ export function GameContent() {
         open={advisorOpen}
         onClose={() => setAdvisorOpen(false)}
         title="FinSim Advisor"
-        description="Reflect on this round and ask follow-up questions."
+        description="Ask for a Socratic question before you decide — up to 4 times per game."
       >
         <div className="h-[56vh] min-h-[340px]">
-          <AdvisorPanel round={currentRound} metrics={metrics} />
+          <AdvisorPanel
+            sessionId={sessionId}
+            round={currentRound}
+            advisorMessages={advisorState.advisorMessages}
+            advisorCallsUsed={advisorState.advisorCallsUsed}
+            onAdvisorUpdate={handleAdvisorUpdate}
+          />
         </div>
       </BottomSheet>
     </div>

@@ -10,6 +10,7 @@ const {
   listSessions,
   userData
 } = require("../controller/game");
+const { requestAdvisor } = require("../controller/advisor");
 
 // POST /api/game/session          — start a new game session
 router.post("/session",            authMiddleware, createSession);
@@ -19,6 +20,9 @@ router.post("/session/round",      authMiddleware, submitRound);
 
 // POST /api/game/session/:id/abandon — exit game; preserves session data
 router.post("/session/:id/abandon", authMiddleware, abandonSession);
+
+// POST /api/game/session/:id/advisor — on-demand Socratic advisor (max 4/game)
+router.post("/session/:id/advisor", authMiddleware, requestAdvisor);
 
 // GET  /api/game/session/:id/debrief — lazy-generate + return debrief payload
 router.get("/session/:id/debrief", authMiddleware, getSessionDebrief);

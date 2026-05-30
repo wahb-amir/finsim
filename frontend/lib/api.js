@@ -446,11 +446,32 @@ export async function submitChoice(round, choiceId, currentMetrics) {
 }
 
 /**
+ * Request an on-demand advisor insight for the current game session.
+ * Server builds all context from game state — only sessionId is sent.
+ */
+export async function requestAdvisor(sessionId) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/game/session/${sessionId}/advisor`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  const data = await res.json();
+  if (!res.ok || !data?.success) {
+    throw new Error(data?.message || "Advisor request failed");
+  }
+  return data;
+}
+
+/**
  * Get advisor's Socratic question for current round
- * TODO: Replace with real AI call (WebSocket or SSE)
+ * @deprecated Use requestAdvisor(sessionId) — advisor is on-demand, server-authoritative
  */
 export async function getAdvisorMessage(round, metrics, flags) {
-  console.log("[getAdvisorMessage]", { round, metrics, flags });
+  console.warn("[getAdvisorMessage] deprecated — use requestAdvisor(sessionId)");
   await new Promise((r) => setTimeout(r, 800));
   return MOCK_ADVISOR_MESSAGES[(round - 1) % MOCK_ADVISOR_MESSAGES.length];
 }

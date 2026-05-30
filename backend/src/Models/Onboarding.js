@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const onboardingSchema = new mongoose.Schema(
   {
@@ -62,5 +62,5 @@ onboardingSchema.pre("save", function (next) {
   next();
 });
 
-const Onboarding = mongoose.models.Onboarding || mongoose.model("Onboarding", onboardingSchema);
-export default Onboarding;
+module.exports =
+  mongoose.models.Onboarding || mongoose.model("Onboarding", onboardingSchema);
