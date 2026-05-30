@@ -424,115 +424,115 @@ const Profile = () => {
             </button>
           </div>
 
-        <div
-          className="grid grid-cols-[1fr_auto] items-start gap-8 mb-10 p-8 bg-[#111111] border border-[#1f1f1f] rounded-2xl relative overflow-hidden animate-fade-in-up"
-          style={{
-            animationDelay: "60ms",
-            background:
-              "radial-gradient(ellipse at top right, rgba(245,158,11,0.05) 0%, #111111 60%)",
-          }}
-        >
-          <div className="flex flex-col gap-1.5">
-            <div
-              className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[#6b6b6b] mb-1"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
-            >
-              Welcome back
+          <div
+            className="grid grid-cols-[1fr_auto] items-start gap-8 mb-10 p-8 bg-[#111111] border border-[#1f1f1f] rounded-2xl relative overflow-hidden animate-fade-in-up"
+            style={{
+              animationDelay: "60ms",
+              background:
+                "radial-gradient(ellipse at top right, rgba(245,158,11,0.05) 0%, #111111 60%)",
+            }}
+          >
+            <div className="flex flex-col gap-1.5">
+              <div
+                className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[#6b6b6b] mb-1"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              >
+                Welcome back
+              </div>
+
+              {userLoading ? (
+                <div className="flex items-center gap-2 text-[#6b6b6b] text-sm py-1">
+                  <span className="spin inline-block w-4 h-4 rounded-full border-2 border-[#2a2a2a] border-t-amber-400" />
+                  Loading profile…
+                </div>
+              ) : (
+                <>
+                  <div
+                    className="font-display text-[2.2rem] font-extrabold tracking-[-0.03em] leading-none"
+                    style={{ fontFamily: "'Syne', sans-serif" }}
+                  >
+                    {user?.name ?? "Guest User"}
+                  </div>
+                  <div className="text-[0.82rem] text-[#6b6b6b] font-light mt-1 tracking-[0.01em]">
+                    {user?.email ?? "Not authenticated"}
+                  </div>
+                </>
+              )}
+
+              <div
+                className="inline-flex items-center gap-1.5 bg-emerald-500/8 border border-emerald-500/20 text-emerald-400 text-[0.72rem] px-3 py-1.5 rounded-full mt-2 w-fit font-mono"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              >
+                <span className="status-dot w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                Active Session
+              </div>
             </div>
 
-            {userLoading ? (
-              <div className="flex items-center gap-2 text-[#6b6b6b] text-sm py-1">
-                <span className="spin inline-block w-4 h-4 rounded-full border-2 border-[#2a2a2a] border-t-amber-400" />
-                Loading profile…
-              </div>
-            ) : (
-              <>
-                <div
-                  className="font-display text-[2.2rem] font-extrabold tracking-[-0.03em] leading-none"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
-                >
-                  {user?.name ?? "Guest User"}
-                </div>
-                <div className="text-[0.82rem] text-[#6b6b6b] font-light mt-1 tracking-[0.01em]">
-                  {user?.email ?? "Not authenticated"}
-                </div>
-              </>
-            )}
-
             <div
-              className="inline-flex items-center gap-1.5 bg-emerald-500/8 border border-emerald-500/20 text-emerald-400 text-[0.72rem] px-3 py-1.5 rounded-full mt-2 w-fit font-mono"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              className="w-[80px] h-[80px] bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-display text-[1.6rem] font-extrabold text-[#0a0a0a] flex-shrink-0"
+              style={{ fontFamily: "'Syne', sans-serif" }}
             >
-              <span className="status-dot w-1.5 h-1.5 bg-emerald-400 rounded-full" />
-              Active Session
+              {userLoading ? "·" : getInitials(user?.name ?? "Guest User")}
             </div>
           </div>
 
           <div
-            className="w-[80px] h-[80px] bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-display text-[1.6rem] font-extrabold text-[#0a0a0a] flex-shrink-0"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-[#6b6b6b] mb-4 animate-fade-in-up"
+            style={{
+              animationDelay: "140ms",
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
           >
-            {userLoading ? "·" : getInitials(user?.name ?? "Guest User")}
+            Game Overview
           </div>
-        </div>
-
-        <div
-          className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-[#6b6b6b] mb-4 animate-fade-in-up"
-          style={{
-            animationDelay: "140ms",
-            fontFamily: "'JetBrains Mono', monospace",
-          }}
-        >
-          Game Overview
-        </div>
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          {metrics.map((m) => (
-            <MetricCard key={m.label} {...m} />
-          ))}
-        </div>
-
-        <div
-          className="bg-[#111111] border border-[#1f1f1f] rounded-xl p-5 animate-fade-in-up"
-          style={{ animationDelay: "560ms", animationFillMode: "both" }}
-        >
-          <div className="flex items-center justify-between mb-5">
-            <div
-              className="font-display text-[0.95rem] font-bold tracking-[-0.01em]"
-              style={{ fontFamily: "'Syne', sans-serif" }}
-            >
-              Game Sessions
-            </div>
-            <div
-              className="font-mono text-[0.65rem] text-[#6b6b6b] bg-[#1c1c1c] border border-[#1f1f1f] px-2 py-0.5 rounded"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
-            >
-              {gameData.length} total
-            </div>
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {metrics.map((m) => (
+              <MetricCard key={m.label} {...m} />
+            ))}
           </div>
 
-          {gameLoading ? (
-            <div className="flex items-center gap-2 text-[#6b6b6b] text-sm py-6 justify-center">
-              <span className="spin w-4 h-4 rounded-full border-2 border-[#2a2a2a] border-t-amber-400 inline-block" />
-              Loading sessions…
-            </div>
-          ) : gameData.length === 0 ? (
-            <div className="text-center py-10">
-              <div className="text-[#6b6b6b] text-[0.82rem]">
-                No game sessions yet.
+          <div
+            className="bg-[#111111] border border-[#1f1f1f] rounded-xl p-5 animate-fade-in-up"
+            style={{ animationDelay: "560ms", animationFillMode: "both" }}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <div
+                className="font-display text-[0.95rem] font-bold tracking-[-0.01em]"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+              >
+                Game Sessions
               </div>
-              <div className="font-mono text-[0.7rem] text-[#3a3a3a] mt-1">
-                Start your first game to see data here.
+              <div
+                className="font-mono text-[0.65rem] text-[#6b6b6b] bg-[#1c1c1c] border border-[#1f1f1f] px-2 py-0.5 rounded"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              >
+                {gameData.length} total
               </div>
             </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {gameData.map((session, i) => (
-                <SessionRow key={session._id} session={session} index={i} />
-              ))}
-            </div>
-          )}
+
+            {gameLoading ? (
+              <div className="flex items-center gap-2 text-[#6b6b6b] text-sm py-6 justify-center">
+                <span className="spin w-4 h-4 rounded-full border-2 border-[#2a2a2a] border-t-amber-400 inline-block" />
+                Loading sessions…
+              </div>
+            ) : gameData.length === 0 ? (
+              <div className="text-center py-10">
+                <div className="text-[#6b6b6b] text-[0.82rem]">
+                  No game sessions yet.
+                </div>
+                <div className="font-mono text-[0.7rem] text-[#3a3a3a] mt-1">
+                  Start your first game to see data here.
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {gameData.map((session, i) => (
+                  <SessionRow key={session._id} session={session} index={i} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

@@ -131,16 +131,16 @@ frontend/
 
 ## Routes & user flows
 
-| Route          | File                      | Auth | What happens                                              |
-| -------------- | ------------------------- | ---- | --------------------------------------------------------- |
-| `/`            | `app/page.jsx`            | No   | Marketing landing                                         |
-| `/auth`        | `app/auth/page.jsx`       | No   | Register or log in → redirect to `/dashboard`             |
-| `/dashboard`   | `app/dashboard/page.jsx`  | Yes  | List sessions, resume active, start new                   |
-| `/setup`       | `app/setup/page.jsx`      | Yes  | Pick career, salary, goal, climate → `POST /game/session` |
-| `/game`        | `app/game/page.jsx`       | Yes  | Play rounds; `?sessionId=` or localStorage fallback         |
-| `/debrief`     | `app/debrief/page.jsx`    | Yes  | Fetch debrief; `?sessionId=` required                     |
-| `/profile`     | `app/profile/page.jsx`    | Yes  | User stats from `/game/sessions/userData`                   |
-| `/leaderboard` | `app/leaderboard/page.jsx`| No   | Uses `MOCK_LEADERBOARD` from `lib/api.js`                 |
+| Route          | File                       | Auth | What happens                                              |
+| -------------- | -------------------------- | ---- | --------------------------------------------------------- |
+| `/`            | `app/page.jsx`             | No   | Marketing landing                                         |
+| `/auth`        | `app/auth/page.jsx`        | No   | Register or log in → redirect to `/dashboard`             |
+| `/dashboard`   | `app/dashboard/page.jsx`   | Yes  | List sessions, resume active, start new                   |
+| `/setup`       | `app/setup/page.jsx`       | Yes  | Pick career, salary, goal, climate → `POST /game/session` |
+| `/game`        | `app/game/page.jsx`        | Yes  | Play rounds; `?sessionId=` or localStorage fallback       |
+| `/debrief`     | `app/debrief/page.jsx`     | Yes  | Fetch debrief; `?sessionId=` required                     |
+| `/profile`     | `app/profile/page.jsx`     | Yes  | User stats from `/game/sessions/userData`                 |
+| `/leaderboard` | `app/leaderboard/page.jsx` | No   | Uses `MOCK_LEADERBOARD` from `lib/api.js`                 |
 
 ### Typical new-player flow
 
@@ -213,17 +213,17 @@ Two React contexts, mounted in `app/layout.jsx`:
 
 Client-side **view state** only:
 
-| State field        | Purpose                                      |
-| ------------------ | -------------------------------------------- |
-| `playerName`       | Display name                                 |
-| `currentRound`     | Round indicator (1–10)                       |
-| `metrics`          | UI-shaped numbers from API                   |
-| `currentEvent`     | Event card (title, left/right options)       |
-| `currentNarrative` | Headline + advisor hint                      |
-| `selectedChoice`   | `"left"` or `"right"` before confirm         |
+| State field        | Purpose                                          |
+| ------------------ | ------------------------------------------------ |
+| `playerName`       | Display name                                     |
+| `currentRound`     | Round indicator (1–10)                           |
+| `metrics`          | UI-shaped numbers from API                       |
+| `currentEvent`     | Event card (title, left/right options)           |
+| `currentNarrative` | Headline + advisor hint                          |
+| `selectedChoice`   | `"left"` or `"right"` before confirm             |
 | `roundHistory`     | Client-side snapshots for UI (not authoritative) |
-| `advisorMessages`  | Display list (also persisted server-side)    |
-| `debriefData`      | Cached debrief payload                       |
+| `advisorMessages`  | Display list (also persisted server-side)        |
+| `debriefData`      | Cached debrief payload                           |
 
 Key actions: `hydrateGameView`, `selectChoice`, `recordRoundSnapshot`, `setDebriefData`, `resetGame`.
 
@@ -242,25 +242,27 @@ const res = await fetch(`${API}/game/session/${sessionId}`, {
   headers: { "Content-Type": "application/json" },
 });
 const data = await res.json();
-if (!res.ok || !data?.success) { /* handle error */ }
+if (!res.ok || !data?.success) {
+  /* handle error */
+}
 ```
 
 ### Endpoints used by the frontend
 
-| Feature           | Method | Path                              | Used in                    |
-| ------------------- | ------ | --------------------------------- | -------------------------- |
-| Auth check          | GET    | `/auth/me`                        | AuthContext                |
-| Register            | POST   | `/auth/signin`                    | auth/page                  |
-| Login               | POST   | `/auth/login`                     | auth/page                  |
-| Logout              | POST   | `/auth/logout`                    | AuthContext, profile       |
-| Create session      | POST   | `/game/session`                   | setup/page                 |
-| Submit choice       | POST   | `/game/session/round`             | GameContent                |
-| Load session        | GET    | `/game/session/:id`               | useGameSession             |
-| Abandon session     | POST   | `/game/session/:id/abandon`       | GameContent                |
-| Advisor             | POST   | `/game/session/:id/advisor`       | lib/api.js, AdvisorPanel   |
-| Debrief             | GET    | `/game/session/:id/debrief`       | debrief/page               |
-| List sessions       | GET    | `/game/sessions`                  | dashboard, setup           |
-| User stats          | GET    | `/game/sessions/userData`         | profile, dashboard         |
+| Feature         | Method | Path                        | Used in                  |
+| --------------- | ------ | --------------------------- | ------------------------ |
+| Auth check      | GET    | `/auth/me`                  | AuthContext              |
+| Register        | POST   | `/auth/signin`              | auth/page                |
+| Login           | POST   | `/auth/login`               | auth/page                |
+| Logout          | POST   | `/auth/logout`              | AuthContext, profile     |
+| Create session  | POST   | `/game/session`             | setup/page               |
+| Submit choice   | POST   | `/game/session/round`       | GameContent              |
+| Load session    | GET    | `/game/session/:id`         | useGameSession           |
+| Abandon session | POST   | `/game/session/:id/abandon` | GameContent              |
+| Advisor         | POST   | `/game/session/:id/advisor` | lib/api.js, AdvisorPanel |
+| Debrief         | GET    | `/game/session/:id/debrief` | debrief/page             |
+| List sessions   | GET    | `/game/sessions`            | dashboard, setup         |
+| User stats      | GET    | `/game/sessions/userData`   | profile, dashboard       |
 
 ### Legacy / mock layer (`lib/api.js`)
 
@@ -306,16 +308,16 @@ Still contains `MOCK_ROUNDS`, `MOCK_LEADERBOARD`, and `getFinalDebrief` for refe
 
 Defined in `app/globals.css` and used via Tailwind utility classes:
 
-| Token    | Value     | Usage                          |
-| -------- | --------- | ------------------------------ |
-| Base     | `#0A0A0A` | Page background                |
-| Surface  | `#111111` | Cards, panels                  |
-| Border   | `#1F1F1F` | Dividers                       |
-| Accent   | `#F59E0B` | Primary actions, active states |
-| Success  | `#10B981` | Positive metrics               |
-| Danger   | `#EF4444` | Crisis, errors                 |
-| Text     | `#F5F5F5` | Primary copy                   |
-| Muted    | `#A1A1A1` | Secondary copy                 |
+| Token   | Value     | Usage                          |
+| ------- | --------- | ------------------------------ |
+| Base    | `#0A0A0A` | Page background                |
+| Surface | `#111111` | Cards, panels                  |
+| Border  | `#1F1F1F` | Dividers                       |
+| Accent  | `#F59E0B` | Primary actions, active states |
+| Success | `#10B981` | Positive metrics               |
+| Danger  | `#EF4444` | Crisis, errors                 |
+| Text    | `#F5F5F5` | Primary copy                   |
+| Muted   | `#A1A1A1` | Secondary copy                 |
 
 **Fonts:** Syne (headings), DM Sans (body) — loaded in `layout.jsx`.
 
@@ -344,7 +346,7 @@ import { MetricCard } from "@/components/ui/MetricCard";
 3. **Auth redirects** — game and debrief pages redirect to `/auth` if `user` is null after loading.
 4. **Completed session guard** — `useGameSession` redirects completed sessions straight to debrief.
 5. **Adding a page** — create `app/your-route/page.jsx`, wrap with `AppNavbar` if authenticated, use `useAuth()` for gating.
-6. **Changing metrics display** — edit sidebar/panel components; metric *values* come from API field names in `metrics` object.
+6. **Changing metrics display** — edit sidebar/panel components; metric _values_ come from API field names in `metrics` object.
 7. **Testing advisor/debrief locally** — requires backend `GROQ_API_KEY` (and Supabase for RAG-enhanced advisor).
 
 For simulation rules, API contracts, and AI pipeline details, see [backend/README.md](../backend/README.md).

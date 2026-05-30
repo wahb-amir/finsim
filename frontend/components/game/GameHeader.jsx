@@ -9,10 +9,7 @@ export function GameHeader({
 }) {
   return (
     <header className="flex-shrink-0 h-12 border-b border-[#1A1A1A] flex items-center px-4 gap-4 bg-[#0A0A0A] z-30">
-      <BrandLogo
-        size="sm"
-        wordmarkClassName="text-[13px] font-bold"
-      />
+      <BrandLogo size="sm" wordmarkClassName="text-[13px] font-bold" />
       <div className="h-4 w-px bg-[#2A2A2A]" />
       <span className="text-[11px] text-[#6B6B6B]">{userName}</span>
       <div className="ml-auto">

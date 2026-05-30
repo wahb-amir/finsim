@@ -43,17 +43,17 @@ The API expects the frontend at `CLIENT_URL` (default `http://localhost:3000`) f
 
 Copy `backend/.env.example` → `backend/.env`. Keys must match exactly for production deploy validation.
 
-| Variable              | Required | Description                                      |
-| --------------------- | -------- | ------------------------------------------------ |
-| `MONGO_URI`           | Yes      | MongoDB connection string                        |
-| `PORT`                | Yes      | Listen port (default `8081` in example)          |
-| `JWT_SECRET`          | Yes      | Secret for signing httpOnly auth cookies         |
-| `NODE_ENV`            | Yes      | `development` or `production`                    |
-| `CLIENT_URL`          | No       | Frontend origin for CORS (default `:3000`)       |
-| `GROQ_API_KEY`        | For AI   | Groq API key for advisor + debrief               |
-| `SUPABASE_URL`        | For RAG  | Supabase project URL                             |
-| `SUPABASE_SERVICE_KEY`| For RAG  | Service role key (server-side only)              |
-| `SUPABASE_ANON_KEY`   | For RAG  | Anon key (some RAG scripts)                      |
+| Variable               | Required | Description                                |
+| ---------------------- | -------- | ------------------------------------------ |
+| `MONGO_URI`            | Yes      | MongoDB connection string                  |
+| `PORT`                 | Yes      | Listen port (default `8081` in example)    |
+| `JWT_SECRET`           | Yes      | Secret for signing httpOnly auth cookies   |
+| `NODE_ENV`             | Yes      | `development` or `production`              |
+| `CLIENT_URL`           | No       | Frontend origin for CORS (default `:3000`) |
+| `GROQ_API_KEY`         | For AI   | Groq API key for advisor + debrief         |
+| `SUPABASE_URL`         | For RAG  | Supabase project URL                       |
+| `SUPABASE_SERVICE_KEY` | For RAG  | Service role key (server-side only)        |
+| `SUPABASE_ANON_KEY`    | For RAG  | Anon key (some RAG scripts)                |
 
 Without Groq/Supabase, core gameplay still works; advisor and debrief fall back or error depending on the code path.
 
@@ -154,38 +154,38 @@ All game and setup routes require a valid auth cookie unless noted.
 
 ### Health
 
-| Method | Path           | Auth | Description        |
-| ------ | -------------- | ---- | ------------------ |
-| GET    | `/health`      | No   | `{ success: true }`|
+| Method | Path      | Auth | Description         |
+| ------ | --------- | ---- | ------------------- |
+| GET    | `/health` | No   | `{ success: true }` |
 
 ### Auth — mounted at `/api/auth`
 
-| Method | Path       | Description                          |
-| ------ | ---------- | ------------------------------------ |
-| POST   | `/signin`    | Register `{ name, email, password }` |
-| POST   | `/login`     | Log in `{ email, password }`         |
-| GET    | `/me`        | Current user                         |
-| POST   | `/logout`    | Clear auth cookie                    |
+| Method | Path      | Description                          |
+| ------ | --------- | ------------------------------------ |
+| POST   | `/signin` | Register `{ name, email, password }` |
+| POST   | `/login`  | Log in `{ email, password }`         |
+| GET    | `/me`     | Current user                         |
+| POST   | `/logout` | Clear auth cookie                    |
 
 ### Setup — mounted at `/api`
 
-| Method | Path     | Body                              |
-| ------ | -------- | --------------------------------- |
-| POST   | `/setup` | `{ name, confidence, goal }`      |
-| PUT    | `/setup` | Update existing setup             |
+| Method | Path     | Body                         |
+| ------ | -------- | ---------------------------- |
+| POST   | `/setup` | `{ name, confidence, goal }` |
+| PUT    | `/setup` | Update existing setup        |
 
 ### Game — mounted at `/api/game`
 
-| Method | Path                          | Description                                      |
-| ------ | ----------------------------- | ------------------------------------------------ |
-| POST   | `/session`                    | Start game — returns `sessionId`, event, metrics |
-| POST   | `/session/round`              | Submit `{ sessionId, choice: "left"\|"right" }`  |
-| POST   | `/session/:id/abandon`        | Exit without deleting history                    |
-| POST   | `/session/:id/advisor`        | On-demand advisor (max 4 calls per session)      |
-| GET    | `/session/:id`                | Reload active session view                       |
-| GET    | `/session/:id/debrief`        | Lazy-generate + return debrief payload           |
-| GET    | `/sessions`                   | List user's past sessions                        |
-| GET    | `/sessions/userData`          | Aggregated stats for profile/dashboard           |
+| Method | Path                   | Description                                      |
+| ------ | ---------------------- | ------------------------------------------------ |
+| POST   | `/session`             | Start game — returns `sessionId`, event, metrics |
+| POST   | `/session/round`       | Submit `{ sessionId, choice: "left"\|"right" }`  |
+| POST   | `/session/:id/abandon` | Exit without deleting history                    |
+| POST   | `/session/:id/advisor` | On-demand advisor (max 4 calls per session)      |
+| GET    | `/session/:id`         | Reload active session view                       |
+| GET    | `/session/:id/debrief` | Lazy-generate + return debrief payload           |
+| GET    | `/sessions`            | List user's past sessions                        |
+| GET    | `/sessions/userData`   | Aggregated stats for profile/dashboard           |
 
 #### Create session — request body
 
@@ -207,7 +207,13 @@ All game and setup routes require a valid auth cookie unless noted.
   "sessionId": "...",
   "currentRound": 1,
   "metrics": { "netWorth": 800, "creditScore": 680, "...": "..." },
-  "event": { "id": "...", "title": "...", "left": {}, "right": {}, "crisis": false },
+  "event": {
+    "id": "...",
+    "title": "...",
+    "left": {},
+    "right": {},
+    "crisis": false
+  },
   "narrative": { "headline": "...", "advisorHint": "..." },
   "scenarioId": "baseline",
   "ageYears": 22
@@ -222,9 +228,9 @@ Full contract details and breaking-change history: [docs/MIGRATION-SERVER-AUTHOR
 
 ### AI — mounted at `/api/ai`
 
-| Method | Path       | Description                    |
-| ------ | ---------- | ------------------------------ |
-| POST   | `/debrief`   | Standalone debrief generation  |
+| Method | Path       | Description                   |
+| ------ | ---------- | ----------------------------- |
+| POST   | `/debrief` | Standalone debrief generation |
 
 ---
 
@@ -263,8 +269,12 @@ Location: `src/services/simulation/`
 ### Entry points
 
 ```js
-const { createNewGame, applyChoice, deriveScenarioId, toUIMetrics } =
-  require("./src/services/simulation");
+const {
+  createNewGame,
+  applyChoice,
+  deriveScenarioId,
+  toUIMetrics,
+} = require("./src/services/simulation");
 
 // Start a session
 const step = createNewGame({
@@ -344,13 +354,13 @@ Schema: `src/rag/001_pgvector.sql` — run once in Supabase.
 
 ## Scripts
 
-| Script              | Command                              | Purpose                    |
-| ------------------- | ------------------------------------ | -------------------------- |
-| Dev server          | `pnpm dev`                           | `node --watch server.js`   |
-| Production          | `pnpm start`                         | `node server.js`           |
-| Chunk knowledge     | `pnpm chunk`                         | Build `chunks.json`        |
-| Seed embeddings     | `pnpm seed` / `pnpm seed:fresh`      | Upsert to Supabase         |
-| Simulation smoke    | `pnpm test:sim`                      | Quick engine sanity check  |
+| Script           | Command                         | Purpose                   |
+| ---------------- | ------------------------------- | ------------------------- |
+| Dev server       | `pnpm dev`                      | `node --watch server.js`  |
+| Production       | `pnpm start`                    | `node server.js`          |
+| Chunk knowledge  | `pnpm chunk`                    | Build `chunks.json`       |
+| Seed embeddings  | `pnpm seed` / `pnpm seed:fresh` | Upsert to Supabase        |
+| Simulation smoke | `pnpm test:sim`                 | Quick engine sanity check |
 
 ---
 

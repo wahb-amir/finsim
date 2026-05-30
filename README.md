@@ -4,10 +4,10 @@
 
 FinSim is a **pnpm monorepo** with a Next.js frontend and an Express API. The **simulation engine runs on the server**; the client renders API responses and sends player choices. Sessions, auth, AI advisor, and debrief all persist through the backend.
 
-| Package        | Path        | Name          | Role                          |
-| -------------- | ----------- | ------------- | ----------------------------- |
-| Frontend       | `frontend/` | `@finsim/web` | Next.js 16 App Router UI      |
-| Backend        | `backend/`  | `@finsim/api` | Express API + simulation + AI |
+| Package  | Path        | Name          | Role                          |
+| -------- | ----------- | ------------- | ----------------------------- |
+| Frontend | `frontend/` | `@finsim/web` | Next.js 16 App Router UI      |
+| Backend  | `backend/`  | `@finsim/api` | Express API + simulation + AI |
 
 **Deep dives:** [frontend/README.md](./frontend/README.md) · [backend/README.md](./backend/README.md)
 
@@ -97,17 +97,17 @@ sequenceDiagram
 
 ## User journey
 
-| Route           | Auth required | Purpose                                      |
-| --------------- | ------------- | -------------------------------------------- |
-| `/`             | No            | Landing page                                 |
-| `/auth`         | No            | Sign up / log in                             |
-| `/dashboard`    | Yes           | Past sessions, start new game                |
-| `/setup`        | Yes           | Career, salary, goal, climate → new session  |
-| `/game`         | Yes           | Main board — metrics, decisions, advisor     |
-| `/debrief`      | Yes           | Post-game summary and net worth chart        |
-| `/profile`      | Yes           | Account and onboarding profile               |
-| `/leaderboard`  | No*           | Top scores (mock data + your run)            |
-| `/onboarding`   | —             | Legacy/alternate onboarding UI               |
+| Route          | Auth required | Purpose                                     |
+| -------------- | ------------- | ------------------------------------------- |
+| `/`            | No            | Landing page                                |
+| `/auth`        | No            | Sign up / log in                            |
+| `/dashboard`   | Yes           | Past sessions, start new game               |
+| `/setup`       | Yes           | Career, salary, goal, climate → new session |
+| `/game`        | Yes           | Main board — metrics, decisions, advisor    |
+| `/debrief`     | Yes           | Post-game summary and net worth chart       |
+| `/profile`     | Yes           | Account and onboarding profile              |
+| `/leaderboard` | No\*          | Top scores (mock data + your run)           |
+| `/onboarding`  | —             | Legacy/alternate onboarding UI              |
 
 \*Leaderboard uses mock data in `frontend/lib/api.js` until a live endpoint is wired.
 
@@ -193,13 +193,13 @@ Open [http://localhost:3000](http://localhost:3000). Health check: `GET http://l
 
 ### Workspace scripts
 
-| Command            | Description                         |
-| ------------------ | ----------------------------------- |
-| `pnpm dev`         | Start Next.js frontend              |
-| `pnpm dev:backend` | Start Express API with `--watch`    |
-| `pnpm build`       | Production build of the frontend    |
-| `pnpm start`       | Run production frontend server      |
-| `pnpm lint`        | ESLint on the frontend              |
+| Command            | Description                      |
+| ------------------ | -------------------------------- |
+| `pnpm dev`         | Start Next.js frontend           |
+| `pnpm dev:backend` | Start Express API with `--watch` |
+| `pnpm build`       | Production build of the frontend |
+| `pnpm start`       | Run production frontend server   |
+| `pnpm lint`        | ESLint on the frontend           |
 
 Run a package directly:
 
@@ -212,15 +212,15 @@ pnpm --filter @finsim/api dev
 
 ## Stack
 
-| Layer        | Technology                                              |
-| ------------ | ------------------------------------------------------- |
-| Frontend     | Next.js 16, React 19, Tailwind CSS v4, Framer Motion    |
-| Backend      | Express 4, Mongoose, JWT cookies, rate limiting         |
-| Database     | MongoDB (users, sessions, setup profiles)               |
-| AI           | Groq SDK — Socratic advisor + post-game debrief         |
-| RAG          | Supabase pgvector + local embeddings (`@xenova/transformers`) |
-| Charts       | Recharts                                                |
-| Monorepo     | pnpm workspaces                                         |
+| Layer    | Technology                                                    |
+| -------- | ------------------------------------------------------------- |
+| Frontend | Next.js 16, React 19, Tailwind CSS v4, Framer Motion          |
+| Backend  | Express 4, Mongoose, JWT cookies, rate limiting               |
+| Database | MongoDB (users, sessions, setup profiles)                     |
+| AI       | Groq SDK — Socratic advisor + post-game debrief               |
+| RAG      | Supabase pgvector + local embeddings (`@xenova/transformers`) |
+| Charts   | Recharts                                                      |
+| Monorepo | pnpm workspaces                                               |
 
 ---
 
