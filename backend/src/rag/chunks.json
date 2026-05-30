@@ -1,0 +1,1173 @@
+[
+  {
+    "content": "Loss aversion is the psychological tendency to feel losses approximately 2.5 times more intensely than equivalent gains. Losing $100 feels as bad as gaining $250 feels good. In financial decisions, this manifests as: refusing to sell investments at a loss (holding losers too long), paying off 0% debt immediately because the psychological burden of owing money outweighs the math, keeping emergency funds too large because the fear of running out exceeds the opportunity cost of uninvested cash, and avoiding market investing entirely due to fear of seeing negative returns even temporarily. Loss aversion consistently leads to decisions that feel right emotionally but produce worse long-term outcomes.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "loss_aversion",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Present bias is the tendency to overweight immediate costs and benefits versus future ones — systematically discounting the future even when the math clearly favors patience. Retirement feels abstract at 25 in a way that a new car does not. Present bias explains: choosing immediate spending over automatic 401k contributions, opting for the cash now over larger future value, taking on high-interest debt to fund current consumption, and consistently under-saving despite knowing intellectually that saving matters. The research-backed antidote is commitment devices: automatic transfers that remove the choice, employer payroll deductions, and apps that make future consequences feel immediate. Present bias is strongest when the future reward is more than 6 months away.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "present_bias",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Lifestyle inflation (also called lifestyle creep) is the tendency to increase spending proportionally as income rises, preventing wealth accumulation even at high income levels. The pattern: promotion → new car → nicer apartment → dining out more often → savings rate unchanged or lower. Studies show that self-reported happiness does not increase proportionally with spending beyond a moderate income level, but spending increases automatically without conscious choice. The financial impact is severe: a person earning $100,000 with a 10% savings rate accumulates the same wealth as a person earning $60,000 with a 17% savings rate. The solution is \"paying yourself first\" — automating savings increases with each raise before lifestyle has a chance to absorb the difference.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "lifestyle_inflation",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Mental accounting is the tendency to treat money differently based on its source or intended purpose, violating the economic principle that money is fungible. Common examples: spending a tax refund freely because it feels like \"found money\" (it's your money, paid back with no interest), treating gambling winnings differently from salary, maintaining a savings account at 1% while carrying credit card debt at 22% because they are mentally \"separate buckets,\" and overspending on credit cards versus cash because the payment is deferred. The refund example is particularly costly: the average federal tax refund is approximately $3,000 — at 22% APR, keeping that money from the IRS via adjusted withholding and applying it to credit card debt saves $660 in annual interest.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "mental_accounting",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The sunk cost fallacy is making decisions based on past costs that cannot be recovered rather than future value. In finance: continuing to hold a declining investment because you \"already lost so much\" and can't bear to sell, continuing to pay insurance on a depreciating asset far beyond its value, keeping a high-expense financial advisor because you've worked with them for years and switching feels disloyal, or staying in a career path because of student loans already paid even when a better opportunity exists. The corrective question: \"If I had no history with this, what would I choose today?\" Sunk costs should never enter forward-looking financial decisions.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "sunk_cost_fallacy",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The availability heuristic leads people to judge the probability of events based on how easily examples come to mind. Vivid, recent, or emotional events are overweighted. Financial manifestations: pulling investments out of the market after a crash because the loss is emotionally salient, overinsuring against dramatic but unlikely risks (plane crashes, asteroid strikes) while underinsuring against mundane but common ones (disability, car accident), timing stock purchases based on recent performance, and overweighting news-cycle narratives in investment decisions. The research-backed response: use base rates (actual historical frequencies) rather than emotional salience. Market crashes are followed by recoveries in 100% of historical cases for diversified index portfolios held long enough.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "availability_heuristic",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Anchoring is the tendency to rely too heavily on the first piece of information encountered when making decisions. In financial contexts: the original purchase price of a stock becomes an anchor for sell decisions (refusing to sell below purchase price regardless of current value), the MSRP on a car anchors negotiation even when the number is arbitrary, a salary number mentioned first in negotiation anchors the final outcome strongly in that direction, and mortgage lenders use monthly payment anchoring to obscure the total cost of a longer loan. Awareness of anchoring doesn't eliminate its effect — studies show even people told an anchor is random still adjust insufficiently away from it. The defense: establish your own independent valuation before receiving anchored information.",
+    "source": "academic",
+    "topic": "behavioral_finance",
+    "subtopic": "anchoring",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Compound interest is calculated as A = P(1 + r/n)^(nt), where A is the final amount, P is the principal, r is the annual interest rate as a decimal, n is the number of times interest compounds per year, and t is time in years. At 7% annual return compounding monthly, $10,000 becomes $20,097 after 10 years, $54,274 after 25 years, and $76,123 after 30 years. The key variable is time — not the rate. Adding 5 years to an investment period at 7% adds more value than increasing the rate by 2% for the same period.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "formula_and_basics",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The Rule of 72 is a mental math shortcut for estimating doubling time: divide 72 by the annual interest rate to get approximate years to double. At 7%, money doubles in roughly 10.3 years (72/7). At 21.9% credit card APR, a balance that isn't paid down doubles in 3.3 years. At 1% savings account, money doubles in 72 years. This rule makes the difference between high-interest debt and market returns viscerally clear: your debt is compounding 3x faster than a stock index fund.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "rule_of_72",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A $5,000 balance at 21.9% APR with a 2% minimum payment (starting at $100) takes approximately 30 years to pay off and costs $9,200 in total interest — nearly double the original balance. The minimum payment structure is intentional: as the balance drops, the minimum drops too, extending the payoff timeline. Paying a fixed $150 per month instead cuts payoff to 4 years and reduces total interest to $1,600. Paying $300 per month cuts it to under 2 years and costs only $700 in interest. The difference between minimum payments and a fixed aggressive payment on a single card can exceed $7,500 over the life of the debt.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "credit_card_minimum_payment_spiral",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A high-yield savings account (HYSA) at 4.5% APY on $5,000 earns $225 in year one, $235 in year two (because interest earned in year one also earns interest). Over 5 years, the $5,000 grows to $6,230 with no additional contributions. With $200 monthly contributions added, the same account reaches $19,450 in 5 years — $7,450 of which is interest. The distinction between APR (annual percentage rate, simple) and APY (annual percentage yield, compounded) matters: a savings account advertising 4.5% APR compounds to 4.59% APY monthly.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "savings_compound_growth",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Starting retirement investing at 22 versus 32 creates approximately a $1,000,000 difference in retirement balance at age 67, assuming identical $500/month contributions at 7% real return. The 22-year-old contributes $270,000 total and ends with $2.4M. The 32-year-old contributes $210,000 total and ends with $1.2M. The extra $60,000 contributed by the 22-year-old generates $1.2M in additional wealth — a 20:1 return on those early contributions. The first 10 years of investing are disproportionately powerful because those dollars compound the longest.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "retirement_start_age_impact",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Inflation acts as negative compounding on purchasing power. At 3% annual inflation, $10,000 today has the purchasing power of $7,441 in 10 years and $5,537 in 20 years — even without spending a dollar. Money sitting in a 0.01% APY checking account is actively losing real value every year. The real rate of return on any investment is the nominal rate minus inflation: a 7% stock market return during 3% inflation is a 4% real return. Keeping more than 3 to 6 months of expenses in cash is mathematically a wealth-destroying choice when real alternatives exist.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "inflation_negative_compounding",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "An unclaimed employer 401k match is the highest guaranteed return available in personal finance. A 4% dollar-for-dollar match on a $60,000 salary means $2,400 per year in free money — a 100% instant return before any investment gains. That $2,400 annually at 7% over 30 years grows to $242,000. Employees who don't contribute enough to capture the full match are leaving this entire amount on the table. There is no investment, savings account, or debt payoff strategy that produces a guaranteed 100% return. The match should always be captured before any other financial priority except a true emergency fund.",
+    "source": "investopedia",
+    "topic": "compound_interest",
+    "subtopic": "employer_match_compounding",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "FICO scores are calculated from five weighted factors: payment history (35%), amounts owed (30%), length of credit history (15%), credit mix (10%), and new credit (10%). Payment history is the single largest factor — one missed payment can drop a score by 60 to 110 points depending on the starting score. The higher your score, the more a single missed payment hurts it.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "fico_factors_overview",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Credit utilization is calculated two ways by FICO: per-card utilization (each individual card's balance vs its limit) and aggregate utilization (total balances across all cards vs total limits). Both matter independently. A single card at 95% utilization hurts your score even if your overall aggregate is low. The widely cited \"safe\" threshold is below 30%, but scores in the 800+ range typically show utilization below 7%. Paying down balances before the statement closing date — not the due date — is when utilization gets reported to bureaus.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "utilization_ratio",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A \"thin file\" means a credit report with fewer than three to five active tradelines. Lenders and landlords treat a thin file similarly to a low score — it signals unproven creditworthiness. Young adults and recent immigrants commonly have thin files. Secured credit cards, credit-builder loans, and becoming an authorized user on a family member's account are the three fastest ways to thicken a file. A thin file at age 22 can directly prevent apartment approval even with no negative marks.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "thin_file",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A hard inquiry occurs when a lender reviews your credit to make a lending decision — credit card applications, auto loans, mortgages, and most personal loans trigger hard inquiries. A hard inquiry typically drops your score by 5 to 10 points and stays on your report for two years. A soft inquiry — checking your own score, pre-qualification checks, employer background checks — does not affect your score at all. Rate shopping for mortgages or auto loans within a 14 to 45 day window counts as a single hard inquiry under FICO's deduplication logic.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "hard_vs_soft_inquiry",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Negative items stay on a credit report for specific durations: late payments (7 years from the date of first delinquency), collections (7 years), Chapter 13 bankruptcy (7 years), Chapter 7 bankruptcy (10 years), hard inquiries (2 years). Time is calculated from the original delinquency date, not when the account was sent to collections or when you paid it off. Paying a collection account does not remove it from your report — it updates the status to \"paid collection,\" which still hurts your score until it ages off.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "negative_item_timeline",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Credit score thresholds create pricing tiers that directly affect loan costs. On a $300,000 30-year mortgage, the difference between a 620–639 score and a 760+ score is approximately 1.5% APR — which translates to roughly $48,000 in additional interest over the life of the loan. Key pricing breakpoints: below 620 (subprime, many lenders decline), 620–659 (high-rate tier), 660–699 (standard rate), 700–739 (good rate), 740–759 (very good rate), 760+ (best available rate). Auto loans show similar tier structures with differences of 4 to 8% APR between lowest and highest tiers.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "score_thresholds_loan_pricing",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Common credit score myths that cost people money: (1) Closing old credit cards improves your score — it actually hurts by reducing available credit and shortening average account age. (2) Checking your own credit score lowers it — checking your own score is a soft inquiry and has zero effect. (3) Carrying a small balance helps your score — paying in full monthly is optimal; carrying a balance costs interest with no scoring benefit. (4) Income affects your credit score — income is not a factor in any credit scoring model. (5) Married couples share a credit score — each person always has their own individual credit report and score.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "credit_score_myths",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The fastest legitimate path to building credit from zero: (1) Open a secured credit card with a $200–$500 deposit — use it for one recurring small purchase monthly. (2) Set the card to autopay the full balance — this guarantees on-time payment history, the largest FICO factor. (3) Keep utilization below 10% by paying before the statement close date. (4) After 6 months of on-time payments, most secured cards convert to unsecured and return the deposit. A credit score can go from no file to 680+ in 12 months using only this strategy with no other debt.",
+    "source": "cfpb",
+    "topic": "credit_scores",
+    "subtopic": "credit_building_strategy",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Credit card debt is revolving debt with variable APR. The national average APR as of 2024 is approximately 21–22%. Unlike installment loans, the minimum payment on a credit card is calculated as a percentage of the balance (typically 1–2% or a flat $25–35, whichever is greater), which means the payment shrinks as the balance shrinks — intentionally extending the repayment period. Most credit cards offer a grace period (typically 21–25 days after statement close) during which no interest accrues if the previous balance was paid in full. Once you carry a balance, the grace period disappears and purchases begin accruing interest immediately.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "credit_card_debt",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Auto loans amortize interest front-loaded: more of each early payment goes to interest. On a $30,000 auto loan at 7% over 60 months, the monthly payment is $594. In month 1, $175 is interest and $419 is principal. By month 30, $102 is interest and $492 is principal. Total interest paid over the life of the loan is $5,640. New cars depreciate approximately 20% in year one and 15% per year after that — meaning a $30,000 car is worth roughly $24,000 after 12 months. A buyer who finances at purchase and sells after 2 years may owe more than the car is worth (being \"underwater\"). Total cost of ownership — including depreciation, insurance, maintenance, and financing — is typically 1.5 to 2x the sticker price over 5 years.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "auto_loan_true_cost",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Federal student loans come in two types during school: subsidized (government pays interest while enrolled) and unsubsidized (interest accrues from disbursement, capitalizes at repayment start). A $20,000 unsubsidized loan at 6.5% that accrues for 4 years of school starts repayment at approximately $25,400 — the borrower has never made a payment and already owes $5,400 more than they borrowed. Income-driven repayment (IDR) plans cap payments at 10% of discretionary income but can result in paying for 20 to 25 years. Federal loans offer protections — forbearance, deferment, IDR — that private loans do not. Refinancing federal loans to private permanently eliminates these protections.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "student_loans",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Mortgages front-load interest heavily. On a 30-year $300,000 mortgage at 6.8%, the monthly payment is $1,956. In year one, approximately 78% of each payment is interest — only $432 of the first $1,956 payment goes to principal. The borrower must make 8 years of payments before the principal/interest split becomes 50/50. Private Mortgage Insurance (PMI) is required when the down payment is below 20%, typically costing 0.5 to 1.5% of the loan annually — on a $300,000 loan, that's $1,500 to $4,500 per year until equity reaches 20%. Closing costs add 2 to 5% of the purchase price upfront, making a $300,000 home purchase require $6,000 to $15,000 in cash beyond the down payment.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "mortgage_amortization",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Medical debt operates under different rules than other consumer debt. Hospitals are legally required to offer financial assistance programs for patients below certain income thresholds — these are negotiable and rarely advertised. As of 2023, the three major credit bureaus (Equifax, Experian, TransUnion) no longer include medical debt under $500 on credit reports, and paid medical collections are removed immediately. Unpaid medical bills under $500 are excluded; larger amounts have a 12-month grace period before being reported. Hospitals routinely offer 0% interest payment plans — this is the only common consumer debt where 0% financing is standard and accessible without a credit check. Always request an itemized bill; hospital billing errors are common.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "medical_debt",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The \"good debt vs bad debt\" framework is an oversimplification that leads to poor decisions. The more accurate framework: debt is beneficial when the asset it funds appreciates or produces income faster than the interest cost, and harmful when it does not. A mortgage at 4% on a house that appreciates at 3% annually may be neutral to slightly negative in pure math terms but provides housing and leverage. Student loan debt at 7% for a degree that increases income by $40,000 annually pays off quickly. Credit card debt at 22% on consumer goods is nearly always destructive — goods depreciate immediately, zero income is produced, and the interest compounds aggressively. The interest rate relative to the return on the purchased asset is the only calculation that matters.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "good_debt_bad_debt_framework",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Two proven debt payoff strategies: Avalanche (pay minimums on all debts, put all extra money toward the highest-APR debt first) and Snowball (pay minimums on all debts, target the smallest balance first regardless of rate). Avalanche is mathematically optimal — it minimizes total interest paid. Snowball is psychologically optimal — early wins on small balances create momentum. Research shows Snowball leads to higher completion rates for people who have struggled with debt before. Avalanche is the right choice for people with strong financial discipline. The best strategy is the one that gets executed. The difference in total interest between the two methods is typically 5 to 15% on a typical multi-debt portfolio.",
+    "source": "cfpb",
+    "topic": "debt",
+    "subtopic": "debt_avalanche_vs_snowball",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 1: Build Your Safety Net\nTopic: emergency_fund\nOptimal choice: Build emergency fund first\nSuboptimal choice: Invest immediately instead\nReasoning: An emergency fund is a prerequisite for all other financial moves. Without 3 months of expenses in cash, any unexpected event forces liquidation of investments — potentially at a loss and with tax consequences. The opportunity cost of keeping cash is real but small; the risk of investing without a buffer is asymmetric and large.\nCommon mistake: Players choose B because investing feels like the 'smart money move' and emergency funds feel passive. This is present bias applied to risk — the future emergency is discounted because it isn't happening now.\nTeaching moment: The emergency fund isn't an investment — it's insurance against being forced to make terrible financial decisions under duress. Its return is measured in bad decisions avoided, not yield.\nBehavioral pattern: present_bias",
+    "source": "finsim-internal",
+    "topic": "emergency_fund",
+    "subtopic": "round_1_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 2: Your First Credit Card\nTopic: credit_scores\nOptimal choice: Accept card, pay balance in full monthly\nSuboptimal choice: Decline the card to avoid debt risk\nReasoning: Declining a credit card at this stage leaves a thin file for years. The optimal move is to accept, use for one recurring purchase, and autopay in full — building payment history (35% of FICO) at zero cost. The fear of debt is rational in the abstract but counterproductive when the card is used as a tool, not a loan.\nCommon mistake: Players decline the card because they associate credit cards with debt. This conflates the instrument with the misuse of the instrument.\nTeaching moment: A credit card paid in full every month costs nothing and builds the single most valuable financial asset a young adult can have: a credit history. The card is a tool. The debt comes from the behavior, not the card.\nBehavioral pattern: availability_heuristic",
+    "source": "finsim-internal",
+    "topic": "credit_scores",
+    "subtopic": "round_2_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      2
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 3: Car Decision\nTopic: debt\nOptimal choice: Buy reliable used car with cash\nSuboptimal choice: Finance a new car\nReasoning: A new car depreciates 20% in year one. Financing amplifies this: you pay interest on an asset that is actively losing value. A reliable used car (3–5 years old) has absorbed the steepest depreciation curve and can be purchased outright or with minimal financing. The true cost difference over 5 years between a financed new car and a used cash purchase is typically $15,000 to $25,000.\nCommon mistake: Players choose A because a new car feels like a reward for early financial progress. This is lifestyle inflation — upgrading consumption as income rises without corresponding wealth growth.\nTeaching moment: Cars are depreciating liabilities. Every dollar of car payment is a dollar not compounding in investments. The financially optimal vehicle is the one that gets you to work reliably at the lowest total cost of ownership.\nBehavioral pattern: lifestyle_inflation",
+    "source": "finsim-internal",
+    "topic": "debt",
+    "subtopic": "round_3_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 4: Medical Bill\nTopic: debt\nOptimal choice: Take the 0% payment plan\nSuboptimal choice: Pay in full immediately from savings\nReasoning: A 0% payment plan on medical debt is mathematically superior to depleting savings. The opportunity cost of liquidating savings (lost HYSA interest, lost investment time) exceeds zero. The 0% rate fundamentally changes the calculus — this is not the same as carrying high-interest credit card debt. The only scenario where paying in full wins: if you are certain you will miss payments and trigger penalty APR.\nCommon mistake: Players choose A because paying in full feels psychologically clean. The discomfort of an outstanding obligation overrides the financial logic — this is loss aversion operating on the debt side.\nTeaching moment: 0% debt is free money. The bank or hospital is lending you their money at no cost. Refusing it by paying immediately is paying a premium for the psychological comfort of zero balance.\nBehavioral pattern: loss_aversion",
+    "source": "finsim-internal",
+    "topic": "debt",
+    "subtopic": "round_4_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      4
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 5: First Investing Decision\nTopic: investing\nOptimal choice: Open Roth IRA, invest in index fund\nSuboptimal choice: Keep saving in HYSA for now\nReasoning: At this career stage, the player has an established emergency fund and manageable debt. The Roth IRA window — while in a lower tax bracket — is the highest-value move available. Index fund returns historically outpace HYSA rates by 4–5% annually. The tax-free compounding on Roth contributions made in your 20s is irreplaceable.\nCommon mistake: Players choose B because the HYSA feels safe and the stock market feels risky. This is availability heuristic applied to market risk — recent volatility is more salient than 30 years of index fund data.\nTeaching moment: Risk is not just the chance of loss. Keeping money in a savings account earning 4.5% while inflation runs at 3% is a guaranteed 1.5% real return — while a diversified index fund has returned 7% real over every 20-year period in history.\nBehavioral pattern: availability_heuristic",
+    "source": "finsim-internal",
+    "topic": "investing",
+    "subtopic": "round_5_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      5
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 6: 401k Match\nTopic: investing\nOptimal choice: Contribute enough to capture full employer match\nSuboptimal choice: Skip 401k, pay down student loans faster\nReasoning: Employer match is a guaranteed 50–100% instant return on contributions — no investment product competes with this. Skipping the match to pay off low-interest student loans (under 7%) is mathematically inferior in all but extreme debt situations. The match plus compounding over 30 years dwarfs the interest saved on student loans.\nCommon mistake: Players choose B because student loan debt feels urgent and the 401k match feels abstract and distant. This is present bias — the future benefit of the match is discounted relative to the immediate satisfaction of reducing debt.\nTeaching moment: The 401k match has a cutoff date — the payroll year. Unclaimed match is permanently gone. Student loan interest is a fixed cost that will be there next month. Always capture the match first.\nBehavioral pattern: present_bias",
+    "source": "finsim-internal",
+    "topic": "investing",
+    "subtopic": "round_6_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      6
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 7: Market Crash Response\nTopic: behavioral_finance\nOptimal choice: Hold investments, continue regular contributions\nSuboptimal choice: Move investments to cash until market recovers\nReasoning: Selling during a market downturn locks in losses and requires correctly timing both the exit AND the re-entry. Studies show investors who moved to cash during the 2008 and 2020 crashes and waited for 'recovery signals' missed 50–80% of the rebound, which happened in the first few weeks. Time in market beats timing the market in 90%+ of historical cases.\nCommon mistake: Players choose A because the loss feels unbearable and action feels better than inaction. This is loss aversion and availability heuristic combined — the crash is vivid and current, recovery is abstract.\nTeaching moment: A market drop only becomes a loss when you sell. Paper losses are temporary for diversified long-term investors. The investor who holds through a 40% crash and recovers ends up wealthier than the investor who sold at the bottom and bought back after the recovery.\nBehavioral pattern: loss_aversion",
+    "source": "finsim-internal",
+    "topic": "behavioral_finance",
+    "subtopic": "round_7_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      7
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 8: Side Income Tax Planning\nTopic: taxes\nOptimal choice: Set aside 30% quarterly, pay estimated taxes\nSuboptimal choice: Pay it all at filing in April\nReasoning: 1099 income requires quarterly estimated payments. Paying all at April filing triggers underpayment penalties that compound per quarter, plus a large cash crunch. Systematic quarterly payments smooth cash flow and eliminate penalties. The 30% set-aside creates a tax savings habit that also disciplines spending.\nCommon mistake: Players choose B because the tax bill isn't due yet and the quarterly process feels complex. This is present bias — the future penalty is discounted, and the complexity of quarterly filing triggers avoidance.\nTeaching moment: Self-employed income has no withholding. Every dollar earned is gross. The IRS considers quarterly payments a legal obligation, not a courtesy — missing them incurs penalties even when you pay in full in April.\nBehavioral pattern: present_bias",
+    "source": "finsim-internal",
+    "topic": "taxes",
+    "subtopic": "round_8_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      8
+    ],
+    "career_relevance": [
+      "freelancer",
+      "small-business"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 9: Windfall Decision\nTopic: investing\nOptimal choice: Max IRA and invest remainder in index fund\nSuboptimal choice: Pay off mortgage early\nReasoning: Mortgage rates in a typical environment (4–7%) are below expected market returns (7% real). Paying down a 5% mortgage early is a guaranteed 5% return. Investing in a diversified index fund historically returns 7%+ real. The math favors investing, especially when the mortgage also provides a tax deduction and the investments compound tax-advantaged in a Roth IRA.\nCommon mistake: Players choose B because debt-free feels better than invested. Mortgage payoff is emotionally salient and concrete; investment returns are probabilistic and abstract. This is present bias plus loss aversion.\nTeaching moment: When your borrowing rate is lower than your expected investment return, paying down debt early is giving up expected wealth to buy psychological comfort. That comfort has a calculable price — and it's usually in the tens of thousands of dollars.\nBehavioral pattern: present_bias",
+    "source": "finsim-internal",
+    "topic": "investing",
+    "subtopic": "round_9_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      9
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Round 10: Retirement Account Strategy\nTopic: retirement\nOptimal choice: Maximize tax-advantaged accounts before taxable investing\nSuboptimal choice: Invest in taxable brokerage for flexibility\nReasoning: Tax-advantaged space (401k, IRA, HSA) is limited and non-recoverable year-to-year. A taxable brokerage provides flexibility but at the cost of annual taxes on dividends and capital gains, and no deduction on contributions. For long-term wealth building, exhausting tax-advantaged space before taxable investing is the dominant strategy in all but a few edge cases (very high income, early retirement before 59.5).\nCommon mistake: Players choose B because taxable accounts feel more flexible and accessible. Roth IRAs actually allow contribution withdrawal at any time without penalty — making the flexibility argument mostly moot.\nTeaching moment: Tax drag on a taxable brokerage is invisible but enormous. A 7% return in a taxable account becomes approximately 5.5–6% after taxes on dividends and gains. Over 30 years on $10,000, that gap is over $50,000.\nBehavioral pattern: mental_accounting",
+    "source": "finsim-internal",
+    "topic": "retirement",
+    "subtopic": "round_10_decision",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Health insurance has three cost levers that interact: premium (monthly cost regardless of use), deductible (amount you pay out-of-pocket before insurance covers anything), and out-of-pocket maximum (the most you will ever pay in a single year — after this, insurance covers 100%). A low-premium, high-deductible plan has lower monthly cost but requires significant savings to cover the deductible. A high-premium, low-deductible plan costs more monthly but limits surprise expenses. The math: if your annual premium savings on an HDHP vs PPO is $1,200/year and your deductible is $2,000 higher, you break even only if you use healthcare enough to trigger the deductible. Young, healthy people typically benefit from HDHPs; those with chronic conditions typically benefit from low-deductible plans.",
+    "source": "cfpb",
+    "topic": "insurance",
+    "subtopic": "health_insurance_mechanics",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A Health Savings Account (HSA) is available only with a High-Deductible Health Plan (HDHP) and offers three tax advantages: contributions are pre-tax (or tax-deductible), growth is tax-free, and withdrawals for qualified medical expenses are tax-free. This \"triple tax advantage\" makes an HSA mathematically the most tax-efficient account in the US tax code — more efficient than a 401k or IRA. HSA funds roll over indefinitely — they never expire. The stealth retirement strategy: invest HSA funds in index funds, pay medical expenses out of pocket while young and healthy, and let the HSA compound for 30 years. After age 65, HSA funds can be withdrawn for any purpose and are taxed as ordinary income — making the account function exactly like a Traditional IRA but with zero tax on medical withdrawals.",
+    "source": "cfpb",
+    "topic": "insurance",
+    "subtopic": "hsa_triple_tax_advantage",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Disability insurance replaces a portion of income (typically 60–70%) if illness or injury prevents work. It is statistically the most underowned protection for working adults: a 35-year-old has a 25% chance of experiencing a disability lasting 90 days or longer before retirement, compared to a much lower probability of dying during working years. Short-term disability (STD) covers 60 to 180 days. Long-term disability (LTD) covers from the STD period end through retirement age. Employer-provided LTD is taxable as income if premiums are employer-paid. Individual policies are non-taxable if you paid premiums yourself. Young professionals in physically non-demanding jobs can get strong LTD coverage for $50–$150/month.",
+    "source": "cfpb",
+    "topic": "insurance",
+    "subtopic": "disability_insurance",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Renters insurance covers personal property (theft, fire, water damage), liability (if someone is injured in your apartment), and additional living expenses (hotel if your apartment becomes uninhabitable). Cost: $15–$30 per month for $30,000 in personal property coverage and $100,000 in liability. Renters insurance does not cover the building itself (that's the landlord's policy) or flooding (requires separate flood insurance). The most common reason renters skip it: believing they own nothing worth insuring. The calculation: replacing a laptop ($1,200), bike ($600), clothes ($2,000), and furniture ($3,000) after a fire costs $6,800 — nearly 19 years of premium payments. Renters insurance is one of the highest-value financial products available per dollar spent.",
+    "source": "cfpb",
+    "topic": "insurance",
+    "subtopic": "renters_insurance",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Life insurance is income replacement for dependents — it is only necessary if other people rely on your income. A single 24-year-old with no children and no co-signed debts does not need life insurance. The same person with a spouse, a child, or a co-signed mortgage needs it immediately. Term life insurance covers a specific period (10, 20, or 30 years) at a fixed premium — a 30-year-old non-smoker can get $500,000 of 20-year term coverage for approximately $25–$30 per month. Whole life insurance (permanent, builds cash value) costs 10 to 15 times more than equivalent term coverage and is almost never the right product for young people — the investment component underperforms simply buying term and investing the premium difference.",
+    "source": "cfpb",
+    "topic": "insurance",
+    "subtopic": "life_insurance_when_needed",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Index funds passively track a market index (like the S&P 500) with minimal trading. Actively managed funds employ managers who attempt to beat the market. The fee drag math: a 1% expense ratio on a $100,000 portfolio costs $1,000 in year one and compounds to approximately $100,000 in foregone wealth over 30 years at 7% return — meaning fees alone can consume a third of a retirement portfolio. Over any 15-year period, over 90% of actively managed large-cap funds underperform their benchmark index after fees. Vanguard, Fidelity, and Schwab offer index funds with expense ratios as low as 0.015% — essentially free.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "index_funds_vs_active",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "A commonly used rule of thumb: subtract your age from 110 to get the percentage of your portfolio in stocks, with the remainder in bonds. At age 25: 85% stocks, 15% bonds. At age 50: 60% stocks, 40% bonds. At age 65: 45% stocks, 55% bonds. More aggressive variants use 120 or 125 as the base number, appropriate for investors with higher risk tolerance or longer expected lifespans. Target-date funds automate this allocation shift, called \"glide path,\" and are appropriate for investors who don't want to manage allocation manually. The key insight: young investors holding bonds are sacrificing growth for stability they don't yet need.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "asset_allocation_by_age",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The 2024 401k contribution limit is $23,000 ($30,500 for those 50 and older with catch-up contributions). Employer matches come in two common forms: dollar-for-dollar up to a percentage (e.g., 100% match on the first 4% of salary) or partial match (e.g., 50% match on contributions up to 6% of salary). Vesting schedules determine when the employer match becomes truly yours: cliff vesting (0% until 3 years, then 100%) or graded vesting (20% per year for 6 years). Employees who leave before vesting forfeit unvested match contributions. Always confirm your company's vesting schedule before deciding to leave — the unvested match may be worth staying for.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "401k_mechanics",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Traditional IRA contributions may be tax-deductible depending on income and whether you have a workplace plan. Roth IRA contributions are never deductible but grow and withdraw tax-free. 2024 Roth IRA income phase-out begins at $146,000 (single) and $230,000 (married filing jointly). The contribution limit is $7,000 ($8,000 if 50+) shared across all IRAs. Decision tree: no workplace retirement plan available → Traditional IRA for the deduction. Have a 401k, expect to be in higher bracket in retirement → Roth IRA. High income exceeding Roth limits → Backdoor Roth conversion. Early career, currently in 12% bracket → Roth almost always wins because tax-free compounding for 40 years outweighs the small upfront deduction.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "roth_vs_traditional_ira",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The canonical personal finance order of operations: (1) Build a 3–6 month emergency fund in a high-yield savings account first. (2) Contribute to 401k at least up to the employer match. (3) Pay off high-interest debt (above ~7% APR). (4) Max IRA contributions. (5) Return to 401k for additional contributions. (6) Invest in taxable brokerage account. The emergency fund comes first because without it, any unexpected expense (job loss, medical bill, car repair) forces liquidation of investments at potentially the worst time, potentially at a loss, and with tax consequences. The threshold: 3 months for dual-income households with stable employment, 6 months for single income, variable income, or self-employed.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "emergency_fund_before_investing",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "When a lump sum of money is available to invest, studies show investing it all immediately (lump sum investing) outperforms spreading it over time (dollar-cost averaging) approximately 67% of the time, because markets rise more often than they fall and sitting in cash has an opportunity cost. However, dollar-cost averaging reduces regret and emotional distress when markets drop immediately after a lump sum investment. For regular monthly investing from income (salary), dollar-cost averaging is the default and works optimally — there is no lump sum decision to make. The lump sum vs DCA debate only applies to windfalls, inheritances, or large one-time amounts.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "dollar_cost_averaging_vs_lump_sum",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Sequence-of-returns risk describes the danger of experiencing large portfolio losses early in retirement when withdrawals are being taken. A 40% market drop in year 2 of retirement is far more damaging than the same drop in year 20, because early withdrawals sell shares at depressed prices, permanently reducing the share count that will recover. A portfolio that averages 7% annual return over 30 years can be completely depleted in 15 years if the worst years happen first. Mitigation strategies: maintaining 1–2 years of expenses in cash or bonds (a \"bucket\"), flexible withdrawal rates, and delayed Social Security claiming to reduce portfolio dependency.",
+    "source": "investopedia",
+    "topic": "investing",
+    "subtopic": "sequence_of_returns_risk",
+    "difficulty": "advanced",
+    "applies_to_rounds": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Marginal tax rate is the rate applied to the last dollar earned — the rate of the highest bracket you enter. Effective tax rate is total tax paid divided by total income. A single filer earning $80,000 in 2024 is in the 22% marginal bracket but has an effective rate of approximately 15.4% because the first $11,600 is taxed at 10% and the next $35,550 is taxed at 12%. The common mistake: believing a raise or bonus that pushes you into a higher bracket means you'll \"take home less.\" Tax brackets are marginal — only the dollars in the new bracket are taxed at the higher rate. A raise never reduces take-home pay.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "marginal_vs_effective_rate",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "W-2 employees have payroll taxes split with their employer: the employee pays 7.65% FICA (6.2% Social Security + 1.45% Medicare) and the employer pays an equal 7.65%. 1099 independent contractors pay both halves — the full 15.3% self-employment tax — in addition to income tax. On $60,000 of 1099 income, this means $9,180 in self-employment tax before federal income tax is calculated. The self-employed can deduct half of self-employment tax (the \"employer half\") from gross income. Quarterly estimated tax payments are required for 1099 earners expecting to owe $1,000 or more — missing these triggers underpayment penalties even if you pay in full at filing.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "w2_vs_1099",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Traditional 401k and IRA contributions are pre-tax: they reduce taxable income now and are taxed at ordinary income rates on withdrawal in retirement. Roth IRA and Roth 401k contributions are post-tax: no upfront deduction, but all growth and withdrawals in retirement are completely tax-free. The decision rule: if you expect to be in a higher tax bracket in retirement than today, choose Roth. If you expect to be in a lower bracket, choose Traditional. For most people in their 20s and early 30s who are in the 12% or 22% bracket, Roth is typically advantageous. Roth IRA contributions (not earnings) can be withdrawn penalty-free at any time — making it a hybrid emergency fund for very early-career workers.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "pretax_vs_posttax_accounts",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Capital gains tax is applied to profits from selling investments. Short-term capital gains (assets held under 1 year) are taxed at ordinary income rates — the same as your paycheck. Long-term capital gains (assets held over 1 year) receive preferential rates: 0% for income under $47,025 (single, 2024), 15% for most middle-income earners, and 20% for high earners. Holding an investment for one day longer than a year can drop the tax rate from 22% to 15% — a meaningful difference. Tax-loss harvesting is the practice of selling investments at a loss to offset capital gains, reducing the taxable gain dollar-for-dollar. Losses exceeding gains can offset up to $3,000 of ordinary income per year, with excess carried forward to future years.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "capital_gains_tax",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "The standard deduction for 2024 is $14,600 for single filers and $29,200 for married filing jointly. Itemizing is only beneficial if your qualifying deductions (mortgage interest, state and local taxes up to $10,000, charitable contributions, medical expenses over 7.5% of AGI) exceed the standard deduction. The 2017 Tax Cuts and Jobs Act nearly doubled the standard deduction, meaning fewer than 10% of taxpayers now benefit from itemizing. Most renters should never itemize. Most homeowners with mortgages under $500,000 should run the calculation annually — especially in early mortgage years when interest paid is highest.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "standard_deduction_vs_itemizing",
+    "difficulty": "foundational",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  },
+  {
+    "content": "Freelancers, self-employed individuals, and anyone with significant non-W2 income must make quarterly estimated tax payments: April 15, June 15, September 15, and January 15. The safe harbor rule: pay either 100% of last year's tax liability (110% if prior year AGI exceeded $150,000) or 90% of this year's expected liability — whichever is smaller — to avoid underpayment penalties. A simple system: set aside 25–30% of every 1099 payment received into a dedicated tax savings account and pay quarterly. Failing to make quarterly payments results in penalties that compound per quarter even if the full tax bill is paid in April.",
+    "source": "irs",
+    "topic": "taxes",
+    "subtopic": "quarterly_estimated_taxes",
+    "difficulty": "intermediate",
+    "applies_to_rounds": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "career_relevance": [
+      "all"
+    ],
+    "last_updated": "2024-01"
+  }
+]
