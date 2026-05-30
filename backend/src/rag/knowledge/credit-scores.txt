@@ -1,0 +1,53 @@
+TOPIC: credit_scores
+SOURCE: cfpb
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 2,3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: fico_factors_overview
+DIFFICULTY: foundational
+
+FICO scores are calculated from five weighted factors: payment history (35%), amounts owed (30%), length of credit history (15%), credit mix (10%), and new credit (10%). Payment history is the single largest factor — one missed payment can drop a score by 60 to 110 points depending on the starting score. The higher your score, the more a single missed payment hurts it.
+
+---CHUNK---
+SUBTOPIC: utilization_ratio
+DIFFICULTY: foundational
+
+Credit utilization is calculated two ways by FICO: per-card utilization (each individual card's balance vs its limit) and aggregate utilization (total balances across all cards vs total limits). Both matter independently. A single card at 95% utilization hurts your score even if your overall aggregate is low. The widely cited "safe" threshold is below 30%, but scores in the 800+ range typically show utilization below 7%. Paying down balances before the statement closing date — not the due date — is when utilization gets reported to bureaus.
+
+---CHUNK---
+SUBTOPIC: thin_file
+DIFFICULTY: foundational
+
+A "thin file" means a credit report with fewer than three to five active tradelines. Lenders and landlords treat a thin file similarly to a low score — it signals unproven creditworthiness. Young adults and recent immigrants commonly have thin files. Secured credit cards, credit-builder loans, and becoming an authorized user on a family member's account are the three fastest ways to thicken a file. A thin file at age 22 can directly prevent apartment approval even with no negative marks.
+
+---CHUNK---
+SUBTOPIC: hard_vs_soft_inquiry
+DIFFICULTY: foundational
+
+A hard inquiry occurs when a lender reviews your credit to make a lending decision — credit card applications, auto loans, mortgages, and most personal loans trigger hard inquiries. A hard inquiry typically drops your score by 5 to 10 points and stays on your report for two years. A soft inquiry — checking your own score, pre-qualification checks, employer background checks — does not affect your score at all. Rate shopping for mortgages or auto loans within a 14 to 45 day window counts as a single hard inquiry under FICO's deduplication logic.
+
+---CHUNK---
+SUBTOPIC: negative_item_timeline
+DIFFICULTY: intermediate
+
+Negative items stay on a credit report for specific durations: late payments (7 years from the date of first delinquency), collections (7 years), Chapter 13 bankruptcy (7 years), Chapter 7 bankruptcy (10 years), hard inquiries (2 years). Time is calculated from the original delinquency date, not when the account was sent to collections or when you paid it off. Paying a collection account does not remove it from your report — it updates the status to "paid collection," which still hurts your score until it ages off.
+
+---CHUNK---
+SUBTOPIC: score_thresholds_loan_pricing
+DIFFICULTY: intermediate
+
+Credit score thresholds create pricing tiers that directly affect loan costs. On a $300,000 30-year mortgage, the difference between a 620–639 score and a 760+ score is approximately 1.5% APR — which translates to roughly $48,000 in additional interest over the life of the loan. Key pricing breakpoints: below 620 (subprime, many lenders decline), 620–659 (high-rate tier), 660–699 (standard rate), 700–739 (good rate), 740–759 (very good rate), 760+ (best available rate). Auto loans show similar tier structures with differences of 4 to 8% APR between lowest and highest tiers.
+
+---CHUNK---
+SUBTOPIC: credit_score_myths
+DIFFICULTY: foundational
+
+Common credit score myths that cost people money: (1) Closing old credit cards improves your score — it actually hurts by reducing available credit and shortening average account age. (2) Checking your own credit score lowers it — checking your own score is a soft inquiry and has zero effect. (3) Carrying a small balance helps your score — paying in full monthly is optimal; carrying a balance costs interest with no scoring benefit. (4) Income affects your credit score — income is not a factor in any credit scoring model. (5) Married couples share a credit score — each person always has their own individual credit report and score.
+
+---CHUNK---
+SUBTOPIC: credit_building_strategy
+DIFFICULTY: foundational
+
+The fastest legitimate path to building credit from zero: (1) Open a secured credit card with a $200–$500 deposit — use it for one recurring small purchase monthly. (2) Set the card to autopay the full balance — this guarantees on-time payment history, the largest FICO factor. (3) Keep utilization below 10% by paying before the statement close date. (4) After 6 months of on-time payments, most secured cards convert to unsecured and return the deposit. A credit score can go from no file to 680+ in 12 months using only this strategy with no other debt.

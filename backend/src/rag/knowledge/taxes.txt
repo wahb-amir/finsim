@@ -1,0 +1,41 @@
+TOPIC: taxes
+SOURCE: irs
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: marginal_vs_effective_rate
+DIFFICULTY: foundational
+
+Marginal tax rate is the rate applied to the last dollar earned — the rate of the highest bracket you enter. Effective tax rate is total tax paid divided by total income. A single filer earning $80,000 in 2024 is in the 22% marginal bracket but has an effective rate of approximately 15.4% because the first $11,600 is taxed at 10% and the next $35,550 is taxed at 12%. The common mistake: believing a raise or bonus that pushes you into a higher bracket means you'll "take home less." Tax brackets are marginal — only the dollars in the new bracket are taxed at the higher rate. A raise never reduces take-home pay.
+
+---CHUNK---
+SUBTOPIC: w2_vs_1099
+DIFFICULTY: intermediate
+
+W-2 employees have payroll taxes split with their employer: the employee pays 7.65% FICA (6.2% Social Security + 1.45% Medicare) and the employer pays an equal 7.65%. 1099 independent contractors pay both halves — the full 15.3% self-employment tax — in addition to income tax. On $60,000 of 1099 income, this means $9,180 in self-employment tax before federal income tax is calculated. The self-employed can deduct half of self-employment tax (the "employer half") from gross income. Quarterly estimated tax payments are required for 1099 earners expecting to owe $1,000 or more — missing these triggers underpayment penalties even if you pay in full at filing.
+
+---CHUNK---
+SUBTOPIC: pretax_vs_posttax_accounts
+DIFFICULTY: intermediate
+
+Traditional 401k and IRA contributions are pre-tax: they reduce taxable income now and are taxed at ordinary income rates on withdrawal in retirement. Roth IRA and Roth 401k contributions are post-tax: no upfront deduction, but all growth and withdrawals in retirement are completely tax-free. The decision rule: if you expect to be in a higher tax bracket in retirement than today, choose Roth. If you expect to be in a lower bracket, choose Traditional. For most people in their 20s and early 30s who are in the 12% or 22% bracket, Roth is typically advantageous. Roth IRA contributions (not earnings) can be withdrawn penalty-free at any time — making it a hybrid emergency fund for very early-career workers.
+
+---CHUNK---
+SUBTOPIC: capital_gains_tax
+DIFFICULTY: intermediate
+
+Capital gains tax is applied to profits from selling investments. Short-term capital gains (assets held under 1 year) are taxed at ordinary income rates — the same as your paycheck. Long-term capital gains (assets held over 1 year) receive preferential rates: 0% for income under $47,025 (single, 2024), 15% for most middle-income earners, and 20% for high earners. Holding an investment for one day longer than a year can drop the tax rate from 22% to 15% — a meaningful difference. Tax-loss harvesting is the practice of selling investments at a loss to offset capital gains, reducing the taxable gain dollar-for-dollar. Losses exceeding gains can offset up to $3,000 of ordinary income per year, with excess carried forward to future years.
+
+---CHUNK---
+SUBTOPIC: standard_deduction_vs_itemizing
+DIFFICULTY: foundational
+
+The standard deduction for 2024 is $14,600 for single filers and $29,200 for married filing jointly. Itemizing is only beneficial if your qualifying deductions (mortgage interest, state and local taxes up to $10,000, charitable contributions, medical expenses over 7.5% of AGI) exceed the standard deduction. The 2017 Tax Cuts and Jobs Act nearly doubled the standard deduction, meaning fewer than 10% of taxpayers now benefit from itemizing. Most renters should never itemize. Most homeowners with mortgages under $500,000 should run the calculation annually — especially in early mortgage years when interest paid is highest.
+
+---CHUNK---
+SUBTOPIC: quarterly_estimated_taxes
+DIFFICULTY: intermediate
+
+Freelancers, self-employed individuals, and anyone with significant non-W2 income must make quarterly estimated tax payments: April 15, June 15, September 15, and January 15. The safe harbor rule: pay either 100% of last year's tax liability (110% if prior year AGI exceeded $150,000) or 90% of this year's expected liability — whichever is smaller — to avoid underpayment penalties. A simple system: set aside 25–30% of every 1099 payment received into a dedicated tax savings account and pay quarterly. Failing to make quarterly payments results in penalties that compound per quarter even if the full tax bill is paid in April.

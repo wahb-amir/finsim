@@ -1,0 +1,35 @@
+TOPIC: insurance
+SOURCE: cfpb
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: health_insurance_mechanics
+DIFFICULTY: foundational
+
+Health insurance has three cost levers that interact: premium (monthly cost regardless of use), deductible (amount you pay out-of-pocket before insurance covers anything), and out-of-pocket maximum (the most you will ever pay in a single year — after this, insurance covers 100%). A low-premium, high-deductible plan has lower monthly cost but requires significant savings to cover the deductible. A high-premium, low-deductible plan costs more monthly but limits surprise expenses. The math: if your annual premium savings on an HDHP vs PPO is $1,200/year and your deductible is $2,000 higher, you break even only if you use healthcare enough to trigger the deductible. Young, healthy people typically benefit from HDHPs; those with chronic conditions typically benefit from low-deductible plans.
+
+---CHUNK---
+SUBTOPIC: hsa_triple_tax_advantage
+DIFFICULTY: intermediate
+
+A Health Savings Account (HSA) is available only with a High-Deductible Health Plan (HDHP) and offers three tax advantages: contributions are pre-tax (or tax-deductible), growth is tax-free, and withdrawals for qualified medical expenses are tax-free. This "triple tax advantage" makes an HSA mathematically the most tax-efficient account in the US tax code — more efficient than a 401k or IRA. HSA funds roll over indefinitely — they never expire. The stealth retirement strategy: invest HSA funds in index funds, pay medical expenses out of pocket while young and healthy, and let the HSA compound for 30 years. After age 65, HSA funds can be withdrawn for any purpose and are taxed as ordinary income — making the account function exactly like a Traditional IRA but with zero tax on medical withdrawals.
+
+---CHUNK---
+SUBTOPIC: disability_insurance
+DIFFICULTY: intermediate
+
+Disability insurance replaces a portion of income (typically 60–70%) if illness or injury prevents work. It is statistically the most underowned protection for working adults: a 35-year-old has a 25% chance of experiencing a disability lasting 90 days or longer before retirement, compared to a much lower probability of dying during working years. Short-term disability (STD) covers 60 to 180 days. Long-term disability (LTD) covers from the STD period end through retirement age. Employer-provided LTD is taxable as income if premiums are employer-paid. Individual policies are non-taxable if you paid premiums yourself. Young professionals in physically non-demanding jobs can get strong LTD coverage for $50–$150/month.
+
+---CHUNK---
+SUBTOPIC: renters_insurance
+DIFFICULTY: foundational
+
+Renters insurance covers personal property (theft, fire, water damage), liability (if someone is injured in your apartment), and additional living expenses (hotel if your apartment becomes uninhabitable). Cost: $15–$30 per month for $30,000 in personal property coverage and $100,000 in liability. Renters insurance does not cover the building itself (that's the landlord's policy) or flooding (requires separate flood insurance). The most common reason renters skip it: believing they own nothing worth insuring. The calculation: replacing a laptop ($1,200), bike ($600), clothes ($2,000), and furniture ($3,000) after a fire costs $6,800 — nearly 19 years of premium payments. Renters insurance is one of the highest-value financial products available per dollar spent.
+
+---CHUNK---
+SUBTOPIC: life_insurance_when_needed
+DIFFICULTY: foundational
+
+Life insurance is income replacement for dependents — it is only necessary if other people rely on your income. A single 24-year-old with no children and no co-signed debts does not need life insurance. The same person with a spouse, a child, or a co-signed mortgage needs it immediately. Term life insurance covers a specific period (10, 20, or 30 years) at a fixed premium — a 30-year-old non-smoker can get $500,000 of 20-year term coverage for approximately $25–$30 per month. Whole life insurance (permanent, builds cash value) costs 10 to 15 times more than equivalent term coverage and is almost never the right product for young people — the investment component underperforms simply buying term and investing the premium difference.

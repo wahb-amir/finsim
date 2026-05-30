@@ -1,0 +1,47 @@
+TOPIC: compound_interest
+SOURCE: investopedia
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 1,2,3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: formula_and_basics
+DIFFICULTY: foundational
+
+Compound interest is calculated as A = P(1 + r/n)^(nt), where A is the final amount, P is the principal, r is the annual interest rate as a decimal, n is the number of times interest compounds per year, and t is time in years. At 7% annual return compounding monthly, $10,000 becomes $20,097 after 10 years, $54,274 after 25 years, and $76,123 after 30 years. The key variable is time — not the rate. Adding 5 years to an investment period at 7% adds more value than increasing the rate by 2% for the same period.
+
+---CHUNK---
+SUBTOPIC: rule_of_72
+DIFFICULTY: foundational
+
+The Rule of 72 is a mental math shortcut for estimating doubling time: divide 72 by the annual interest rate to get approximate years to double. At 7%, money doubles in roughly 10.3 years (72/7). At 21.9% credit card APR, a balance that isn't paid down doubles in 3.3 years. At 1% savings account, money doubles in 72 years. This rule makes the difference between high-interest debt and market returns viscerally clear: your debt is compounding 3x faster than a stock index fund.
+
+---CHUNK---
+SUBTOPIC: credit_card_minimum_payment_spiral
+DIFFICULTY: intermediate
+
+A $5,000 balance at 21.9% APR with a 2% minimum payment (starting at $100) takes approximately 30 years to pay off and costs $9,200 in total interest — nearly double the original balance. The minimum payment structure is intentional: as the balance drops, the minimum drops too, extending the payoff timeline. Paying a fixed $150 per month instead cuts payoff to 4 years and reduces total interest to $1,600. Paying $300 per month cuts it to under 2 years and costs only $700 in interest. The difference between minimum payments and a fixed aggressive payment on a single card can exceed $7,500 over the life of the debt.
+
+---CHUNK---
+SUBTOPIC: savings_compound_growth
+DIFFICULTY: foundational
+
+A high-yield savings account (HYSA) at 4.5% APY on $5,000 earns $225 in year one, $235 in year two (because interest earned in year one also earns interest). Over 5 years, the $5,000 grows to $6,230 with no additional contributions. With $200 monthly contributions added, the same account reaches $19,450 in 5 years — $7,450 of which is interest. The distinction between APR (annual percentage rate, simple) and APY (annual percentage yield, compounded) matters: a savings account advertising 4.5% APR compounds to 4.59% APY monthly.
+
+---CHUNK---
+SUBTOPIC: retirement_start_age_impact
+DIFFICULTY: intermediate
+
+Starting retirement investing at 22 versus 32 creates approximately a $1,000,000 difference in retirement balance at age 67, assuming identical $500/month contributions at 7% real return. The 22-year-old contributes $270,000 total and ends with $2.4M. The 32-year-old contributes $210,000 total and ends with $1.2M. The extra $60,000 contributed by the 22-year-old generates $1.2M in additional wealth — a 20:1 return on those early contributions. The first 10 years of investing are disproportionately powerful because those dollars compound the longest.
+
+---CHUNK---
+SUBTOPIC: inflation_negative_compounding
+DIFFICULTY: intermediate
+
+Inflation acts as negative compounding on purchasing power. At 3% annual inflation, $10,000 today has the purchasing power of $7,441 in 10 years and $5,537 in 20 years — even without spending a dollar. Money sitting in a 0.01% APY checking account is actively losing real value every year. The real rate of return on any investment is the nominal rate minus inflation: a 7% stock market return during 3% inflation is a 4% real return. Keeping more than 3 to 6 months of expenses in cash is mathematically a wealth-destroying choice when real alternatives exist.
+
+---CHUNK---
+SUBTOPIC: employer_match_compounding
+DIFFICULTY: foundational
+
+An unclaimed employer 401k match is the highest guaranteed return available in personal finance. A 4% dollar-for-dollar match on a $60,000 salary means $2,400 per year in free money — a 100% instant return before any investment gains. That $2,400 annually at 7% over 30 years grows to $242,000. Employees who don't contribute enough to capture the full match are leaving this entire amount on the table. There is no investment, savings account, or debt payoff strategy that produces a guaranteed 100% return. The match should always be captured before any other financial priority except a true emergency fund.

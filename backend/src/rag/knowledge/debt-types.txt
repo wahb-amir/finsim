@@ -1,0 +1,47 @@
+TOPIC: debt
+SOURCE: cfpb
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 2,3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: credit_card_debt
+DIFFICULTY: foundational
+
+Credit card debt is revolving debt with variable APR. The national average APR as of 2024 is approximately 21–22%. Unlike installment loans, the minimum payment on a credit card is calculated as a percentage of the balance (typically 1–2% or a flat $25–35, whichever is greater), which means the payment shrinks as the balance shrinks — intentionally extending the repayment period. Most credit cards offer a grace period (typically 21–25 days after statement close) during which no interest accrues if the previous balance was paid in full. Once you carry a balance, the grace period disappears and purchases begin accruing interest immediately.
+
+---CHUNK---
+SUBTOPIC: auto_loan_true_cost
+DIFFICULTY: intermediate
+
+Auto loans amortize interest front-loaded: more of each early payment goes to interest. On a $30,000 auto loan at 7% over 60 months, the monthly payment is $594. In month 1, $175 is interest and $419 is principal. By month 30, $102 is interest and $492 is principal. Total interest paid over the life of the loan is $5,640. New cars depreciate approximately 20% in year one and 15% per year after that — meaning a $30,000 car is worth roughly $24,000 after 12 months. A buyer who finances at purchase and sells after 2 years may owe more than the car is worth (being "underwater"). Total cost of ownership — including depreciation, insurance, maintenance, and financing — is typically 1.5 to 2x the sticker price over 5 years.
+
+---CHUNK---
+SUBTOPIC: student_loans
+DIFFICULTY: intermediate
+
+Federal student loans come in two types during school: subsidized (government pays interest while enrolled) and unsubsidized (interest accrues from disbursement, capitalizes at repayment start). A $20,000 unsubsidized loan at 6.5% that accrues for 4 years of school starts repayment at approximately $25,400 — the borrower has never made a payment and already owes $5,400 more than they borrowed. Income-driven repayment (IDR) plans cap payments at 10% of discretionary income but can result in paying for 20 to 25 years. Federal loans offer protections — forbearance, deferment, IDR — that private loans do not. Refinancing federal loans to private permanently eliminates these protections.
+
+---CHUNK---
+SUBTOPIC: mortgage_amortization
+DIFFICULTY: intermediate
+
+Mortgages front-load interest heavily. On a 30-year $300,000 mortgage at 6.8%, the monthly payment is $1,956. In year one, approximately 78% of each payment is interest — only $432 of the first $1,956 payment goes to principal. The borrower must make 8 years of payments before the principal/interest split becomes 50/50. Private Mortgage Insurance (PMI) is required when the down payment is below 20%, typically costing 0.5 to 1.5% of the loan annually — on a $300,000 loan, that's $1,500 to $4,500 per year until equity reaches 20%. Closing costs add 2 to 5% of the purchase price upfront, making a $300,000 home purchase require $6,000 to $15,000 in cash beyond the down payment.
+
+---CHUNK---
+SUBTOPIC: medical_debt
+DIFFICULTY: intermediate
+
+Medical debt operates under different rules than other consumer debt. Hospitals are legally required to offer financial assistance programs for patients below certain income thresholds — these are negotiable and rarely advertised. As of 2023, the three major credit bureaus (Equifax, Experian, TransUnion) no longer include medical debt under $500 on credit reports, and paid medical collections are removed immediately. Unpaid medical bills under $500 are excluded; larger amounts have a 12-month grace period before being reported. Hospitals routinely offer 0% interest payment plans — this is the only common consumer debt where 0% financing is standard and accessible without a credit check. Always request an itemized bill; hospital billing errors are common.
+
+---CHUNK---
+SUBTOPIC: good_debt_bad_debt_framework
+DIFFICULTY: foundational
+
+The "good debt vs bad debt" framework is an oversimplification that leads to poor decisions. The more accurate framework: debt is beneficial when the asset it funds appreciates or produces income faster than the interest cost, and harmful when it does not. A mortgage at 4% on a house that appreciates at 3% annually may be neutral to slightly negative in pure math terms but provides housing and leverage. Student loan debt at 7% for a degree that increases income by $40,000 annually pays off quickly. Credit card debt at 22% on consumer goods is nearly always destructive — goods depreciate immediately, zero income is produced, and the interest compounds aggressively. The interest rate relative to the return on the purchased asset is the only calculation that matters.
+
+---CHUNK---
+SUBTOPIC: debt_avalanche_vs_snowball
+DIFFICULTY: foundational
+
+Two proven debt payoff strategies: Avalanche (pay minimums on all debts, put all extra money toward the highest-APR debt first) and Snowball (pay minimums on all debts, target the smallest balance first regardless of rate). Avalanche is mathematically optimal — it minimizes total interest paid. Snowball is psychologically optimal — early wins on small balances create momentum. Research shows Snowball leads to higher completion rates for people who have struggled with debt before. Avalanche is the right choice for people with strong financial discipline. The best strategy is the one that gets executed. The difference in total interest between the two methods is typically 5 to 15% on a typical multi-debt portfolio.

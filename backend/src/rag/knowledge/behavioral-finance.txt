@@ -1,0 +1,47 @@
+TOPIC: behavioral_finance
+SOURCE: academic
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 1,2,3,4,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: loss_aversion
+DIFFICULTY: foundational
+
+Loss aversion is the psychological tendency to feel losses approximately 2.5 times more intensely than equivalent gains. Losing $100 feels as bad as gaining $250 feels good. In financial decisions, this manifests as: refusing to sell investments at a loss (holding losers too long), paying off 0% debt immediately because the psychological burden of owing money outweighs the math, keeping emergency funds too large because the fear of running out exceeds the opportunity cost of uninvested cash, and avoiding market investing entirely due to fear of seeing negative returns even temporarily. Loss aversion consistently leads to decisions that feel right emotionally but produce worse long-term outcomes.
+
+---CHUNK---
+SUBTOPIC: present_bias
+DIFFICULTY: foundational
+
+Present bias is the tendency to overweight immediate costs and benefits versus future ones — systematically discounting the future even when the math clearly favors patience. Retirement feels abstract at 25 in a way that a new car does not. Present bias explains: choosing immediate spending over automatic 401k contributions, opting for the cash now over larger future value, taking on high-interest debt to fund current consumption, and consistently under-saving despite knowing intellectually that saving matters. The research-backed antidote is commitment devices: automatic transfers that remove the choice, employer payroll deductions, and apps that make future consequences feel immediate. Present bias is strongest when the future reward is more than 6 months away.
+
+---CHUNK---
+SUBTOPIC: lifestyle_inflation
+DIFFICULTY: foundational
+
+Lifestyle inflation (also called lifestyle creep) is the tendency to increase spending proportionally as income rises, preventing wealth accumulation even at high income levels. The pattern: promotion → new car → nicer apartment → dining out more often → savings rate unchanged or lower. Studies show that self-reported happiness does not increase proportionally with spending beyond a moderate income level, but spending increases automatically without conscious choice. The financial impact is severe: a person earning $100,000 with a 10% savings rate accumulates the same wealth as a person earning $60,000 with a 17% savings rate. The solution is "paying yourself first" — automating savings increases with each raise before lifestyle has a chance to absorb the difference.
+
+---CHUNK---
+SUBTOPIC: mental_accounting
+DIFFICULTY: intermediate
+
+Mental accounting is the tendency to treat money differently based on its source or intended purpose, violating the economic principle that money is fungible. Common examples: spending a tax refund freely because it feels like "found money" (it's your money, paid back with no interest), treating gambling winnings differently from salary, maintaining a savings account at 1% while carrying credit card debt at 22% because they are mentally "separate buckets," and overspending on credit cards versus cash because the payment is deferred. The refund example is particularly costly: the average federal tax refund is approximately $3,000 — at 22% APR, keeping that money from the IRS via adjusted withholding and applying it to credit card debt saves $660 in annual interest.
+
+---CHUNK---
+SUBTOPIC: sunk_cost_fallacy
+DIFFICULTY: foundational
+
+The sunk cost fallacy is making decisions based on past costs that cannot be recovered rather than future value. In finance: continuing to hold a declining investment because you "already lost so much" and can't bear to sell, continuing to pay insurance on a depreciating asset far beyond its value, keeping a high-expense financial advisor because you've worked with them for years and switching feels disloyal, or staying in a career path because of student loans already paid even when a better opportunity exists. The corrective question: "If I had no history with this, what would I choose today?" Sunk costs should never enter forward-looking financial decisions.
+
+---CHUNK---
+SUBTOPIC: availability_heuristic
+DIFFICULTY: intermediate
+
+The availability heuristic leads people to judge the probability of events based on how easily examples come to mind. Vivid, recent, or emotional events are overweighted. Financial manifestations: pulling investments out of the market after a crash because the loss is emotionally salient, overinsuring against dramatic but unlikely risks (plane crashes, asteroid strikes) while underinsuring against mundane but common ones (disability, car accident), timing stock purchases based on recent performance, and overweighting news-cycle narratives in investment decisions. The research-backed response: use base rates (actual historical frequencies) rather than emotional salience. Market crashes are followed by recoveries in 100% of historical cases for diversified index portfolios held long enough.
+
+---CHUNK---
+SUBTOPIC: anchoring
+DIFFICULTY: intermediate
+
+Anchoring is the tendency to rely too heavily on the first piece of information encountered when making decisions. In financial contexts: the original purchase price of a stock becomes an anchor for sell decisions (refusing to sell below purchase price regardless of current value), the MSRP on a car anchors negotiation even when the number is arbitrary, a salary number mentioned first in negotiation anchors the final outcome strongly in that direction, and mortgage lenders use monthly payment anchoring to obscure the total cost of a longer loan. Awareness of anchoring doesn't eliminate its effect — studies show even people told an anchor is random still adjust insufficiently away from it. The defense: establish your own independent valuation before receiving anchored information.

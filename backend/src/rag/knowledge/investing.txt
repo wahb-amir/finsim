@@ -1,0 +1,47 @@
+TOPIC: investing
+SOURCE: investopedia
+LAST_UPDATED: 2024-01
+APPLIES_TO_ROUNDS: 1,3,5,6,7,8,9,10
+CAREER_RELEVANCE: all
+
+---CHUNK---
+SUBTOPIC: index_funds_vs_active
+DIFFICULTY: foundational
+
+Index funds passively track a market index (like the S&P 500) with minimal trading. Actively managed funds employ managers who attempt to beat the market. The fee drag math: a 1% expense ratio on a $100,000 portfolio costs $1,000 in year one and compounds to approximately $100,000 in foregone wealth over 30 years at 7% return — meaning fees alone can consume a third of a retirement portfolio. Over any 15-year period, over 90% of actively managed large-cap funds underperform their benchmark index after fees. Vanguard, Fidelity, and Schwab offer index funds with expense ratios as low as 0.015% — essentially free.
+
+---CHUNK---
+SUBTOPIC: asset_allocation_by_age
+DIFFICULTY: foundational
+
+A commonly used rule of thumb: subtract your age from 110 to get the percentage of your portfolio in stocks, with the remainder in bonds. At age 25: 85% stocks, 15% bonds. At age 50: 60% stocks, 40% bonds. At age 65: 45% stocks, 55% bonds. More aggressive variants use 120 or 125 as the base number, appropriate for investors with higher risk tolerance or longer expected lifespans. Target-date funds automate this allocation shift, called "glide path," and are appropriate for investors who don't want to manage allocation manually. The key insight: young investors holding bonds are sacrificing growth for stability they don't yet need.
+
+---CHUNK---
+SUBTOPIC: 401k_mechanics
+DIFFICULTY: foundational
+
+The 2024 401k contribution limit is $23,000 ($30,500 for those 50 and older with catch-up contributions). Employer matches come in two common forms: dollar-for-dollar up to a percentage (e.g., 100% match on the first 4% of salary) or partial match (e.g., 50% match on contributions up to 6% of salary). Vesting schedules determine when the employer match becomes truly yours: cliff vesting (0% until 3 years, then 100%) or graded vesting (20% per year for 6 years). Employees who leave before vesting forfeit unvested match contributions. Always confirm your company's vesting schedule before deciding to leave — the unvested match may be worth staying for.
+
+---CHUNK---
+SUBTOPIC: roth_vs_traditional_ira
+DIFFICULTY: intermediate
+
+Traditional IRA contributions may be tax-deductible depending on income and whether you have a workplace plan. Roth IRA contributions are never deductible but grow and withdraw tax-free. 2024 Roth IRA income phase-out begins at $146,000 (single) and $230,000 (married filing jointly). The contribution limit is $7,000 ($8,000 if 50+) shared across all IRAs. Decision tree: no workplace retirement plan available → Traditional IRA for the deduction. Have a 401k, expect to be in higher bracket in retirement → Roth IRA. High income exceeding Roth limits → Backdoor Roth conversion. Early career, currently in 12% bracket → Roth almost always wins because tax-free compounding for 40 years outweighs the small upfront deduction.
+
+---CHUNK---
+SUBTOPIC: emergency_fund_before_investing
+DIFFICULTY: foundational
+
+The canonical personal finance order of operations: (1) Build a 3–6 month emergency fund in a high-yield savings account first. (2) Contribute to 401k at least up to the employer match. (3) Pay off high-interest debt (above ~7% APR). (4) Max IRA contributions. (5) Return to 401k for additional contributions. (6) Invest in taxable brokerage account. The emergency fund comes first because without it, any unexpected expense (job loss, medical bill, car repair) forces liquidation of investments at potentially the worst time, potentially at a loss, and with tax consequences. The threshold: 3 months for dual-income households with stable employment, 6 months for single income, variable income, or self-employed.
+
+---CHUNK---
+SUBTOPIC: dollar_cost_averaging_vs_lump_sum
+DIFFICULTY: intermediate
+
+When a lump sum of money is available to invest, studies show investing it all immediately (lump sum investing) outperforms spreading it over time (dollar-cost averaging) approximately 67% of the time, because markets rise more often than they fall and sitting in cash has an opportunity cost. However, dollar-cost averaging reduces regret and emotional distress when markets drop immediately after a lump sum investment. For regular monthly investing from income (salary), dollar-cost averaging is the default and works optimally — there is no lump sum decision to make. The lump sum vs DCA debate only applies to windfalls, inheritances, or large one-time amounts.
+
+---CHUNK---
+SUBTOPIC: sequence_of_returns_risk
+DIFFICULTY: advanced
+
+Sequence-of-returns risk describes the danger of experiencing large portfolio losses early in retirement when withdrawals are being taken. A 40% market drop in year 2 of retirement is far more damaging than the same drop in year 20, because early withdrawals sell shares at depressed prices, permanently reducing the share count that will recover. A portfolio that averages 7% annual return over 30 years can be completely depleted in 15 years if the worst years happen first. Mitigation strategies: maintaining 1–2 years of expenses in cash or bonds (a "bucket"), flexible withdrawal rates, and delayed Social Security claiming to reduce portfolio dependency.
