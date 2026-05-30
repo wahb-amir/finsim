@@ -1,9 +1,15 @@
 /**
- * src/controllers/debrief.js
+ * AI debrief endpoint (POST) — delegates to shared debrief service.
+ * Prefer GET /api/game/session/:id/debrief for the debrief page.
  */
 
 const GameSession = require("../Models/GameSession");
-const { generateDebriefReport } = require("../ai/debrief");
+const {
+  generateAndPersistDebrief,
+  toDebriefUIPayload,
+  finalMetricsToUI,
+  toPublicSession,
+} = require("../services/debrief");
 
 const debriefController = async (req, res) => {
   try {
@@ -13,28 +19,31 @@ const debriefController = async (req, res) => {
     const session = await GameSession.findOne({ _id: sessionId, userId: req.user._id });
     if (!session) return res.status(404).json({ message: "Session not found" });
 
-    // Must be a completed 10-round game
-    if (session.rounds.length < 10) {
+    if (session.status !== "completed") {
       return res.status(400).json({ message: "Game must be completed before generating debrief" });
     }
 
-    // Return cached report if it exists — debrief is never re-generated
-    if (session.debriefReport) {
-      return res.status(200).json({ success: true, cached: true, report: session.debriefReport });
-    }
+    const hadDebrief = Boolean(session.debriefData);
+    const { cached, report, sources } = await generateAndPersistDebrief(session);
+    const debrief = toDebriefUIPayload(session);
+    const metrics = finalMetricsToUI(session.finalMetrics, session.simState);
 
-    // Generate
-    const report = await generateDebriefReport(session);
-
-    // Persist to session so we never regenerate
-    session.debriefReport = report;
-    session.status = "completed";
-    await session.save();
-
-    return res.status(200).json({ success: true, cached: false, report });
+    return res.status(200).json({
+      success: true,
+      cached: cached || hadDebrief,
+      report,
+      debrief,
+      metrics,
+      sources,
+      session: toPublicSession(session),
+    });
   } catch (err) {
+    const status = err.statusCode || 500;
     console.error("[debriefController]", err.message);
-    res.status(500).json({ message: "Debrief generation failed", error: err.message });
+    res.status(status).json({
+      message: status === 400 ? err.message : "Debrief generation failed",
+      error: err.message,
+    });
   }
 };
 

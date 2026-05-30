@@ -87,6 +87,7 @@ function GameContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  const [exiting, setExiting] = useState(false);
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -158,6 +159,14 @@ function GameContent() {
 
         if (loadedSession.status === "completed") {
           router.replace(`/debrief?sessionId=${activeSessionId}`);
+          return;
+        }
+
+        if (loadedSession.status === "abandoned") {
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem("gameSessionId");
+          }
+          router.replace("/setup");
           return;
         }
 
@@ -270,6 +279,35 @@ function GameContent() {
     setDebriefData,
   ]);
 
+  const handleExitGame = useCallback(async () => {
+    if (!sessionId || exiting) return;
+    const confirmed = window.confirm(
+      "Exit this game? Your progress is saved and you can start a new simulation from setup.",
+    );
+    if (!confirmed) return;
+
+    setExiting(true);
+    try {
+      const res = await fetch(`${API}/game/session/${sessionId}/abandon`, {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || "Could not exit session");
+      }
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("gameSessionId");
+      }
+      router.push("/setup");
+    } catch (e) {
+      console.error(e);
+      showToast("error", e.message || "Could not exit game");
+    } finally {
+      setExiting(false);
+    }
+  }, [API, sessionId, exiting, router]);
+
   if (authLoading || loadingSession) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-[#F59E0B]">
@@ -320,6 +358,24 @@ function GameContent() {
         <span className="text-[11px] text-[#6B6B6B]">{userName}</span>
         <div className="ml-auto">
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleExitGame}
+              disabled={exiting}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2A2A2A] text-[#A1A1A1] text-[11px] font-medium hover:border-[#3A3A3A] hover:text-[#F5F5F5] transition-colors disabled:opacity-50"
+              aria-label="Exit game"
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path
+                  d="M4.5 2.5L2 5v5.5h8V5L7.5 2.5H4.5Z"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                  strokeLinejoin="round"
+                />
+                <path d="M5 6h2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+              </svg>
+              {exiting ? "Exiting…" : "Exit Game"}
+            </button>
             <button
               onClick={() => setAdvisorOpen(true)}
               className="lg:hidden px-2.5 py-1.5 rounded-lg border border-[#2A2A2A] text-[#A1A1A1] text-[11px] font-medium"
@@ -376,12 +432,23 @@ function GameContent() {
               <div>Starting salary: {formatCurrency(session.startSalary)}</div>
             </div>
 
-            <button
-              className="mt-3 text-[13px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black px-4 py-2 font-semibold rounded-[10px]"
-              onClick={() => router.push("/profile")}
-            >
-              Visit Profile
-            </button>
+            <div className="mt-3 flex flex-col gap-2">
+              <button
+                type="button"
+                className="text-[13px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black px-4 py-2 font-semibold rounded-[10px] transition-colors"
+                onClick={() => router.push("/profile")}
+              >
+                Visit Profile
+              </button>
+              <button
+                type="button"
+                disabled={exiting}
+                onClick={handleExitGame}
+                className="text-[12px] px-4 py-2 font-medium rounded-[10px] border border-[#2A2A2A] text-[#A1A1A1] hover:border-[#3A3A3A] hover:text-[#F5F5F5] transition-colors disabled:opacity-50"
+              >
+                {exiting ? "Saving & exiting…" : "Exit Game"}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1.5">

@@ -84,12 +84,17 @@ function mode(arr) {
 
 function buildDebriefPrompt(session, chunks) {
   const roundHistory = session.rounds.map((r) => ({
-    round:       r.round,
-    title:       r.title,
-    choice:      r.choice,
-    optimal:     getOptimalChoice(r.round),
-    isOptimal:   normalizeChoice(r.choice) === getOptimalChoice(r.round),
+    round: r.round,
+    eventTitle: r.eventTitle || r.title,
+    eventDescription: r.eventDescription,
+    choice: r.choice,
+    selectedOptionTitle: r.selectedOptionTitle,
+    selectedOptionDescription: r.selectedOptionDescription,
+    optimal: getOptimalChoice(r.round),
+    isOptimal: normalizeChoice(r.choice) === getOptimalChoice(r.round),
+    metricsBefore: r.metricsBefore,
     metricsAfter: r.metricsAfter,
+    narrative: r.narrative,
   }));
 
   return `You are generating a FinSim debrief report. Output ONLY valid JSON matching the schema below.
@@ -204,36 +209,42 @@ Output the JSON now:`;
 // ── Main export ───────────────────────────────────────────────────────────────
 
 async function generateDebriefReport(session) {
-  // 1. Run multi-query RAG in parallel
   const queries = buildDebriefQueries(session);
-  const chunks  = await retrieveMulti(queries, 8);
-
-  // 2. Build prompt
+  const chunks = await retrieveMulti(queries, 8);
   const prompt = buildDebriefPrompt(session, chunks);
 
-  // 3. Call Groq — JSON mode, no streaming (full document)
   const response = await groq.chat.completions.create({
-    model:       "llama-3.3-70b-versatile",
-    max_tokens:  4000,
+    model: "llama-3.3-70b-versatile",
+    max_tokens: 4000,
     temperature: 0.3,
-    stream:      false,
+    stream: false,
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: "You are a financial analysis engine. Output only valid JSON." },
-      { role: "user",   content: prompt },
+      { role: "user", content: prompt },
     ],
   });
 
   const raw = response.choices[0]?.message?.content || "";
-
-  // 4. Parse — strip any accidental markdown fences
   const cleaned = raw.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
 
+  let report;
   try {
-    return JSON.parse(cleaned);
+    report = JSON.parse(cleaned);
   } catch (err) {
     throw new Error(`Debrief JSON parse failed: ${err.message}\nRaw: ${cleaned.slice(0, 200)}`);
   }
+
+  const sources = (chunks || []).map((c) => ({
+    id: c.id,
+    source: c.source,
+    topic: c.topic,
+    subtopic: c.subtopic,
+    similarity: c.similarity,
+    excerpt: typeof c.content === "string" ? c.content.slice(0, 400) : "",
+  }));
+
+  return { report, sources };
 }
 
-module.exports = { generateDebriefReport };
+module.exports = { generateDebriefReport, buildDebriefQueries };

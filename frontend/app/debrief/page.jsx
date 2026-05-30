@@ -1,56 +1,99 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGame } from "@/context/GameContext";
-import { getFinalDebrief, MOCK_DEBRIEF } from "@/lib/api";
+import { useAuth } from "../context/AuthContext";
 import dynamic from "next/dynamic";
 
 const NetWorthChart = dynamic(() => import("@/components/ui/NetWorthChart"), {
   ssr: false,
 });
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 function DebriefContent() {
   const router = useRouter();
-  const {
-    playerName,
-    metrics,
-    roundHistory,
-    debriefData,
-    setDebriefData,
-    resetGame,
-    scenarioId,
-  } = useGame();
-  const [isLoading, setIsLoading] = useState(!debriefData);
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId");
+  const { user, loading: authLoading } = useAuth();
+  const { playerName, metrics, debriefData, setDebriefData, resetGame, scenarioId, hydrateGameView } =
+    useGame();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [serverMetrics, setServerMetrics] = useState(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!debriefData) {
-      // TODO: Replace mock debrief call with streamed LLM-generated analysis
-      // using full round history + final simulation state.
-      getFinalDebrief(roundHistory, metrics).then((data) => {
-        setDebriefData(data);
-        setIsLoading(false);
-      });
+    if (!authLoading && !user) {
+      router.replace("/auth");
     }
-  }, [debriefData, roundHistory, metrics, setDebriefData]);
+  }, [authLoading, user, router]);
 
-  const debrief = debriefData || MOCK_DEBRIEF;
-  const netWorth = metrics.netWorth ?? 0;
+  useEffect(() => {
+    if (!sessionId || authLoading || !user) return;
+
+    let cancelled = false;
+
+    const loadDebrief = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`${API}/game/session/${sessionId}/debrief`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data?.success) {
+          throw new Error(data?.message || "Failed to load debrief");
+        }
+
+        if (cancelled) return;
+
+        setDebriefData(data.debrief);
+        setServerMetrics(data.metrics);
+        if (data.metrics) {
+          hydrateGameView({ metrics: data.metrics });
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message || "Could not load debrief");
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    loadDebrief();
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, authLoading, user, setDebriefData, hydrateGameView]);
+
+  const debrief = debriefData;
+  const displayMetrics = serverMetrics || metrics;
+  const netWorth = displayMetrics?.netWorth ?? debrief?.finalMetrics?.netWorth ?? 0;
   const isPositive = netWorth >= 0;
-  const optimalMatches = debrief.optimalPath.filter((x) => x.match).length;
-  const matchRate = Math.round(
-    (optimalMatches / debrief.optimalPath.length) * 100,
-  );
+
+  const optimalPath = debrief?.optimalPath || [];
+  const optimalMatches = optimalPath.filter((x) => x.match).length;
+  const matchRate =
+    optimalPath.length > 0
+      ? Math.round((optimalMatches / optimalPath.length) * 100)
+      : 0;
+
   const macroRiskLabel =
-    metrics.recessionProbAnnual > 0.26
+    (displayMetrics?.recessionProbAnnual ?? 0) > 0.26
       ? "High"
-      : metrics.recessionProbAnnual > 0.18
+      : (displayMetrics?.recessionProbAnnual ?? 0) > 0.18
         ? "Medium"
         : "Low";
 
   const handleShare = () => {
-    const text = `🎮 FinSim Result — ${playerName || "Anonymous"}\n💰 Net Worth: $${netWorth.toLocaleString()}\n📊 Credit Score: ${metrics.creditScore}\n🏦 Retirement: $${metrics.retirementBalance.toLocaleString()}\n\nPlay at finsim.app`;
+    const text =
+      debrief?.shareText ||
+      `FinSim Result — ${playerName || debrief?.playerName || "Player"}\nNet Worth: $${netWorth.toLocaleString()}\nCredit Score: ${displayMetrics?.creditScore ?? "—"}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -59,6 +102,9 @@ function DebriefContent() {
 
   const handlePlayAgain = () => {
     resetGame();
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("gameSessionId");
+    }
     router.push("/setup");
   };
 
@@ -72,8 +118,25 @@ function DebriefContent() {
             <div className="w-2 h-2 rounded-full bg-[#F59E0B] dot-3" />
           </div>
           <p className="text-[#6B6B6B] text-sm">
-            Analyzing your financial journey...
+            Analyzing your financial journey with AI...
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !debrief) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <p className="text-red-400 mb-4">{error || "Debrief unavailable"}</p>
+          <button
+            type="button"
+            onClick={() => router.push("/setup")}
+            className="px-6 py-3 rounded-xl bg-[#F59E0B] text-[#0A0A0A] font-semibold text-sm"
+          >
+            Back to Setup
+          </button>
         </div>
       </div>
     );
@@ -81,7 +144,6 @@ function DebriefContent() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] pb-24">
-      {/* Top gradient */}
       <div
         className="fixed top-0 left-0 right-0 h-64 pointer-events-none opacity-20"
         style={{
@@ -92,7 +154,6 @@ function DebriefContent() {
       />
 
       <div className="max-w-5xl mx-auto px-4 pt-12 relative z-10">
-        {/* Header */}
         <div className="text-center mb-12 animate-fade-in-up">
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium mb-6"
@@ -103,9 +164,9 @@ function DebriefContent() {
             }}
           >
             SIMULATION COMPLETE · 10 ROUNDS
+            {debrief.scoreLabel ? ` · ${debrief.scoreLabel}` : ""}
           </div>
 
-          {/* Net worth headline */}
           <div
             className="text-6xl md:text-8xl font-extrabold tracking-tight mb-3"
             style={{
@@ -116,7 +177,7 @@ function DebriefContent() {
             {isPositive ? "+" : ""}${netWorth.toLocaleString()}
           </div>
           <p className="text-[#A1A1A1] text-lg mb-2">
-            {playerName || "Your"} net worth at age 31
+            {debrief.playerName || playerName || "Your"} net worth at age 31
           </p>
           <p
             className="text-[#F5F5F5] max-w-md mx-auto leading-relaxed"
@@ -124,9 +185,11 @@ function DebriefContent() {
           >
             &ldquo;{debrief.verdict}&rdquo;
           </p>
+          {debrief.subverdict ? (
+            <p className="text-[#6B6B6B] text-sm mt-3 max-w-lg mx-auto">{debrief.subverdict}</p>
+          ) : null}
         </div>
 
-        {/* 4 stat cards */}
         <div
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
           style={{ animationDelay: "0.1s", animationFillMode: "both" }}
@@ -139,28 +202,29 @@ function DebriefContent() {
             },
             {
               label: "Credit Score",
-              value: metrics.creditScore,
+              value: displayMetrics?.creditScore ?? "—",
               color:
-                metrics.creditScore >= 700
+                (displayMetrics?.creditScore ?? 0) >= 700
                   ? "#10B981"
-                  : metrics.creditScore >= 600
+                  : (displayMetrics?.creditScore ?? 0) >= 600
                     ? "#F59E0B"
                     : "#EF4444",
             },
             {
               label: "Total Debt",
-              value: `$${metrics.totalDebt.toLocaleString()}`,
+              value: `$${(displayMetrics?.totalDebt ?? 0).toLocaleString()}`,
               color:
-                metrics.totalDebt === 0
+                (displayMetrics?.totalDebt ?? 0) === 0
                   ? "#10B981"
-                  : metrics.totalDebt < 20000
+                  : (displayMetrics?.totalDebt ?? 0) < 20000
                     ? "#F59E0B"
                     : "#EF4444",
             },
             {
               label: "Retirement",
-              value: `$${metrics.retirementBalance.toLocaleString()}`,
-              color: metrics.retirementBalance > 5000 ? "#10B981" : "#F59E0B",
+              value: `$${(displayMetrics?.retirementBalance ?? 0).toLocaleString()}`,
+              color:
+                (displayMetrics?.retirementBalance ?? 0) > 5000 ? "#10B981" : "#F59E0B",
             },
           ].map((stat) => (
             <div
@@ -184,101 +248,123 @@ function DebriefContent() {
           ))}
         </div>
 
-        {/* Chart */}
-        <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
-          <h2
-            className="font-bold text-[#F5F5F5] mb-1"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Your Path vs Optimal Path
-          </h2>
-          <p className="text-[11px] text-[#6B6B6B] mb-6">
-            Net worth progression across 10 rounds
-          </p>
-          <NetWorthChart data={debrief.netWorthProgression} />
-        </div>
+        {debrief.netWorthProgression?.length > 0 ? (
+          <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
+            <h2
+              className="font-bold text-[#F5F5F5] mb-1"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Your Path vs Optimal Path
+            </h2>
+            <p className="text-[11px] text-[#6B6B6B] mb-6">
+              Net worth progression across 10 rounds
+            </p>
+            <NetWorthChart data={debrief.netWorthProgression} />
+          </div>
+        ) : null}
 
-        {/* Decision comparison */}
-        <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
-          <h2
-            className="font-bold text-[#F5F5F5] mb-1"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Decision Breakdown
-          </h2>
-          <p className="text-[11px] text-[#6B6B6B] mb-6">
-            What you chose vs. the optimal play
-          </p>
+        {optimalPath.length > 0 ? (
+          <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
+            <h2
+              className="font-bold text-[#F5F5F5] mb-1"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Decision Breakdown
+            </h2>
+            <p className="text-[11px] text-[#6B6B6B] mb-6">
+              What you chose vs. the optimal play
+            </p>
 
-          <div className="space-y-2">
-            {debrief.optimalPath.map((item) => (
-              <div
-                key={item.round}
-                className="grid grid-cols-[32px_1fr_1fr] gap-3 items-center py-2.5 px-3 rounded-lg"
-                style={{
-                  background: item.match
-                    ? "rgba(16,185,129,0.04)"
-                    : "rgba(239,68,68,0.04)",
-                }}
-              >
+            <div className="space-y-2">
+              {optimalPath.map((item) => (
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0"
+                  key={item.round}
+                  className="grid grid-cols-[32px_1fr_1fr] gap-3 items-center py-2.5 px-3 rounded-lg"
                   style={{
                     background: item.match
-                      ? "rgba(16,185,129,0.12)"
-                      : "rgba(239,68,68,0.12)",
-                    color: item.match ? "#10B981" : "#EF4444",
-                    border: `1px solid ${item.match ? "rgba(16,185,129,0.25)" : "rgba(239,68,68,0.25)"}`,
+                      ? "rgba(16,185,129,0.04)"
+                      : "rgba(239,68,68,0.04)",
                   }}
                 >
-                  {item.round}
-                </div>
-                <div>
-                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">
-                    You chose
-                  </div>
                   <div
-                    className="text-[12px] font-medium"
-                    style={{ color: item.match ? "#10B981" : "#EF4444" }}
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0"
+                    style={{
+                      background: item.match
+                        ? "rgba(16,185,129,0.12)"
+                        : "rgba(239,68,68,0.12)",
+                      color: item.match ? "#10B981" : "#EF4444",
+                      border: `1px solid ${item.match ? "rgba(16,185,129,0.25)" : "rgba(239,68,68,0.25)"}`,
+                    }}
                   >
-                    {item.choice}
+                    {item.round}
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">You chose</div>
+                    <div
+                      className="text-[12px] font-medium"
+                      style={{ color: item.match ? "#10B981" : "#EF4444" }}
+                    >
+                      {item.choice}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">Optimal</div>
+                    <div className="text-[12px] font-medium text-[#A1A1A1]">{item.optimal}</div>
                   </div>
                 </div>
-                <div>
-                  <div className="text-[11px] text-[#6B6B6B] mb-0.5">
-                    Optimal
-                  </div>
-                  <div className="text-[12px] font-medium text-[#A1A1A1]">
-                    {item.optimal}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* Match rate */}
-          <div className="mt-4 pt-4 border-t border-[#1F1F1F] flex items-center justify-between">
-            <span className="text-[11px] text-[#6B6B6B]">
-              Optimal decisions matched
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="w-32 h-1.5 rounded-full bg-[#1F1F1F] overflow-hidden">
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${(debrief.optimalPath.filter((x) => x.match).length / debrief.optimalPath.length) * 100}%`,
-                    background: "#10B981",
-                  }}
-                />
+            <div className="mt-4 pt-4 border-t border-[#1F1F1F] flex items-center justify-between">
+              <span className="text-[11px] text-[#6B6B6B]">Optimal decisions matched</span>
+              <div className="flex items-center gap-2">
+                <div className="w-32 h-1.5 rounded-full bg-[#1F1F1F] overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${matchRate}%`,
+                      background: "#10B981",
+                    }}
+                  />
+                </div>
+                <span className="text-[12px] font-bold text-[#10B981]">
+                  {optimalMatches}/{optimalPath.length}
+                </span>
               </div>
-              <span className="text-[12px] font-bold text-[#10B981]">
-                {optimalMatches}/{debrief.optimalPath.length}
-              </span>
             </div>
           </div>
-        </div>
+        ) : null}
 
-        {/* Report card */}
+        {debrief.advice?.length > 0 ? (
+          <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
+            <h2
+              className="font-bold text-[#F5F5F5] mb-1"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Personalized Takeaways
+            </h2>
+            <p className="text-[11px] text-[#6B6B6B] mb-6">
+              Based on your decisions and retrieved financial education
+            </p>
+            <div className="space-y-4">
+              {debrief.advice.map((item, i) => (
+                <div
+                  key={item.title || i}
+                  className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4"
+                >
+                  <div className="text-sm font-semibold text-[#F5F5F5] mb-1">
+                    {item.title}
+                  </div>
+                  <p className="text-[12px] text-[#A1A1A1] leading-relaxed">{item.body}</p>
+                  {item.estimatedImpact ? (
+                    <p className="text-[11px] text-[#F59E0B] mt-2">{item.estimatedImpact}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-6 mb-8">
           <h2
             className="font-bold text-[#F5F5F5] mb-1"
@@ -287,7 +373,7 @@ function DebriefContent() {
             Financial Report Card
           </h2>
           <p className="text-[11px] text-[#6B6B6B] mb-6">
-            Scenario: {scenarioId} · Generated from final simulation metrics
+            Scenario: {scenarioId || debrief.scenarioId} · Server-authoritative metrics
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
@@ -295,7 +381,7 @@ function DebriefContent() {
                 Resilience
               </div>
               <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
-                {Math.round(100 - metrics.stressIndex)}/100
+                {Math.round(100 - (displayMetrics?.stressIndex ?? 0))}/100
               </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Emergency cash buffer and stress profile after 10 rounds.
@@ -306,7 +392,7 @@ function DebriefContent() {
                 Debt Fitness
               </div>
               <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
-                {Math.max(0, 100 - Math.round(metrics.debtToIncome))}/100
+                {Math.max(0, 100 - Math.round(displayMetrics?.debtToIncome ?? 0))}/100
               </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Derived from debt-to-income and total debt load at finish.
@@ -316,29 +402,28 @@ function DebriefContent() {
               <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">
                 Decision Quality
               </div>
-              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
-                {matchRate}/100
-              </div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{matchRate}/100</div>
               <div className="text-[12px] text-[#A1A1A1]">
-                Proxy from optimal-path alignment in this mock debrief.
+                Alignment with heuristic optimal path from your round history.
               </div>
             </div>
           </div>
-          <div className="mt-4 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
-            <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-1">
-              Macro Conditions At Finish
+          {displayMetrics?.inflationAnnual != null ? (
+            <div className="mt-4 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
+              <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-1">
+                Macro Conditions At Finish
+              </div>
+              <div className="text-sm text-[#D1D1D1]">
+                Inflation: {(displayMetrics.inflationAnnual * 100).toFixed(1)}% · Recession
+                risk: {(displayMetrics.recessionProbAnnual * 100).toFixed(1)}% ({macroRiskLabel})
+              </div>
             </div>
-            <div className="text-sm text-[#D1D1D1]">
-              Inflation: {(metrics.inflationAnnual * 100).toFixed(1)}% ·
-              Recession risk: {(metrics.recessionProbAnnual * 100).toFixed(1)}%
-              ({macroRiskLabel})
-            </div>
-          </div>
+          ) : null}
         </div>
 
-        {/* CTA buttons */}
-        <div className="flex gap-4 justify-center">
+        <div className="flex gap-4 justify-center flex-wrap">
           <button
+            type="button"
             onClick={handlePlayAgain}
             className="px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
             style={{
@@ -351,6 +436,7 @@ function DebriefContent() {
             Play Again
           </button>
           <button
+            type="button"
             onClick={handleShare}
             className="px-8 py-3.5 rounded-xl font-semibold text-sm border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] flex items-center gap-2"
             style={{
@@ -360,33 +446,7 @@ function DebriefContent() {
               fontFamily: "var(--font-display)",
             }}
           >
-            {copied ? (
-              <>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M2 7L5.5 10.5L12 3"
-                    stroke="#10B981"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M10 4H4v7h6V4ZM8 2H2v7"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Share Result
-              </>
-            )}
+            {copied ? "Copied!" : "Share Result"}
           </button>
         </div>
       </div>
@@ -395,5 +455,15 @@ function DebriefContent() {
 }
 
 export default function DebriefPage() {
-  return <DebriefContent />;
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-[#6B6B6B]">
+          Loading debrief...
+        </div>
+      }
+    >
+      <DebriefContent />
+    </Suspense>
+  );
 }

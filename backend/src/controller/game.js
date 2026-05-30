@@ -1,9 +1,11 @@
 /**
  * Game session lifecycle (server-authoritative simulation).
  *
- *   POST /api/game/session         → create session + initial event
- *   POST /api/game/session/round   → apply choice, return next event
- *   GET  /api/game/session/:id     → session + current game view
+ *   POST /api/game/session              → create session + initial event
+ *   POST /api/game/session/round        → apply choice, return next event
+ *   POST /api/game/session/:id/abandon  → exit without deleting history
+ *   GET  /api/game/session/:id          → session + current game view
+ *   GET  /api/game/session/:id/debrief  → debrief payload (lazy-generates)
  */
 
 const GameSession = require("../Models/GameSession");
@@ -16,14 +18,39 @@ const {
   deriveScenarioId,
   hashStringToSeed,
   buildGameView,
+  getVisibleMetrics,
 } = require("../services/simulation");
+const {
+  normalizeChoice,
+  buildOptimalComparisonFromRounds,
+  buildFinalMetrics,
+  toPublicSession,
+  generateAndPersistDebrief,
+  toDebriefUIPayload,
+  finalMetricsToUI,
+} = require("../services/debrief");
 
 function persistGameView(session, stepResult) {
-  session.simulationState = stepResult.state;
+  session.simState = stepResult.state;
   session.currentEvent = stepResult.event;
   session.currentNarrative = stepResult.narrative;
   session.scenarioId = stepResult.state.scenarioId;
   session.simSeed = stepResult.state.seed;
+}
+
+function choiceToSide(choice) {
+  if (choice === "A" || choice === "left") return "left";
+  if (choice === "B" || choice === "right") return "right";
+  return choice;
+}
+
+function getSelectedOption(event, side) {
+  const option = side === "left" ? event?.left : event?.right;
+  if (!option) return { title: "", description: "" };
+  const description = Array.isArray(option.bullets)
+    ? option.bullets.join(" · ")
+    : option.description || "";
+  return { title: option.title || "", description };
 }
 
 const createSession = async (req, res) => {
@@ -80,8 +107,8 @@ const submitRound = async (req, res) => {
     if (!sessionId || !choice) {
       return res.status(400).json({ message: "sessionId and choice are required" });
     }
-    if (!["left", "right"].includes(choice)) {
-      return res.status(400).json({ message: 'choice must be "left" or "right"' });
+    if (!["left", "right", "A", "B"].includes(choice)) {
+      return res.status(400).json({ message: 'choice must be "left", "right", "A", or "B"' });
     }
 
     const session = await GameSession.findOne({ _id: sessionId, userId: req.user._id });
@@ -89,7 +116,10 @@ const submitRound = async (req, res) => {
     if (session.status === "completed") {
       return res.status(400).json({ message: "Game already completed" });
     }
-    if (!session.simulationState || !session.currentEvent) {
+    if (session.status === "abandoned") {
+      return res.status(400).json({ message: "Session was abandoned — start a new game" });
+    }
+    if (!session.simState || !session.currentEvent) {
       return res.status(400).json({ message: "Session has no active simulation state" });
     }
 
@@ -100,14 +130,32 @@ const submitRound = async (req, res) => {
     }
 
     const eventBefore = session.currentEvent;
-    const result = applyChoice({ state: session.simulationState, choice });
+    const side = choiceToSide(choice);
+    const metricsBefore = toStoredMetrics(
+      getVisibleMetrics(session.simState),
+      session.simState,
+    );
+    const selected = getSelectedOption(eventBefore, side);
+
+    const result = applyChoice({ state: session.simState, choice: side });
 
     session.rounds.push({
       round,
-      title: eventBefore.title,
       eventId: eventBefore.id,
-      choice,
+      eventTitle: eventBefore.title,
+      eventDescription: eventBefore.description,
+      choice: normalizeChoice(side),
+      selectedOptionTitle: selected.title,
+      selectedOptionDescription: selected.description,
+      metricsBefore,
       metricsAfter: toStoredMetrics(result.metrics, result.state),
+      narrative: result.narrative
+        ? {
+            headline: result.narrative.headline,
+            advisorHint: result.narrative.advisorHint,
+          }
+        : undefined,
+      timestamp: new Date(),
     });
 
     persistGameView(session, result);
@@ -115,38 +163,100 @@ const submitRound = async (req, res) => {
 
     if (round >= TOTAL_ROUNDS) {
       const finalStored = toStoredMetrics(result.metrics, result.state);
-      session.finalMetrics = {
-        netWorth: finalStored.netWorth,
-        creditScore: finalStored.creditScore,
-        savingsBalance: finalStored.savingsBalance,
-        investmentBalance: finalStored.investmentBalance,
-        retirementBalance: finalStored.retirementBalance,
-        totalDebt: finalStored.totalDebt,
-        stressIndex: finalStored.stressIndex,
-      };
+      session.finalMetrics = buildFinalMetrics(finalStored, result.state);
       session.finalSalary = result.state.grossIncomeAnnual;
+      session.optimalComparison = buildOptimalComparisonFromRounds(session.rounds);
       session.status = "completed";
+      session.currentEvent = null;
+      session.currentNarrative = null;
     }
 
     await session.save();
 
     const metrics = toUIMetrics(result.metrics, result.state);
+    const completed = session.status === "completed";
 
     res.status(200).json({
       success: true,
       currentRound: session.currentRound,
       metrics,
-      event: session.status === "completed" ? null : result.event,
+      event: completed ? null : result.event,
       narrative: result.narrative,
       debrief: result.debrief || null,
       status: session.status,
-      completed: session.status === "completed",
+      completed,
+      sessionId: session._id,
       ageYears: result.state.ageYears,
       scenarioId: session.scenarioId,
     });
   } catch (err) {
     console.error("[submitRound]", err.message);
     res.status(500).json({ message: "Failed to submit round", error: err.message });
+  }
+};
+
+const abandonSession = async (req, res) => {
+  try {
+    const session = await GameSession.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+    if (!session) return res.status(404).json({ message: "Session not found" });
+
+    if (session.status === "completed") {
+      return res.status(400).json({ message: "Cannot abandon a completed session" });
+    }
+
+    if (session.status !== "abandoned") {
+      session.status = "abandoned";
+      await session.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      sessionId: session._id,
+      status: session.status,
+      message: "Session saved. You can resume from your profile later or start a new game.",
+    });
+  } catch (err) {
+    console.error("[abandonSession]", err.message);
+    res.status(500).json({ message: "Failed to abandon session", error: err.message });
+  }
+};
+
+const getSessionDebrief = async (req, res) => {
+  try {
+    const session = await GameSession.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+    if (!session) return res.status(404).json({ message: "Session not found" });
+
+    if (session.status !== "completed") {
+      return res.status(400).json({
+        message: "Debrief is only available for completed sessions",
+        status: session.status,
+      });
+    }
+
+    const { cached } = await generateAndPersistDebrief(session);
+    const payload = toDebriefUIPayload(session);
+    const metrics = finalMetricsToUI(session.finalMetrics, session.simState);
+
+    res.status(200).json({
+      success: true,
+      cached,
+      debrief: payload,
+      metrics,
+      session: toPublicSession(session),
+    });
+  } catch (err) {
+    const status = err.statusCode || 500;
+    console.error("[getSessionDebrief]", err.message);
+    res.status(status).json({
+      message: err.statusCode === 400 ? err.message : "Debrief generation failed",
+      error: err.message,
+    });
   }
 };
 
@@ -162,7 +272,7 @@ const getSession = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      session,
+      session: toPublicSession(session),
       ...(game
         ? {
             currentRound: game.currentRound,
@@ -171,8 +281,9 @@ const getSession = async (req, res) => {
             narrative: game.narrative,
             scenarioId: game.scenarioId,
             ageYears: game.ageYears,
+            status: session.status,
           }
-        : {}),
+        : { status: session.status }),
     });
   } catch (err) {
     console.error("[getSession]", err.message);
@@ -183,7 +294,9 @@ const getSession = async (req, res) => {
 const listSessions = async (req, res) => {
   try {
     const sessions = await GameSession.find({ userId: req.user._id })
-      .select("_id career goal status currentRound createdAt finalMetrics.netWorth scenarioId")
+      .select(
+        "_id career goal status currentRound createdAt finalMetrics.netWorth scenarioId playerName",
+      )
       .sort({ createdAt: -1 })
       .limit(10);
     res.status(200).json({ success: true, sessions });
@@ -193,4 +306,11 @@ const listSessions = async (req, res) => {
   }
 };
 
-module.exports = { createSession, submitRound, getSession, listSessions };
+module.exports = {
+  createSession,
+  submitRound,
+  abandonSession,
+  getSessionDebrief,
+  getSession,
+  listSessions,
+};

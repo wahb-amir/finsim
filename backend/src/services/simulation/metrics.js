@@ -71,7 +71,7 @@ function hashStringToSeed(str = "") {
 }
 
 function buildGameView(session) {
-  const simState = session.simulationState;
+  const simState = session.simState ?? session.simulationState;
   if (!simState) return null;
 
   const visible = getVisibleMetrics(simState);

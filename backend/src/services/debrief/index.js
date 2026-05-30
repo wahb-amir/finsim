@@ -1,0 +1,242 @@
+/**
+ * Debrief orchestration: RAG retrieval, LLM report, persistence, UI adapter.
+ * All debrief data is derived from server-stored session state — never from the client.
+ */
+
+const { toUIMetrics } = require("../simulation/metrics");
+const { getVisibleMetrics } = require("../simulation/engine");
+
+const OPTIMAL_CHOICES = {
+  1: "A", 2: "A", 3: "B", 4: "B", 5: "A", 6: "A", 7: "B", 8: "A", 9: "A", 10: "A",
+};
+
+function normalizeChoice(choice) {
+  if (choice === "left") return "A";
+  if (choice === "right") return "B";
+  return choice;
+}
+
+function buildOptimalComparisonFromRounds(rounds) {
+  const netWorthByRound = (rounds || []).map((r) => {
+    const player = r.metricsAfter?.netWorth ?? 0;
+    const optimalRound = r.round;
+    const optimalChoice = OPTIMAL_CHOICES[optimalRound];
+    const playerMatchesOptimal =
+      normalizeChoice(r.choice) === optimalChoice;
+    const optimal = playerMatchesOptimal
+      ? player
+      : Math.round(player * 1.08);
+    return {
+      round: r.round,
+      player,
+      optimal,
+      delta: optimal - player,
+    };
+  });
+
+  const last = rounds[rounds.length - 1];
+  const finalPlayer = last?.metricsAfter?.netWorth ?? 0;
+  const finalOptimal =
+    netWorthByRound.reduce((max, row) => Math.max(max, row.optimal), finalPlayer);
+
+  return {
+    optimalNetWorth: finalOptimal,
+    optimalCredit: 760,
+    optimalRetirement: Math.round(
+      (last?.metricsAfter?.retirementBalance ?? 0) * 1.35,
+    ),
+    netWorthByRound,
+  };
+}
+
+function buildFinalMetrics(storedMetrics, simState) {
+  return {
+    netWorth: storedMetrics.netWorth,
+    creditScore: storedMetrics.creditScore,
+    savingsBalance: storedMetrics.savingsBalance,
+    investmentBalance: storedMetrics.investmentBalance,
+    retirementBalance: storedMetrics.retirementBalance,
+    totalDebt: storedMetrics.totalDebt,
+    totalInterestPaid: simState?.totalInterestPaid ?? 0,
+    stressIndex: storedMetrics.stressIndex,
+    debtToIncome: storedMetrics.debtToIncome,
+    emergencyFundMonths: storedMetrics.emergencyFundMonths,
+  };
+}
+
+/**
+ * Build client-safe final metrics for debrief UI (no simState).
+ */
+function finalMetricsToUI(finalMetrics, simState) {
+  if (!finalMetrics) return null;
+  const visible = simState
+    ? getVisibleMetrics(simState)
+    : {
+        monthlyIncomeNet: 0,
+        monthlyExpenses: 0,
+        netWorth: finalMetrics.netWorth,
+        creditScore: finalMetrics.creditScore,
+        stress: finalMetrics.stressIndex,
+        dti: (finalMetrics.debtToIncome ?? 0) / 100,
+        investments: finalMetrics.investmentBalance ?? 0,
+        inflationAnnual: 0.03,
+        recessionProbAnnual: 0.14,
+        burnout: 0,
+        bufferMonths: finalMetrics.emergencyFundMonths ?? 0,
+        outcomeScore: { composite: 0 },
+      };
+  return toUIMetrics(visible, simState || {
+    portfolio: {
+      retirement: finalMetrics.retirementBalance ?? 0,
+    },
+  });
+}
+
+/**
+ * Map stored debrief report + session into the shape the debrief page expects.
+ */
+function toDebriefUIPayload(session) {
+  const report = session.debriefData;
+  const rounds = session.rounds || [];
+  const comparison = session.optimalComparison;
+  const netWorthRows =
+    report?.netWorthByRound ||
+    comparison?.netWorthByRound ||
+    rounds.map((r) => ({
+      round: r.round,
+      player: r.metricsAfter?.netWorth ?? 0,
+      optimal: r.metricsAfter?.netWorth ?? 0,
+    }));
+
+  const optimalPath = rounds.map((r) => {
+    const optimalLetter = OPTIMAL_CHOICES[r.round] || "A";
+    const choiceLetter = normalizeChoice(r.choice);
+    const match = choiceLetter === optimalLetter;
+    return {
+      round: r.round,
+      choice: r.selectedOptionTitle || `Option ${choiceLetter}`,
+      optimal: match
+        ? r.selectedOptionTitle || `Option ${optimalLetter}`
+        : `Optimal: Option ${optimalLetter}`,
+      match,
+      choiceLetter,
+      optimalLetter,
+    };
+  });
+
+  const verdict =
+    session.aiSummary ||
+    report?.headline?.verdict ||
+    report?.headline?.subverdict ||
+    "Your 10-year financial simulation is complete.";
+
+  return {
+    verdict,
+    subverdict: report?.headline?.subverdict,
+    score: report?.headline?.score,
+    scoreLabel: report?.headline?.scoreLabel,
+    optimalPath,
+    netWorthProgression: netWorthRows.map((row) => ({
+      round: row.round,
+      player: row.player,
+      optimal: row.optimal ?? row.player,
+    })),
+    report,
+    sources: session.debriefSources || [],
+    advice: session.aiAdvice || report?.realLifeTakeaways || [],
+    shareText: report?.shareText,
+    playerName: session.playerName,
+    career: session.career,
+    goal: session.goal,
+    climateLabel: session.climateLabel,
+    scenarioId: session.scenarioId,
+    finalMetrics: session.finalMetrics,
+    optimalComparison: session.optimalComparison,
+    rounds: rounds.map((r) => ({
+      round: r.round,
+      eventTitle: r.eventTitle,
+      choice: r.choice,
+      selectedOptionTitle: r.selectedOptionTitle,
+      metricsBefore: r.metricsBefore,
+      metricsAfter: r.metricsAfter,
+    })),
+  };
+}
+
+/**
+ * Run RAG + LLM debrief and persist on the session document.
+ */
+async function generateAndPersistDebrief(session) {
+  if (session.debriefData) {
+    return {
+      cached: true,
+      report: session.debriefData,
+      sources: session.debriefSources,
+    };
+  }
+
+  if (session.status !== "completed" || (session.rounds?.length || 0) < 10) {
+    const err = new Error("Game must be completed with 10 rounds before debrief");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const { generateDebriefReport } = require("../../ai/debrief");
+  const { report, sources } = await generateDebriefReport(session);
+
+  session.debriefData = report;
+  session.debriefSources = sources;
+  session.aiSummary =
+    report?.headline?.verdict ||
+    report?.headline?.subverdict ||
+    null;
+  session.aiAdvice = report?.realLifeTakeaways || [];
+  session.debriefGeneratedAt = new Date();
+
+  if (report?.optimalComparison) {
+    session.optimalComparison = {
+      ...session.optimalComparison?.toObject?.() || session.optimalComparison || {},
+      optimalNetWorth:
+        report.optimalComparison.optimalNetWorth ??
+        session.optimalComparison?.optimalNetWorth,
+      optimalCredit:
+        report.optimalComparison.optimalCredit ??
+        session.optimalComparison?.optimalCredit,
+      optimalRetirement:
+        report.optimalComparison.optimalRetirement ??
+        session.optimalComparison?.optimalRetirement,
+    };
+  }
+
+  if (report?.netWorthByRound?.length) {
+    session.optimalComparison = {
+      ...(session.optimalComparison?.toObject?.() || session.optimalComparison || {}),
+      netWorthByRound: report.netWorthByRound,
+    };
+  }
+
+  await session.save();
+
+  return { cached: false, report, sources };
+}
+
+/**
+ * Strip server-only fields before sending session to the client.
+ */
+function toPublicSession(session) {
+  const doc = session.toObject ? session.toObject() : { ...session };
+  delete doc.simState;
+  delete doc.simSeed;
+  return doc;
+}
+
+module.exports = {
+  normalizeChoice,
+  buildOptimalComparisonFromRounds,
+  buildFinalMetrics,
+  finalMetricsToUI,
+  toDebriefUIPayload,
+  generateAndPersistDebrief,
+  toPublicSession,
+  OPTIMAL_CHOICES,
+};
