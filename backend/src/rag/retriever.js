@@ -1,25 +1,25 @@
 /**
- * retriever.js
- *
- * pgvector similarity search with metadata pre-filtering.
- * Used by both advisor.js (single query) and debrief.js (multi-query merge).
+ * src/rag/retriever.js
+ * pgvector similarity search using local all-MiniLM-L6-v2 embeddings.
  */
 
-import { pipeline } from "@xenova/transformers";
-import { createClient } from "@supabase/supabase-js";
-
-let _embedder = null;
-async function getEmbedder() {
-  if (!_embedder) _embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
-  return _embedder;
-}
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// ── Embed a query string ──────────────────────────────────────────────────────
+// Lazy-loaded local embedding model
+let _embedder = null;
+
+async function getEmbedder() {
+  if (!_embedder) {
+    const { pipeline } = await import("@xenova/transformers");
+    _embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+  }
+  return _embedder;
+}
 
 async function embedQuery(text) {
   const embedder = await getEmbedder();
@@ -27,54 +27,42 @@ async function embedQuery(text) {
   return Array.from(result.data);
 }
 
-// ── Single retrieval call ─────────────────────────────────────────────────────
 /**
- * @param {string}   queryText         - The query to embed and search
+ * Single retrieval call with optional metadata pre-filters.
+ * @param {string}   queryText
  * @param {object}   opts
- * @param {number}   opts.topK         - Number of chunks to return (default 5)
- * @param {number[]} opts.rounds       - Filter by applies_to_rounds (null = no filter)
- * @param {string}   opts.career       - Filter by career_relevance label (null = no filter)
- * @param {string}   opts.topic        - Lock to a single topic (null = no filter)
- *
- * @returns {Array<{id, content, source, topic, subtopic, difficulty, similarity}>}
+ * @param {number}   opts.topK       default 5
+ * @param {number[]} opts.rounds     filter by applies_to_rounds
+ * @param {string}   opts.career     filter by career_relevance
+ * @param {string}   opts.topic      lock to single topic
  */
-export async function retrieve(queryText, opts = {}) {
+async function retrieve(queryText, opts = {}) {
   const { topK = 5, rounds = null, career = null, topic = null } = opts;
-
   const embedding = await embedQuery(queryText);
 
   const { data, error } = await supabase.rpc("match_chunks", {
-    query_embedding:  embedding,
-    match_count:      topK,
-    filter_rounds:    rounds,
-    filter_career:    career,
-    filter_topic:     topic,
+    query_embedding: embedding,
+    match_count:     topK,
+    filter_rounds:   rounds,
+    filter_career:   career,
+    filter_topic:    topic,
   });
 
-  if (error) {
-    console.error("[retriever] Supabase RPC error:", error.message);
-    throw new Error(`Retrieval failed: ${error.message}`);
-  }
-
+  if (error) throw new Error(`Retrieval failed: ${error.message}`);
   return data || [];
 }
 
-// ── Multi-query retrieval (for debrief) ───────────────────────────────────────
 /**
- * Runs multiple queries in parallel, merges results, deduplicates by id,
- * then re-sorts by highest similarity across all queries.
- *
+ * Multi-query retrieval for debrief — runs queries in parallel,
+ * deduplicates by id, re-ranks by highest similarity.
  * @param {Array<{query, opts}>} queries
- * @param {number} finalTopK  - How many unique chunks to return after merge
- *
- * @returns {Array} deduplicated, re-ranked chunks
+ * @param {number} finalTopK
  */
-export async function retrieveMulti(queries, finalTopK = 8) {
+async function retrieveMulti(queries, finalTopK = 8) {
   const results = await Promise.all(
     queries.map(({ query, opts }) => retrieve(query, opts))
   );
 
-  // Flatten + deduplicate by id (keep highest similarity score on collision)
   const seen = new Map();
   for (const batch of results) {
     for (const chunk of batch) {
@@ -85,23 +73,21 @@ export async function retrieveMulti(queries, finalTopK = 8) {
     }
   }
 
-  // Sort by similarity descending and slice to finalTopK
   return Array.from(seen.values())
     .sort((a, b) => b.similarity - a.similarity)
     .slice(0, finalTopK);
 }
 
-// ── Format chunks as a context block for prompt injection ─────────────────────
 /**
- * Converts retrieved chunks into a clean string for prompt injection.
- * Each chunk is numbered and includes source/topic metadata for traceability.
+ * Format chunks into a clean string for prompt injection.
  */
-export function formatChunksForPrompt(chunks) {
-  if (!chunks || chunks.length === 0) return "(no context retrieved)";
+function formatChunksForPrompt(chunks) {
+  if (!chunks?.length) return "(no context retrieved)";
   return chunks
-    .map(
-      (c, i) =>
-        `[${i + 1}] Source: ${c.source} | Topic: ${c.topic}${c.subtopic ? ` > ${c.subtopic}` : ""}\n${c.content}`
+    .map((c, i) =>
+      `[${i + 1}] Source: ${c.source} | Topic: ${c.topic}${c.subtopic ? ` > ${c.subtopic}` : ""}\n${c.content}`
     )
     .join("\n\n---\n\n");
 }
+
+module.exports = { retrieve, retrieveMulti, formatChunksForPrompt };
