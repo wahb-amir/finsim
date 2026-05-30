@@ -188,7 +188,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API}/api/sessions/userData`, { credentials: "include" })
+    fetch(`${API}/game/sessions/userData`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => setGameData(d.gameData ?? []))
       .catch(() => setGameData([]))
