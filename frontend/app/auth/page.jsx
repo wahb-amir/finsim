@@ -30,7 +30,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push("/setup");
+      router.push("/dashboard");
     }
   }, [loading, user, router]);
 
@@ -76,7 +76,7 @@ const Auth = () => {
           setUser(data.user);
         }
 
-        setTimeout(() => router.push("/setup"), 1200);
+        setTimeout(() => router.push("/dashboard"), 1200);
       } else {
         showToast("error", data.message || "Failed");
       }

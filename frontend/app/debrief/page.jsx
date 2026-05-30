@@ -108,6 +108,10 @@ function DebriefContent() {
     router.push("/setup");
   };
 
+  const handleBackToDashboard = () => {
+    router.push("/dashboard");
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
@@ -132,10 +136,10 @@ function DebriefContent() {
           <p className="text-red-400 mb-4">{error || "Debrief unavailable"}</p>
           <button
             type="button"
-            onClick={() => router.push("/setup")}
-            className="px-6 py-3 rounded-xl bg-[#F59E0B] text-[#0A0A0A] font-semibold text-sm"
+            onClick={() => router.push("/dashboard")}
+            className="px-6 py-3 rounded-xl border border-[#2A2A2A] text-[#A1A1A1] font-semibold text-sm"
           >
-            Back to Setup
+            Back to Dashboard
           </button>
         </div>
       </div>
@@ -434,6 +438,19 @@ function DebriefContent() {
             }}
           >
             Play Again
+          </button>
+          <button
+            type="button"
+            onClick={handleBackToDashboard}
+            className="px-8 py-3.5 rounded-xl font-semibold text-sm border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
+            style={{
+              borderColor: "#2A2A2A",
+              color: "#A1A1A1",
+              background: "#111111",
+              fontFamily: "var(--font-display)",
+            }}
+          >
+            Dashboard
           </button>
           <button
             type="button"

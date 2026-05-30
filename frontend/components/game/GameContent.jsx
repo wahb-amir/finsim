@@ -14,6 +14,7 @@ import { GameRoundPanel } from "@/components/game/GameRoundPanel";
 import { GameFooter } from "@/components/game/GameFooter";
 import { useGameSession } from "@/hooks/useGameSession";
 import { TOTAL_ROUNDS, API } from "@/components/game/constants";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 export function GameContent() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export function GameContent() {
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [exiting, setExiting] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
 
   const showToast = useCallback((type, message) => {
     setToast({ type, message });
@@ -162,10 +164,6 @@ export function GameContent() {
 
   const handleExitGame = useCallback(async () => {
     if (!sessionId || exiting) return;
-    const confirmed = window.confirm(
-      "Exit this game? Your progress is saved and you can start a new simulation from setup.",
-    );
-    if (!confirmed) return;
 
     setExiting(true);
     try {
@@ -180,7 +178,8 @@ export function GameContent() {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem("gameSessionId");
       }
-      router.push("/setup");
+      setShowExitModal(false);
+      router.push("/dashboard");
     } catch (e) {
       console.error(e);
       showToast("error", e.message || "Could not exit game");
@@ -199,10 +198,22 @@ export function GameContent() {
     <div className="h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
       <GameToast toast={toast} />
 
+      <ConfirmModal
+        open={showExitModal}
+        title="Exit this simulation?"
+        description="Your progress will be saved to your dashboard. You can review your decisions later or start a new simulation anytime."
+        confirmLabel={exiting ? "Saving…" : "Save & Exit"}
+        cancelLabel="Keep Playing"
+        confirmVariant="danger"
+        loading={exiting}
+        onConfirm={handleExitGame}
+        onCancel={() => setShowExitModal(false)}
+      />
+
       <GameHeader
         userName={userName}
         exiting={exiting}
-        onExitGame={handleExitGame}
+        onExitGame={() => setShowExitModal(true)}
         onOpenAdvisor={() => setAdvisorOpen(true)}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
@@ -216,7 +227,7 @@ export function GameContent() {
           session={session}
           metrics={metrics}
           exiting={exiting}
-          onExitGame={handleExitGame}
+          onExitGame={() => setShowExitModal(true)}
           onClose={() => setSidebarOpen(false)}
         />
 

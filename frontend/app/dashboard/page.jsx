@@ -1,0 +1,323 @@
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
+import { SessionDetailModal } from "@/components/dashboard/SessionDetailModal";
+import { formatCurrency, prettifyLabel } from "@/lib/format";
+
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+const STATUS_CONFIG = {
+  completed: { label: "Completed", color: "#10B981" },
+  active: { label: "In Progress", color: "#F59E0B" },
+  abandoned: { label: "Abandoned", color: "#6B6B6B" },
+};
+
+function formatDate(dateStr) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function SessionCard({ session, onSelect }) {
+  const config = STATUS_CONFIG[session.status] || STATUS_CONFIG.abandoned;
+  const netWorth = session.finalMetrics?.netWorth;
+  const roundsPlayed = session.rounds?.length ?? Math.max(0, session.currentRound - 1);
+  const scoreLabel =
+    session.debriefData?.headline?.scoreLabel ?? session.debriefData?.scoreLabel;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(session)}
+      className="group w-full rounded-2xl border border-[#242424] bg-[#101010] p-5 text-left transition-all duration-200 hover:border-[#F59E0B]/40 hover:bg-[#131313] hover:shadow-[0_0_30px_rgba(245,158,11,0.06)]"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className="text-[10px] font-semibold uppercase tracking-wider"
+              style={{ color: config.color }}
+            >
+              {config.label}
+            </span>
+            {scoreLabel ? (
+              <span className="text-[10px] text-[#6B6B6B]">{scoreLabel}</span>
+            ) : null}
+          </div>
+          <h3
+            className="mt-1 truncate text-lg font-bold text-[#F5F5F5] group-hover:text-white"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {session.career || "Simulation Run"}
+          </h3>
+          <p className="mt-1 text-sm text-[#6B6B6B]">
+            {prettifyLabel(session.goal)} · {session.climateLabel || "Stable"} ·{" "}
+            {roundsPlayed}/10 rounds
+          </p>
+        </div>
+
+        {netWorth != null ? (
+          <div className="text-right flex-shrink-0">
+            <div
+              className="text-lg font-bold"
+              style={{ color: netWorth >= 0 ? "#10B981" : "#EF4444" }}
+            >
+              {netWorth >= 0 ? "+" : ""}
+              {formatCurrency(netWorth)}
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-[#6B6B6B]">
+              Net Worth
+            </div>
+          </div>
+        ) : (
+          <div className="flex-shrink-0 text-[#6B6B6B]">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              className="opacity-50 transition group-hover:opacity-100 group-hover:translate-x-0.5"
+            >
+              <path
+                d="M7 4l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[#6B6B6B]">
+        <span>{formatDate(session.createdAt)}</span>
+        {session.startSalary ? (
+          <span>Started at ${Number(session.startSalary).toLocaleString()}/yr</span>
+        ) : null}
+        {session.scenarioId ? (
+          <span className="capitalize">{session.scenarioId.replace(/-/g, " ")}</span>
+        ) : null}
+      </div>
+    </button>
+  );
+}
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [filter, setFilter] = useState("all");
+
+  const loadSessions = useCallback(async () => {
+    try {
+      const res = await fetch(`${API}/game/sessions`, {
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data?.success && Array.isArray(data.sessions)) {
+        setSessions(data.sessions);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/auth");
+      return;
+    }
+    if (user) loadSessions();
+  }, [authLoading, user, router, loadSessions]);
+
+  const handleSelectSession = async (session) => {
+    setSelectedSession(session);
+    setDetailLoading(true);
+
+    try {
+      const res = await fetch(`${API}/game/session/${session._id}`, {
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data?.success && data.session) {
+        setSelectedSession({ ...session, ...data.session, rounds: data.session.rounds });
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  const handleViewDebrief = (sessionId) => {
+    router.push(`/debrief?sessionId=${sessionId}`);
+  };
+
+  const handleContinue = (sessionId) => {
+    localStorage.setItem("gameSessionId", sessionId);
+    router.push(`/game?sessionId=${sessionId}`);
+  };
+
+  const filteredSessions = sessions.filter((s) => {
+    if (filter === "all") return true;
+    return s.status === filter;
+  });
+
+  const stats = {
+    total: sessions.length,
+    completed: sessions.filter((s) => s.status === "completed").length,
+    active: sessions.filter((s) => s.status === "active").length,
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0A] text-[#F59E0B]">
+        <div className="text-center">
+          <div className="mb-3 text-2xl">Loading dashboard…</div>
+          <div className="text-sm text-[#6B6B6B]">Fetching your simulation history</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SessionDetailModal
+        session={selectedSession}
+        loading={detailLoading}
+        onClose={() => setSelectedSession(null)}
+        onViewDebrief={handleViewDebrief}
+        onContinue={handleContinue}
+      />
+
+      <div className="min-h-screen bg-[#0A0A0A] px-4 py-10 text-white">
+        <div
+          className="pointer-events-none fixed left-1/2 top-0 h-[400px] w-[800px] -translate-x-1/2 opacity-[0.05]"
+          style={{
+            background: "radial-gradient(ellipse, #F59E0B, transparent 70%)",
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-4xl">
+          <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.35em] text-[#6B6B6B]">
+                Your Dashboard
+              </p>
+              <h1
+                className="mt-2 text-4xl font-bold text-[#F5F5F5]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Welcome back, {user?.name?.split(" ")[0] || "Player"}
+              </h1>
+              <p className="mt-2 text-sm text-[#A1A1A1]">
+                Review past simulations, revisit debriefs, or start a new run.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => router.push("/setup")}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-95"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M7 1v12M1 7h12"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+              New Simulation
+            </button>
+          </div>
+
+          <div className="mb-8 grid grid-cols-3 gap-4">
+            {[
+              { label: "Total Runs", value: stats.total },
+              { label: "Completed", value: stats.completed },
+              { label: "In Progress", value: stats.active },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-2xl border border-[#242424] bg-[#101010] p-4 text-center"
+              >
+                <div
+                  className="text-2xl font-bold text-[#F5F5F5]"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {stat.value}
+                </div>
+                <div className="mt-1 text-[10px] uppercase tracking-widest text-[#6B6B6B]">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-6 flex gap-2">
+            {[
+              { id: "all", label: "All" },
+              { id: "completed", label: "Completed" },
+              { id: "active", label: "In Progress" },
+              { id: "abandoned", label: "Abandoned" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setFilter(tab.id)}
+                className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
+                  filter === tab.id
+                    ? "bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30"
+                    : "text-[#6B6B6B] border border-transparent hover:text-[#A1A1A1]"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {filteredSessions.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-[#2A2A2A] bg-[#101010]/50 py-20 text-center">
+              <div className="mb-4 text-4xl">📊</div>
+              <h2 className="text-xl font-bold text-[#F5F5F5]">No simulations yet</h2>
+              <p className="mx-auto mt-2 max-w-sm text-sm text-[#6B6B6B]">
+                Start your first financial life simulation to see your history, decisions, and
+                debriefs here.
+              </p>
+              <button
+                type="button"
+                onClick={() => router.push("/setup")}
+                className="mt-6 rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-95"
+              >
+                Start Your First Run
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredSessions.map((session) => (
+                <SessionCard
+                  key={session._id}
+                  session={session}
+                  onSelect={handleSelectSession}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}

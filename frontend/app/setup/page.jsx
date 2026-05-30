@@ -51,6 +51,23 @@ const CLIMATE_OPTIONS = [
   },
 ];
 
+const PROFESSIONS = [
+  "Software Engineer",
+  "Doctor",
+  "Nurse",
+  "Teacher",
+  "Accountant",
+  "Electrician",
+  "Lawyer",
+  "Pilot",
+  "Business Owner",
+  "Designer",
+  "Sales Representative",
+  "Project Manager",
+  "Entrepreneur",
+  "Other",
+];
+
 function SetupContent() {
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API_URL;
@@ -62,7 +79,8 @@ function SetupContent() {
   const [step, setStep] = useState(1);
 
   const [userName, setUserName] = useState("");
-  const [career, setCareer] = useState("");
+  const [profession, setProfession] = useState("");
+  const [customProfession, setCustomProfession] = useState("");
   const [startSalary, setStartSalary] = useState("");
   const [goal, setGoal] = useState("build-wealth");
   const [climateLabel, setClimateLabel] = useState("Stable");
@@ -77,7 +95,11 @@ function SetupContent() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const canProceedStep1 = career.trim().length >= 2 && Number(startSalary) > 0;
+  const selectedProfessionLabel =
+    profession === "Other" ? customProfession.trim() : profession.trim();
+
+  const canProceedStep1 =
+    selectedProfessionLabel.length >= 2 && Number(startSalary) > 0;
   const canProceedStep2 = goal !== "";
   const canProceedStep3 = climateLabel !== "";
 
@@ -113,7 +135,7 @@ function SetupContent() {
 
         if (sessionsData?.success && Array.isArray(sessionsData.sessions)) {
           const unfinished = sessionsData.sessions.find(
-            (s) => s.status !== "completed"
+            (s) => s.status === "active",
           );
 
           if (unfinished) {
@@ -152,7 +174,7 @@ function SetupContent() {
 
     try {
       const payload = {
-        career: career.trim(),
+        career: selectedProfessionLabel,
         startSalary: Number(startSalary),
         goal,
         climateLabel,
@@ -269,6 +291,15 @@ function SetupContent() {
 
         <div className="mx-auto w-full max-w-3xl relative z-10">
           <div className="mb-8 text-center">
+            <div className="mb-4 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard")}
+                className="text-[11px] text-[#6B6B6B] transition hover:text-[#F59E0B]"
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
             <p className="text-[11px] uppercase tracking-[0.35em] text-[#6B6B6B]">
               Financial Life Simulation
             </p>
@@ -334,22 +365,69 @@ function SetupContent() {
                     Your starting setup
                   </h2>
                   <p className="mt-2 text-sm text-[#A1A1A1]">
-                    Pick the career and starting salary for this run.
+                    Choose a profession and set your starting salary.
                   </p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4">
                     <label className="mb-2 block text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B]">
-                      Career
+                      Profession
                     </label>
-                    <input
-                      type="text"
-                      value={career}
-                      onChange={(e) => setCareer(e.target.value)}
-                      placeholder="e.g. Software Engineer"
-                      className="w-full rounded-xl border border-[#2A2A2A] bg-[#111111] px-4 py-3 text-base text-white placeholder:text-[#3A3A3A] outline-none transition focus:border-[#F59E0B]/60"
-                    />
+
+                    <div className="relative">
+                      <select
+                        value={profession}
+                        onChange={(e) => {
+                          setProfession(e.target.value);
+                          if (e.target.value !== "Other") {
+                            setCustomProfession("");
+                          }
+                        }}
+                        className="w-full appearance-none rounded-xl border border-[#2A2A2A] bg-[#111111] px-4 py-3 pr-10 text-base text-white outline-none transition focus:border-[#F59E0B]/60"
+                      >
+                        <option value="" disabled>
+                          Select a profession
+                        </option>
+                        {PROFESSIONS.map((job) => (
+                          <option key={job} value={job}>
+                            {job}
+                          </option>
+                        ))}
+                      </select>
+
+                      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#6B6B6B]">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                        >
+                          <path
+                            d="M5 8L10 13L15 8"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {profession === "Other" && (
+                      <div className="mt-4">
+                        <label className="mb-2 block text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B]">
+                          Custom profession
+                        </label>
+                        <input
+                          type="text"
+                          value={customProfession}
+                          onChange={(e) => setCustomProfession(e.target.value)}
+                          placeholder="e.g. Product Designer"
+                          className="w-full rounded-xl border border-[#2A2A2A] bg-[#111111] px-4 py-3 text-base text-white placeholder:text-[#3A3A3A] outline-none transition focus:border-[#F59E0B]/60"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4">
@@ -393,7 +471,7 @@ function SetupContent() {
                     <button
                       key={g.id}
                       onClick={() => setGoal(g.id)}
-                      className={`w-full rounded-2xl border p-5 text-left transition-all duration-200 flex items-center gap-4 ${
+                      className={`flex w-full items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-200 ${
                         goal === g.id
                           ? "border-[#F59E0B] bg-[#151515] shadow-[0_0_0_1px_rgba(245,158,11,0.2)]"
                           : "border-[#242424] bg-[#111111] hover:border-[#363636]"
@@ -472,7 +550,12 @@ function SetupContent() {
               ) : (
                 <button
                   onClick={handleBegin}
-                  disabled={!canProceedStep1 || !canProceedStep2 || !canProceedStep3 || submitting}
+                  disabled={
+                    !canProceedStep1 ||
+                    !canProceedStep2 ||
+                    !canProceedStep3 ||
+                    submitting
+                  }
                   className="flex-1 rounded-xl bg-[#F59E0B] px-6 py-3.5 text-sm font-semibold text-black transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {submitting ? "Creating session..." : "Begin my life →"}

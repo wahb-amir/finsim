@@ -54,7 +54,8 @@ function deriveScenarioId(session) {
 
   if (goal === "build-wealth") {
     if (climate === "volatile") return "startup-founder";
-    if (salary >= 80000) return "startup-founder";
+    if (salary >= 120000) return "startup-founder";
+    if (climate === "inflation") return "baseline";
     return "baseline";
   }
 

@@ -28,6 +28,7 @@ var import_math = require("./math");
 var import_events = require("./events");
 var import_prng = require("./prng");
 var import_scenarios = require("./scenarios");
+var import_setupProfile = require("./setupProfile");
 const DEFAULT_TAX_BRACKETS_US_SINGLE_2026_APPROX = [
   { upTo: 11950, rate: 0.1 },
   { upTo: 48500, rate: 0.12 },
@@ -186,27 +187,36 @@ function fireDelayedEffects({
 }
 function createNewGame({
   scenarioId,
-  seed
+  seed,
+  startSalary,
+  climateLabel,
+  career
 }) {
   const scenario = (0, import_scenarios.getScenario)(scenarioId);
+  const profile = (0, import_setupProfile.buildSetupProfile)(scenario, {
+    startSalary,
+    climateLabel,
+    career,
+  });
+  const { modifiers, start } = profile;
   const actualSeed = (seed ?? (0, import_prng.hashSeed)(`${scenarioId}:seedless`)) >>> 0;
   const rng = (0, import_prng.createRng)(actualSeed);
   const macro = (0, import_events.rollMacro)({
     rng,
-    baseInflationAnnual: scenario.modifiers.inflationAnnual,
-    baseRecessionProbAnnual: scenario.modifiers.recessionProbAnnual,
+    baseInflationAnnual: modifiers.inflationAnnual,
+    baseRecessionProbAnnual: modifiers.recessionProbAnnual,
     stressIndex: 25
   });
   const debts = [];
-  if (scenario.start.debt.kind !== "none" && scenario.start.debt.balance > 0) {
-    const kindMap = scenario.start.debt.kind === "student" ? "student" : "credit-card";
-    const term = scenario.start.debt.termMonths;
-    const min = kindMap === "student" && term ? (0, import_math.paymentAmortized)({ principal: scenario.start.debt.balance, annualRate: scenario.start.debt.apr, termMonths: term }) : Math.max(35, scenario.start.debt.balance * 0.03);
+  if (start.debt.kind !== "none" && start.debt.balance > 0) {
+    const kindMap = start.debt.kind === "student" ? "student" : "credit-card";
+    const term = start.debt.termMonths;
+    const min = kindMap === "student" && term ? (0, import_math.paymentAmortized)({ principal: start.debt.balance, annualRate: start.debt.apr, termMonths: term }) : Math.max(35, start.debt.balance * 0.03);
     debts.push({
       id: `d0`,
       kind: kindMap,
-      balance: scenario.start.debt.balance,
-      apr: scenario.start.debt.apr,
+      balance: start.debt.balance,
+      apr: start.debt.apr,
       minPaymentMonthly: (0, import_math.round2)(min),
       termMonths: term
     });
@@ -216,24 +226,26 @@ function createNewGame({
     scenarioId,
     step: "month",
     monthIndex: 0,
-    ageYears: scenario.start.ageYears,
-    cash: scenario.start.cash,
-    grossIncomeAnnual: scenario.start.grossSalaryAnnual,
-    baseExpensesMonthly: scenario.start.baseExpensesMonthly + scenario.modifiers.childcareMonthly + scenario.modifiers.remittanceMonthly,
-    creditScore: scenario.start.creditScore,
-    burnout: (0, import_math.clamp)(15 + scenario.modifiers.burnoutDriftMonthly * 2, 0, 100),
+    ageYears: start.ageYears,
+    cash: start.cash,
+    grossIncomeAnnual: start.grossSalaryAnnual,
+    baseExpensesMonthly: start.baseExpensesMonthly + modifiers.childcareMonthly + modifiers.remittanceMonthly,
+    creditScore: start.creditScore,
+    burnout: (0, import_math.clamp)(15 + modifiers.burnoutDriftMonthly * 2, 0, 100),
     stress: 20,
     debts,
-    portfolio: { ...scenario.start.investments },
+    portfolio: { ...start.investments },
     macro,
     pendingEffects: [],
-    history: []
+    history: [],
+    setupModifiers: modifiers,
   };
   return nextEvent({ state });
 }
 function nextEvent({ state }) {
   const rng = (0, import_prng.createRng)(state.seed + state.monthIndex * 2654435761 >>> 0);
   const scenario = (0, import_scenarios.getScenario)(state.scenarioId);
+  const modifiers = state.setupModifiers || scenario.modifiers;
   const dti = computeDTI(state);
   const event = (0, import_events.generateEvent)({
     rng,
@@ -247,14 +259,14 @@ function nextEvent({ state }) {
     grossIncomeAnnual: state.grossIncomeAnnual,
     pendingDelayedEffects: state.pendingEffects,
     scenarioFlags: {
-      restrictedCredit: scenario.modifiers.restrictedCredit,
-      remittanceMonthly: scenario.modifiers.remittanceMonthly,
-      childcareMonthly: scenario.modifiers.childcareMonthly,
-      healthcareRiskAnnual: scenario.modifiers.healthcareRiskAnnual,
+      restrictedCredit: modifiers.restrictedCredit,
+      remittanceMonthly: modifiers.remittanceMonthly,
+      childcareMonthly: modifiers.childcareMonthly,
+      healthcareRiskAnnual: modifiers.healthcareRiskAnnual,
       // fix #2
-      layoffProbAnnual: scenario.modifiers.layoffProbAnnual,
+      layoffProbAnnual: modifiers.layoffProbAnnual,
       // fix #2
-      burnoutDriftMonthly: scenario.modifiers.burnoutDriftMonthly,
+      burnoutDriftMonthly: modifiers.burnoutDriftMonthly,
       hasEquity: scenario.start.investments.equity > 0
       // fix #2
     },
@@ -276,6 +288,7 @@ function applyChoice({
   choice
 }) {
   const scenario = (0, import_scenarios.getScenario)(state.scenarioId);
+  const modifiers = state.setupModifiers || scenario.modifiers;
   const rng = (0, import_prng.createRng)((state.seed ^ (state.monthIndex + 1) * 2246822519) >>> 0);
   const annualTax = (0, import_math.taxAnnual)({
     taxableIncome: Math.max(0, state.grossIncomeAnnual * 0.9),
@@ -287,8 +300,8 @@ function applyChoice({
   });
   const nextMacro = (0, import_events.rollMacro)({
     rng,
-    baseInflationAnnual: scenario.modifiers.inflationAnnual,
-    baseRecessionProbAnnual: scenario.modifiers.recessionProbAnnual,
+    baseInflationAnnual: modifiers.inflationAnnual,
+    baseRecessionProbAnnual: modifiers.recessionProbAnnual,
     stressIndex: state.stress
   });
   const inflationMonthly = Math.pow(1 + nextMacro.inflationAnnual, 1 / 12) - 1;
@@ -354,7 +367,7 @@ function applyChoice({
   ];
   let cash = state.cash + netIncomeMonthly;
   cash -= expenses;
-  const restrictedCredit = scenario.modifiers.restrictedCredit;
+  const restrictedCredit = modifiers.restrictedCredit;
   if (cash < 0) {
     const spill = -cash;
     cash = 0;
@@ -439,15 +452,15 @@ function applyChoice({
   const dtiStress = stressFromDTI(dtiNext);
   const macroStress = (0, import_math.clamp)(nextMacro.recessionProbAnnual * 35 + nextMacro.inflationAnnual * 120, 0, 35);
   const burnout = (0, import_math.clamp)(
-    state.burnout + scenario.modifiers.burnoutDriftMonthly + (choice === "right" ? 0.3 : -0.1),
+    state.burnout + modifiers.burnoutDriftMonthly + (choice === "right" ? 0.3 : -0.1),
     0,
     100
   );
   const stressBase = 5 + bufferStress + dtiStress + macroStress + burnout * 0.15;
   const stress = (0, import_math.clamp)((0, import_math.round2)(effResult.stress * 0.25 + stressBase * 0.75), 0, 100);
-  const wageMonthly = Math.pow(1 + scenario.modifiers.wageGrowthAnnual, 1 / 12) - 1;
+  const wageMonthly = Math.pow(1 + modifiers.wageGrowthAnnual, 1 / 12) - 1;
   grossIncomeAnnual = grossIncomeAnnual * (1 + wageMonthly);
-  if (nextMacro.recessionProbAnnual > 0.25 && rng.next() < scenario.modifiers.layoffProbAnnual / 12) {
+  if (nextMacro.recessionProbAnnual > 0.25 && rng.next() < modifiers.layoffProbAnnual / 12) {
     grossIncomeAnnual = Math.max(0, grossIncomeAnnual * 0.5);
   }
   const nextState = {

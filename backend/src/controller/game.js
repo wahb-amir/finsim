@@ -75,7 +75,13 @@ const createSession = async (req, res) => {
 
     const scenarioId = deriveScenarioId(session);
     const seed = hashStringToSeed(String(session._id));
-    const step = createNewGame({ scenarioId, seed });
+    const step = createNewGame({
+      scenarioId,
+      seed,
+      startSalary: session.startSalary,
+      climateLabel: session.climateLabel,
+      career: session.career,
+    });
 
     persistGameView(session, step);
     session.scenarioId = scenarioId;
@@ -216,7 +222,7 @@ const abandonSession = async (req, res) => {
       success: true,
       sessionId: session._id,
       status: session.status,
-      message: "Session saved. You can resume from your profile later or start a new game.",
+      message: "Session saved. You can review it from your dashboard or start a new game.",
     });
   } catch (err) {
     console.error("[abandonSession]", err.message);
@@ -295,10 +301,10 @@ const listSessions = async (req, res) => {
   try {
     const sessions = await GameSession.find({ userId: req.user._id })
       .select(
-        "_id career goal status currentRound createdAt finalMetrics.netWorth scenarioId playerName",
+        "_id playerName career goal climateLabel startSalary status currentRound createdAt updatedAt finalMetrics scenarioId rounds aiSummary debriefData.headline.score debriefData.headline.scoreLabel",
       )
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(25);
     res.status(200).json({ success: true, sessions });
   } catch (err) {
     console.error("[listSessions]", err.message);
