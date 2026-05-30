@@ -1,6 +1,7 @@
 {
   "name": "@finsim/api",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "main": "server.js",
   "scripts": {

@@ -243,4 +243,4 @@ Backend deployment via GitHub Actions → VPS is documented in [backend/DEPLOY.m
 
 ## License
 
-Add your preferred license here before publishing.
+[MIT](./LICENSE)
