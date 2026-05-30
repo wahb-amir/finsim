@@ -3,9 +3,9 @@
  * Run: node src/rag/embed-and-seed.js --fresh
  */
 
-require("dotenv").config();
-const fs   = require("fs");
 const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
+const fs   = require("fs");
 const { createClient } = require("@supabase/supabase-js");
 
 const CHUNKS_PATH = path.join(__dirname, "chunks.json");   // same dir as this script
