@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const getInitials = (name) => {
   if (!name) return "--";
@@ -86,6 +87,7 @@ const TxnRow = ({ name, date, amount, type }) => (
 );
 
 const Profile = () => {
+  const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   const [user, setUser] = useState(null);
@@ -151,8 +153,17 @@ const Profile = () => {
 
       <div className="max-w-[1100px] mx-auto px-6 py-10 font-body" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
         <div className="flex items-center justify-between mb-12 animate-fade-in-up">
-          <div className="font-display text-lg font-bold tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
-            fin<span className="text-amber-400">.</span>arc
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => router.push("/dashboard")}
+              className="text-[11px] text-[#6B6B6B] transition hover:text-[#F59E0B]"
+            >
+              ← Back to Dashboard
+            </button>
+            <div className="font-display text-lg font-bold tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+              fin<span className="text-amber-400">.</span>arc
+            </div>
           </div>
           <button
             onClick={handleLogout}

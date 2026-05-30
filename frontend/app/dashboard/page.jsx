@@ -227,21 +227,39 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => router.push("/setup")}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-95"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M7 1v12M1 7h12"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                />
-              </svg>
-              New Simulation
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => router.push("/profile")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#111111] px-5 py-3 text-sm font-semibold text-[#F5F5F5] transition hover:border-[#F59E0B]/40 hover:text-[#F59E0B]"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+                  <path
+                    d="M2.5 12.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/setup")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-95"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M7 1v12M1 7h12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                New Simulation
+              </button>
+            </div>
           </div>
 
           <div className="mb-8 grid grid-cols-3 gap-4">
@@ -266,6 +284,45 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
+
+          <button
+            type="button"
+            onClick={() => router.push("/profile")}
+            className="group mb-8 w-full rounded-2xl border border-[#242424] bg-[#101010] p-5 text-left transition-all duration-200 hover:border-[#F59E0B]/40 hover:bg-[#131313] hover:shadow-[0_0_30px_rgba(245,158,11,0.06)]"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#F59E0B] to-[#D97706] text-lg font-bold text-black">
+                  {user?.name?.split(" ").map((w) => w[0]?.toUpperCase()).join("").slice(0, 2) || "?"}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[#F59E0B]">
+                    Your Profile
+                  </p>
+                  <h2
+                    className="mt-1 text-lg font-bold text-[#F5F5F5] group-hover:text-white"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    Account & financial overview
+                  </h2>
+                  <p className="mt-1 text-sm text-[#6B6B6B]">
+                    View your account details, financial metrics, and sign out from your profile page.
+                  </p>
+                </div>
+              </div>
+              <div className="flex-shrink-0 text-[#6B6B6B] transition group-hover:translate-x-0.5 group-hover:text-[#F59E0B]">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M7 4l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </button>
 
           <div className="mb-6 flex gap-2">
             {[
