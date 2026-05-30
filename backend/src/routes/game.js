@@ -8,6 +8,7 @@ const {
   getSessionDebrief,
   getSession,
   listSessions,
+  userData
 } = require("../controller/game");
 
 // POST /api/game/session          — start a new game session
@@ -27,5 +28,7 @@ router.get("/session/:id",         authMiddleware, getSession);
 
 // GET  /api/game/sessions         — list user's past sessions
 router.get("/sessions",            authMiddleware, listSessions);
+
+router.get("/sessions",            authMiddleware, userData);
 
 module.exports = router;

@@ -4,10 +4,19 @@
  */
 
 const { createClient } = require("@supabase/supabase-js");
+const dotenv = require("dotenv");
+const WebSocket = require("ws");
+
+dotenv.config();
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
+  process.env.SUPABASE_SERVICE_KEY,
+  {
+    realtime: {
+      transport: WebSocket,
+    },
+  }
 );
 
 // Lazy-loaded local embedding model

@@ -306,6 +306,31 @@ const listSessions = async (req, res) => {
   }
 };
 
+const userData = async (req, res) => {
+  try {
+    const gameData = await GameSession
+      .find({ userId: req.user._id })
+      .sort({ createdAt: -1 });
+
+    if (!gameData.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Data not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      gameData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createSession,
   submitRound,
@@ -313,4 +338,5 @@ module.exports = {
   getSessionDebrief,
   getSession,
   listSessions,
+  userData
 };
