@@ -2,298 +2,245 @@
 
 > A personal finance life simulator that puts players through 10 years of real financial decisions—rent, credit cards, layoffs, investments—and shows exactly where each choice leads.
 
+FinSim is a **pnpm monorepo** with a Next.js frontend and an Express API. The **simulation engine runs on the server**; the client renders API responses and sends player choices. Sessions, auth, AI advisor, and debrief all persist through the backend.
+
+| Package        | Path        | Name          | Role                          |
+| -------------- | ----------- | ------------- | ----------------------------- |
+| Frontend       | `frontend/` | `@finsim/web` | Next.js 16 App Router UI      |
+| Backend        | `backend/`  | `@finsim/api` | Express API + simulation + AI |
+
+**Deep dives:** [frontend/README.md](./frontend/README.md) · [backend/README.md](./backend/README.md)
+
+---
+
 ## The Problem
 
 Most teens enter adulthood without understanding credit scores, compound interest, debt, or how a single financial decision can snowball over decades. By the time the consequences show up, it is often too late to replay the moment.
 
 **FinSim** makes those moments replayable before they are real.
 
+---
+
 ## What It Is
 
-FinSim is a **10-round financial life simulation** where each round presents a procedurally generated event such as a credit offer, medical bill, layoff, investment opportunity, or crisis.
+A **10-round financial life simulation** where each round presents a procedurally generated event (credit offer, medical bill, layoff, investment opportunity, crisis, etc.).
 
-Players choose a path by swiping or clicking. The **simulation engine** updates:
+Players choose a path by swiping or clicking. The server updates cash, debt, credit score, stress, and net worth. An **AI Socratic advisor** (Groq + RAG) can be invoked on demand during a run. After 10 rounds, a **debrief** compares the player's path to an optimal trajectory.
 
-- cash
-- debt
-- credit score
-- stress
-- net worth
+---
 
-An AI advisor asks Socratic questions throughout the run. It is stubbed today, but ready to connect to a real LLM.
+## Architecture (high level)
 
-At the end of the game, players see their net worth trajectory versus an optimal path and can understand exactly where the gap opened.
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│  Browser — Next.js (@finsim/web)                                │
+│  AuthContext · GameContext · pages · game UI                    │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ HTTPS + cookies (JWT)
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Express API (@finsim/api) — port 8081                          │
+│  /api/auth  /api/setup  /api/game  /api/ai                       │
+└──────┬──────────────────┬──────────────────┬──────────────────────┘
+       │                  │                  │
+       ▼                  ▼                  ▼
+  MongoDB            Groq LLM           Supabase pgvector
+  (sessions,         (advisor,           (RAG knowledge
+   users, setup)      debrief)            base)
+```
 
-## Demo Flow
+**Key design choice:** the frontend does **not** compute round outcomes. All simulation logic lives in `backend/src/services/simulation/`. See [docs/MIGRATION-SERVER-AUTHORITATIVE-SIM.md](./docs/MIGRATION-SERVER-AUTHORITATIVE-SIM.md) for the migration notes.
 
-Play through:
+---
 
-`/` → `/setup` → `/game` → `/debrief` → `/leaderboard`
+## Data flow — one game session
 
-| Route          | Purpose                                                      |
-| -------------- | ------------------------------------------------------------ |
-| `/`            | Landing page with hero section and stat cards                |
-| `/setup`       | 3-step config: name, confidence, goal, then start a scenario |
-| `/game`        | Main board with metrics, swipe decisions, and advisor panel  |
-| `/debrief`     | Final summary and net worth chart                            |
-| `/leaderboard` | Top scores using mock data plus your run                     |
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant FE as Next.js frontend
+  participant API as Express API
+  participant DB as MongoDB
+  participant AI as Groq + RAG
 
-## Stack
+  U->>FE: Sign up / log in
+  FE->>API: POST /api/auth/signin or /login
+  API->>DB: Create / verify User
+  API-->>FE: Set httpOnly JWT cookie
 
-- **Framework:** Next.js 16 (App Router)
-- **Language:** JavaScript + TypeScript (`frontend/lib/sim`, some UI components)
-- **Styling:** Tailwind CSS v4
-- **Motion:** Framer Motion for swipe interactions
-- **Icons:** Lucide React
-- **Charts:** Recharts
-- **State:** React Context + `useReducer` through `GameProvider` in `AppProviders`
-- **Simulation:** Deterministic PRNG + monthly financial model in `frontend/lib/sim`
-- **Backend:** Express API in `backend/` (MongoDB via Mongoose; routes ready to extend)
-- **Fonts:** Syne (display) and DM Sans (body)
-- **AI / persistence:** Stubbed in `frontend/lib/api.js` and ready to swap for `@finsim/api`
+  U->>FE: Configure career, salary, goal, climate
+  FE->>API: POST /api/game/session
+  API->>DB: Create GameSession + simState
+  API-->>FE: sessionId, metrics, event, narrative
 
-## Getting Started
+  loop Each of 10 rounds
+    U->>FE: Select left/right choice
+    FE->>API: POST /api/game/session/round
+    API->>API: applyChoice (simulation engine)
+    API->>DB: Persist round + updated simState
+    API-->>FE: Next event + metrics (or completed)
+    opt Advisor (max 4 per game)
+      U->>FE: Ask advisor
+      FE->>API: POST /api/game/session/:id/advisor
+      API->>AI: RAG context + Socratic prompt
+      AI-->>FE: Advisor message
+    end
+  end
+
+  U->>FE: View debrief
+  FE->>API: GET /api/game/session/:id/debrief
+  API->>AI: Generate debrief (lazy, cached)
+  API-->>FE: Verdict, optimal path, net worth chart data
+```
+
+---
+
+## User journey
+
+| Route           | Auth required | Purpose                                      |
+| --------------- | ------------- | -------------------------------------------- |
+| `/`             | No            | Landing page                                 |
+| `/auth`         | No            | Sign up / log in                             |
+| `/dashboard`    | Yes           | Past sessions, start new game                |
+| `/setup`        | Yes           | Career, salary, goal, climate → new session  |
+| `/game`         | Yes           | Main board — metrics, decisions, advisor     |
+| `/debrief`      | Yes           | Post-game summary and net worth chart        |
+| `/profile`      | Yes           | Account and onboarding profile               |
+| `/leaderboard`  | No*           | Top scores (mock data + your run)            |
+| `/onboarding`   | —             | Legacy/alternate onboarding UI               |
+
+\*Leaderboard uses mock data in `frontend/lib/api.js` until a live endpoint is wired.
+
+Typical happy path: **`/` → `/auth` → `/dashboard` → `/setup` → `/game` → `/debrief`**
+
+---
+
+## Repository layout
+
+```text
+finsim/
+├── frontend/                 # @finsim/web — Next.js app
+│   ├── app/                  # App Router pages + AuthContext
+│   ├── components/           # UI, game board, layout, brand
+│   ├── context/              # GameContext (client game view state)
+│   ├── hooks/                # useGameSession, etc.
+│   └── lib/                  # API helpers, formatters, types
+│
+├── backend/                  # @finsim/api — Express + MongoDB
+│   ├── server.js             # Entry point, middleware, route mounting
+│   ├── src/
+│   │   ├── routes/           # auth, setup, game, ai
+│   │   ├── controller/       # Request handlers
+│   │   ├── Models/           # Mongoose schemas
+│   │   ├── services/         # simulation, debrief, advisor
+│   │   ├── ai/               # Groq prompts (advisor, debrief)
+│   │   ├── rag/              # Knowledge base + pgvector retriever
+│   │   └── middleware/       # JWT auth
+│   └── scripts/              # Deploy + env validation
+│
+├── docs/                     # Architecture notes
+├── .github/workflows/        # CI / backend deploy
+├── ecosystem.config.cjs      # PM2 config for production API
+├── package.json              # Workspace root scripts
+└── pnpm-workspace.yaml
+```
+
+---
+
+## Quick start
+
+### Prerequisites
+
+- **Node.js 20+**
+- **pnpm** (recommended)
+- **MongoDB** running locally or a remote `MONGO_URI`
+- Optional for AI features: **Groq API key**, **Supabase** (pgvector for RAG)
+
+### 1. Install
 
 ```bash
 git clone https://github.com/your-username/finsim
 cd finsim
 pnpm install
+```
+
+### 2. Backend environment
+
+```bash
+cp backend/.env.example backend/.env
+# Edit MONGO_URI, JWT_SECRET, PORT, GROQ_API_KEY, SUPABASE_* as needed
+```
+
+### 3. Frontend environment
+
+Create `frontend/.env.local`:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8081/api
+```
+
+### 4. Run both services
+
+```bash
+# Terminal 1 — API (default port 8081)
+pnpm dev:backend
+
+# Terminal 2 — web app (port 3000)
 pnpm dev
 ```
 
-Open the web app at [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Health check: `GET http://localhost:8081/api/health`.
 
-### Other Scripts
+### Workspace scripts
 
-| Command            | Description                                        |
-| ------------------ | -------------------------------------------------- |
-| `pnpm dev`         | Start the Next.js frontend (`@finsim/web`)         |
-| `pnpm dev:backend` | Start the Express API (`@finsim/api`) on port 5000 |
-| `pnpm build`       | Production build of the frontend                   |
-| `pnpm start`       | Run the production frontend server                 |
-| `pnpm lint`        | Lint the frontend                                  |
+| Command            | Description                         |
+| ------------------ | ----------------------------------- |
+| `pnpm dev`         | Start Next.js frontend              |
+| `pnpm dev:backend` | Start Express API with `--watch`    |
+| `pnpm build`       | Production build of the frontend    |
+| `pnpm start`       | Run production frontend server      |
+| `pnpm lint`        | ESLint on the frontend              |
 
-Run workspace packages directly if needed:
+Run a package directly:
 
 ```bash
 pnpm --filter @finsim/web dev
 pnpm --filter @finsim/api dev
 ```
 
-### Backend environment
+---
 
-Copy `backend/.env.example` to `backend/.env` and set `PORT` and `MONGO_URI` before starting the API. A health check is available at `GET http://localhost:5000/api/health`.
+## Stack
 
-## How the Game Works
+| Layer        | Technology                                              |
+| ------------ | ------------------------------------------------------- |
+| Frontend     | Next.js 16, React 19, Tailwind CSS v4, Framer Motion    |
+| Backend      | Express 4, Mongoose, JWT cookies, rate limiting         |
+| Database     | MongoDB (users, sessions, setup profiles)               |
+| AI           | Groq SDK — Socratic advisor + post-game debrief         |
+| RAG          | Supabase pgvector + local embeddings (`@xenova/transformers`) |
+| Charts       | Recharts                                                |
+| Monorepo     | pnpm workspaces                                         |
 
-### 1) Setup
+---
 
-The player chooses:
+## Onboarding checklist for new developers
 
-- name
-- confidence level from 1–5
-- goal:
-  - `avoid-debt`
-  - `build-wealth`
-  - `understand-basics`
+1. Read this file for the big picture and data flow.
+2. Clone, install, configure env files, run `pnpm dev` + `pnpm dev:backend`.
+3. Create an account at `/auth`, start a game from `/setup`, play through `/game`.
+4. Read [frontend/README.md](./frontend/README.md) before touching UI or client state.
+5. Read [backend/README.md](./backend/README.md) before changing simulation, routes, or AI.
+6. Skim [docs/MIGRATION-SERVER-AUTHORITATIVE-SIM.md](./docs/MIGRATION-SERVER-AUTHORITATIVE-SIM.md) if you wonder why the client never computes metrics.
 
-### 2) Scenario
+---
 
-The chosen goal maps to a starting scenario such as recession, baseline, single-parent, or startup-founder. A time-based seed keeps runs deterministic while still feeling fresh.
+## Deployment
 
-### 3) Rounds
+Backend deployment via GitHub Actions → VPS is documented in [backend/DEPLOY.md](./backend/DEPLOY.md).
 
-Each confirmed choice advances the simulation one step through `applyChoice`. Events are generated by `generateEvent` in the engine.
-
-### 4) End
-
-After 10 rounds, the game moves to debrief. `getFinalDebrief` is mocked for now.
-
-Game state such as `playerName`, `metrics`, `simState`, `currentEvent`, and `roundHistory` lives in `GameContext` and persists across routes because `AppProviders` wraps the app in `frontend/app/layout.jsx`.
-
-## Scenario IDs
-
-Defined in `frontend/lib/sim/scenarios.ts`:
-
-- `baseline`
-- `recession`
-- `startup-founder`
-- `immigrant-household`
-- `single-parent`
-
-## Project Structure
-
-The repo is a **pnpm workspace** with a clear split between the web app and the API.
-
-```text
-finsim/
-├── frontend/                       # @finsim/web — Next.js 16 App Router
-│   ├── app/
-│   │   ├── page.jsx                # Landing (/)
-│   │   ├── setup/page.jsx          # Player setup → startSimulation()
-│   │   ├── game/page.jsx           # Main game board
-│   │   ├── debrief/page.jsx        # Final result + chart
-│   │   ├── leaderboard/page.jsx    # Scores
-│   │   ├── auth/page.jsx           # Auth UI (placeholder)
-│   │   ├── layout.jsx              # Root layout + AppProviders
-│   │   └── globals.css             # Design tokens + animations
-│   ├── components/
-│   │   ├── providers/
-│   │   │   └── AppProviders.jsx    # Global GameProvider wrapper
-│   │   ├── game/
-│   │   │   └── SwipeDecisionCard.tsx
-│   │   └── ui/                     # MetricCard, AdvisorPanel, charts, etc.
-│   ├── context/
-│   │   └── GameContext.jsx         # Reducer + sim wiring
-│   ├── lib/
-│   │   ├── sim/                    # Deterministic simulation engine (TS)
-│   │   │   ├── engine.ts
-│   │   │   ├── events.ts
-│   │   │   ├── scenarios.ts
-│   │   │   ├── prng.ts
-│   │   │   └── math.ts
-│   │   └── api.js                  # Stubbed advisor, debrief, leaderboard
-│   ├── public/                     # Static assets
-│   ├── next.config.ts
-│   ├── tsconfig.json               # Path alias: @/* → frontend root
-│   └── package.json
-│
-├── backend/                        # @finsim/api — Express + Mongoose
-│   ├── src/
-│   │   ├── index.js                # Entry point (listen)
-│   │   ├── app.js                  # Express app wiring
-│   │   ├── config/
-│   │   │   └── database.js         # MongoDB connection
-│   │   ├── middleware/
-│   │   │   └── index.js            # CORS, cookies, rate limiting
-│   │   └── routes/
-│   │       └── index.js            # API routes (e.g. /api/health)
-│   ├── .env.example
-│   └── package.json
-│
-├── package.json                    # Workspace root scripts
-├── pnpm-workspace.yaml
-└── README.md
-```
-
-**Import convention (frontend):** use the `@/` alias for anything under `frontend/` (for example `@/components/ui/MetricCard`, `@/lib/sim`, `@/context/GameContext`).
-
-## Simulation Engine
-
-The UI no longer advances rounds through `MOCK_ROUNDS`. Instead:
-
-```ts
-// Start from setup
-createNewGame({ scenarioId, seed }) => {
-  state,
-  event,
-  narrative,
-  metrics
-}
-
-// Each confirmed choice from the game
-applyChoice({ state, choice: "left" | "right" }) => {
-  state,
-  event,
-  narrative,
-  metrics
-}
-```
-
-`GameContext` maps engine `VisibleMetrics` into UI fields like `savingsBalance`, `monthlyIncome`, `netWorth`, and more, then appends snapshots to `roundHistory` for debrief.
-
-## Game Board Layout
-
-```text
-┌─────────────┬──────────────────────────────┬────────────────┐
-│  Sidebar    │       Center Panel           │  Right Panel   │
-│  ~260px     │       flex-1                 │  ~320px        │
-│             │                              │                │
-│  Player     │  Round header + age          │  FinSim        │
-│  Year X/10  │  Event title + description   │  Advisor       │
-│             │                              │                │
-│  Metrics    │  SwipeDecisionCard           │  (mobile:      │
-│  (8)        │  (swipe / click / keyboard)  │   BottomSheet) │
-│             │                              │                │
-│             │  [Confirm Decision]          │                │
-└─────────────┴──────────────────────────────┴────────────────┘
-         ●●●●●◉●●●●   Round progress bar (fixed bottom)
-```
-
-Crisis events show a **CRISIS** badge and a distinct style on the decision card.
-
-## Metrics Tracked
-
-| Metric             | Notes                            |
-| ------------------ | -------------------------------- |
-| Monthly Income     | Net income from the sim          |
-| Monthly Expenses   | Base expenses plus debt payments |
-| Savings Balance    | Liquid cash                      |
-| Total Debt         | Sum of all debt balances         |
-| Credit Score       | 300–850                          |
-| Retirement Balance | Portfolio retirement account     |
-| Debt-to-Income     | DTI percentage                   |
-| Stress Index       | 0–100, color-coded bar           |
-| Net Worth          | Cash + investments − debt        |
-
-## Connecting a Backend
-
-Gameplay metrics and events are handled by `frontend/lib/sim`, so no backend is required for core rounds. The Express API in `backend/` is scaffolded for persistence, auth, and leaderboard endpoints.
-
-Still stubbed in `frontend/lib/api.js`:
-
-```js
-// Socratic advisor message used by AdvisorPanel
-getAdvisorMessage(round, metrics, flags) => string
-
-// Post-game analysis used by the debrief page
-getFinalDebrief(roundHistory, finalMetrics) => debriefObject
-
-// Leaderboard rows
-MOCK_LEADERBOARD
-```
-
-`MOCK_ROUNDS` and `submitChoice` remain in `frontend/lib/api.js` for reference, but they are not used in the live game flow.
-
-When ready, replace the mock debrief with a streamed LLM using the full `roundHistory` and final `simState`. The debrief page already includes a TODO for that integration.
-
-## Design System
-
-- **Base:** `#0A0A0A`
-- **Surface:** `#111111`
-- **Border:** `#1F1F1F` to `#242424`
-- **Accent:** `#F59E0B` amber for primary actions and active states
-- **Success:** `#10B981`
-- **Danger:** `#EF4444`
-- **Text:** `#F5F5F5`, `#A1A1A1`, `#6B6B6B`
-- **Fonts:** Syne for headings, DM Sans for body
-
-## Roadmap
-
-- Deterministic simulation engine (`frontend/lib/sim`)
-- Global game state across routes (`AppProviders`)
-- Dynamic events per round instead of static mock rounds
-- Swipe + click decision UX (`SwipeDecisionCard`)
-- Live AI advisor via WebSocket or SSE
-- Streamed LLM debrief from `roundHistory`
-- User auth + persistent leaderboard
-- Mobile polish on the game layout
-- Shareable result card with OG image
-- More scenario randomization and difficulty tiers
-- Educator mode for classroom deployment
-
-## Why FinSim Exists
-
-FinSim is built to make financial consequences feel immediate, personal, and replayable. Instead of teaching finance as isolated facts, it turns money decisions into a lived experience with visible tradeoffs.
-
-The goal is simple: help players understand how small choices compound into major outcomes.
+---
 
 ## License
 
 Add your preferred license here before publishing.
-
----
-
-## Repo Description
-
-**FinSim is a 10-round personal finance life simulator that teaches credit, debt, investing, and long-term decision-making through replayable scenarios, adaptive metrics, and an AI advisor.**
