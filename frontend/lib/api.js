@@ -471,7 +471,9 @@ export async function requestAdvisor(sessionId) {
  * @deprecated Use requestAdvisor(sessionId) — advisor is on-demand, server-authoritative
  */
 export async function getAdvisorMessage(round, metrics, flags) {
-  console.warn("[getAdvisorMessage] deprecated — use requestAdvisor(sessionId)");
+  console.warn(
+    "[getAdvisorMessage] deprecated — use requestAdvisor(sessionId)",
+  );
   await new Promise((r) => setTimeout(r, 800));
   return MOCK_ADVISOR_MESSAGES[(round - 1) % MOCK_ADVISOR_MESSAGES.length];
 }

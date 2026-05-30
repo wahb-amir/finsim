@@ -37,7 +37,9 @@ export function GameRoundPanel({
               >
                 ROUND {currentRound}
               </span>
-              <span className="text-[11px] text-[#6B6B6B]">{roundData.year}</span>
+              <span className="text-[11px] text-[#6B6B6B]">
+                {roundData.year}
+              </span>
               {isCrisis && (
                 <span
                   className="text-[11px] font-bold px-2 py-0.5 rounded flex items-center gap-1"
@@ -65,7 +67,9 @@ export function GameRoundPanel({
         <div
           className="rounded-2xl p-4 mb-6 text-sm text-[#A1A1A1] leading-relaxed border"
           style={{
-            background: isCrisis ? "rgba(239,68,68,0.04)" : "rgba(17,17,17,0.8)",
+            background: isCrisis
+              ? "rgba(239,68,68,0.04)"
+              : "rgba(17,17,17,0.8)",
             borderColor: isCrisis ? "rgba(239,68,68,0.12)" : "#1F1F1F",
           }}
         >
@@ -99,7 +103,9 @@ export function GameRoundPanel({
               color: selectedChoice ? "#0A0A0A" : "#4A4A4A",
               border: selectedChoice ? "none" : "1px solid #2A2A2A",
               fontFamily: "var(--font-display)",
-              boxShadow: selectedChoice ? "0 0 30px rgba(245,158,11,0.15)" : "none",
+              boxShadow: selectedChoice
+                ? "0 0 30px rgba(245,158,11,0.15)"
+                : "none",
               transition: "all 0.25s ease",
             }}
             aria-busy={isConfirming || savingRound}

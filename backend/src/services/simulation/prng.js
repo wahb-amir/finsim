@@ -8,18 +8,22 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toCommonJS = (mod) =>
+  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var prng_exports = {};
 __export(prng_exports, {
   createRng: () => createRng,
-  hashSeed: () => hashSeed
+  hashSeed: () => hashSeed,
 });
 module.exports = __toCommonJS(prng_exports);
 function createRng(seed) {
@@ -27,9 +31,9 @@ function createRng(seed) {
   const next = () => {
     t += 1831565813;
     let x = t;
-    x = Math.imul(x ^ x >>> 15, x | 1);
-    x ^= x + Math.imul(x ^ x >>> 7, x | 61);
-    return ((x ^ x >>> 14) >>> 0) / 4294967296;
+    x = Math.imul(x ^ (x >>> 15), x | 1);
+    x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
   };
   return {
     next,
@@ -42,7 +46,7 @@ function createRng(seed) {
     pick(arr) {
       if (arr.length === 0) throw new Error("RNG.pick: empty array");
       return arr[Math.floor(next() * arr.length)];
-    }
+    },
   };
 }
 function hashSeed(input) {
@@ -54,7 +58,8 @@ function hashSeed(input) {
   return h >>> 0;
 }
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  createRng,
-  hashSeed
-});
+0 &&
+  (module.exports = {
+    createRng,
+    hashSeed,
+  });

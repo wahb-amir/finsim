@@ -8,14 +8,18 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toCommonJS = (mod) =>
+  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var math_exports = {};
 __export(math_exports, {
   clamp: () => clamp,
@@ -23,7 +27,7 @@ __export(math_exports, {
   paymentAmortized: () => paymentAmortized,
   round2: () => round2,
   stepAmortization: () => stepAmortization,
-  taxAnnual: () => taxAnnual
+  taxAnnual: () => taxAnnual,
 });
 module.exports = __toCommonJS(math_exports);
 function clamp(n, min, max) {
@@ -32,43 +36,27 @@ function clamp(n, min, max) {
 function round2(n) {
   return Math.round(n * 100) / 100;
 }
-function compound({
-  principal,
-  annualRate,
-  compoundsPerYear,
-  years
-}) {
+function compound({ principal, annualRate, compoundsPerYear, years }) {
   const r = annualRate;
   const n = compoundsPerYear;
   const t = years;
   return principal * Math.pow(1 + r / n, n * t);
 }
-function paymentAmortized({
-  principal,
-  annualRate,
-  termMonths
-}) {
+function paymentAmortized({ principal, annualRate, termMonths }) {
   if (termMonths <= 0) return principal;
   const i = annualRate / 12;
   if (Math.abs(i) < 1e-10) return principal / termMonths;
   const denom = 1 - Math.pow(1 + i, -termMonths);
   return principal * (i / denom);
 }
-function stepAmortization({
-  balance,
-  annualRate,
-  payment
-}) {
+function stepAmortization({ balance, annualRate, payment }) {
   const i = annualRate / 12;
   const interest = balance * i;
   const principalPaid = Math.max(0, payment - interest);
   const nextBalance = Math.max(0, balance - principalPaid);
   return { interestPaid: interest, principalPaid, nextBalance };
 }
-function taxAnnual({
-  taxableIncome,
-  brackets
-}) {
+function taxAnnual({ taxableIncome, brackets }) {
   const income = Math.max(0, taxableIncome);
   let remaining = income;
   let lastCap = 0;
@@ -84,11 +72,12 @@ function taxAnnual({
   return tax;
 }
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  clamp,
-  compound,
-  paymentAmortized,
-  round2,
-  stepAmortization,
-  taxAnnual
-});
+0 &&
+  (module.exports = {
+    clamp,
+    compound,
+    paymentAmortized,
+    round2,
+    stepAmortization,
+    taxAnnual,
+  });

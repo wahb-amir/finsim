@@ -8,18 +8,22 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toCommonJS = (mod) =>
+  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var events_exports = {};
 __export(events_exports, {
   generateEvent: () => generateEvent,
-  rollMacro: () => rollMacro
+  rollMacro: () => rollMacro,
 });
 module.exports = __toCommonJS(events_exports);
 var import_math = require("./math");
@@ -27,20 +31,24 @@ function rollMacro({
   rng,
   baseInflationAnnual,
   baseRecessionProbAnnual,
-  stressIndex
+  stressIndex,
 }) {
   const inflationShock = (rng.next() - 0.5) * 0.02;
-  const inflationAnnual = (0, import_math.clamp)(baseInflationAnnual + inflationShock, 0, 0.12);
+  const inflationAnnual = (0, import_math.clamp)(
+    baseInflationAnnual + inflationShock,
+    0,
+    0.12,
+  );
   const stressFactor = (0, import_math.clamp)((stressIndex - 30) / 70, 0, 1);
   const recessionProbAnnual = (0, import_math.clamp)(
     baseRecessionProbAnnual + stressFactor * 0.12 + (rng.next() - 0.5) * 0.04,
     0,
-    0.65
+    0.65,
   );
   const marketReturnAnnual = (0, import_math.clamp)(
     0.08 - inflationAnnual * 0.7 - recessionProbAnnual * 0.12,
     -0.25,
-    0.15
+    0.15,
   );
   return { inflationAnnual, recessionProbAnnual, marketReturnAnnual };
 }
@@ -48,8 +56,12 @@ function budgetSurplusEvent(monthIndex, cashTight) {
   return {
     id: `budget:${monthIndex}`,
     tag: "budget",
-    title: cashTight ? "The buffer is evaporating" : "Budget surplus: allocate it",
-    description: cashTight ? "Your checking account is thin. One surprise expense could push you into high-interest debt." : "You have breathing room this month. Small consistent moves compound into big outcomes.",
+    title: cashTight
+      ? "The buffer is evaporating"
+      : "Budget surplus: allocate it",
+    description: cashTight
+      ? "Your checking account is thin. One surprise expense could push you into high-interest debt."
+      : "You have breathing room this month. Small consistent moves compound into big outcomes.",
     crisis: cashTight,
     left: {
       id: "left",
@@ -57,8 +69,8 @@ function budgetSurplusEvent(monthIndex, cashTight) {
       bullets: [
         "Auto-save a fixed amount monthly",
         "Stress drops as buffer reaches 3-6 months",
-        "Slower discretionary spending now"
-      ]
+        "Slower discretionary spending now",
+      ],
     },
     right: {
       id: "right",
@@ -66,18 +78,27 @@ function budgetSurplusEvent(monthIndex, cashTight) {
       bullets: [
         "Immediate quality-of-life boost",
         "Higher baseline expenses persist",
-        "Harder to recover after shocks"
-      ]
+        "Harder to recover after shocks",
+      ],
     },
     debrief: {
-      principle: "Automate savings before spending; what isn't saved gets spent.",
-      whyItHappened: "Your monthly cash flow created a decision point about allocation priority.",
-      counterfactual: "Saving $200/month compounds to ~$26k in 10 years at 7% \u2014 before any raises.",
-      ruleOfThumb: "Pay yourself first: auto-transfer savings before your spending account sees the money."
+      principle:
+        "Automate savings before spending; what isn't saved gets spent.",
+      whyItHappened:
+        "Your monthly cash flow created a decision point about allocation priority.",
+      counterfactual:
+        "Saving $200/month compounds to ~$26k in 10 years at 7% \u2014 before any raises.",
+      ruleOfThumb:
+        "Pay yourself first: auto-transfer savings before your spending account sees the money.",
     },
     rightEffects: [
-      { triggerMonthOffset: 3, label: "Lifestyle creep locked in. Expenses are stickier than expected.", expenseMultiplier: 1.02 }
-    ]
+      {
+        triggerMonthOffset: 3,
+        label:
+          "Lifestyle creep locked in. Expenses are stickier than expected.",
+        expenseMultiplier: 1.02,
+      },
+    ],
   };
 }
 function creditLineEvent(monthIndex, restrictedCredit) {
@@ -85,7 +106,8 @@ function creditLineEvent(monthIndex, restrictedCredit) {
     id: `credit:${monthIndex}`,
     tag: "credit",
     title: "A credit line offer arrives",
-    description: "A bank offers a card sized to your profile. Used well it builds your score; used poorly it compounds against you.",
+    description:
+      "A bank offers a card sized to your profile. Used well it builds your score; used poorly it compounds against you.",
     crisis: false,
     left: {
       id: "left",
@@ -93,8 +115,8 @@ function creditLineEvent(monthIndex, restrictedCredit) {
       bullets: [
         "Builds payment history (35% of score)",
         "Keep utilization under 10%",
-        "Requires discipline every month"
-      ]
+        "Requires discipline every month",
+      ],
     },
     right: {
       id: "right",
@@ -102,18 +124,26 @@ function creditLineEvent(monthIndex, restrictedCredit) {
       bullets: [
         "No revolving-debt risk",
         "Score grows slower without history",
-        "Loan terms may worsen when you need credit"
-      ]
+        "Loan terms may worsen when you need credit",
+      ],
     },
     debrief: {
-      principle: "Credit is a tool \u2014 the same line can build or destroy depending on your discipline.",
-      whyItHappened: "A thin credit file limits loan options. A new tradeline helps if managed correctly.",
-      counterfactual: "Accepting and staying under 10% utilization adds 15-30 points over 12 months.",
-      ruleOfThumb: "Never carry a balance. Treat the card like a debit card that reports to bureaus."
+      principle:
+        "Credit is a tool \u2014 the same line can build or destroy depending on your discipline.",
+      whyItHappened:
+        "A thin credit file limits loan options. A new tradeline helps if managed correctly.",
+      counterfactual:
+        "Accepting and staying under 10% utilization adds 15-30 points over 12 months.",
+      ruleOfThumb:
+        "Never carry a balance. Treat the card like a debit card that reports to bureaus.",
     },
     leftEffects: [
-      { triggerMonthOffset: 6, label: "On-time payment streak improved your credit score.", creditDelta: 20 }
-    ]
+      {
+        triggerMonthOffset: 6,
+        label: "On-time payment streak improved your credit score.",
+        creditDelta: 20,
+      },
+    ],
   };
 }
 function investingPatience(monthIndex, macroCrisis) {
@@ -121,7 +151,8 @@ function investingPatience(monthIndex, macroCrisis) {
     id: `invest:${monthIndex}`,
     tag: "investing",
     title: "The market offers patience (and pain)",
-    description: "Markets compound quietly most months, then punish panic when volatility spikes. Contribution rate matters more than timing.",
+    description:
+      "Markets compound quietly most months, then punish panic when volatility spikes. Contribution rate matters more than timing.",
     crisis: macroCrisis,
     left: {
       id: "left",
@@ -129,8 +160,8 @@ function investingPatience(monthIndex, macroCrisis) {
       bullets: [
         "Monthly contributions regardless of price",
         "Long horizon survives drawdowns",
-        "Dollar-cost averaging removes timing pressure"
-      ]
+        "Dollar-cost averaging removes timing pressure",
+      ],
     },
     right: {
       id: "right",
@@ -138,21 +169,33 @@ function investingPatience(monthIndex, macroCrisis) {
       bullets: [
         "Less short-term volatility stress",
         "Opportunity cost during rebounds is real",
-        "Inflation quietly erodes purchasing power"
-      ]
+        "Inflation quietly erodes purchasing power",
+      ],
     },
     debrief: {
-      principle: "Time in the market beats timing the market \u2014 compounding requires staying invested.",
-      whyItHappened: "Market volatility triggers loss-aversion bias. Waiting for 'safe' usually means buying higher.",
-      counterfactual: "Missing the 10 best market days per decade can halve your long-run returns.",
-      ruleOfThumb: "Automate investing so emotion can't override the decision."
+      principle:
+        "Time in the market beats timing the market \u2014 compounding requires staying invested.",
+      whyItHappened:
+        "Market volatility triggers loss-aversion bias. Waiting for 'safe' usually means buying higher.",
+      counterfactual:
+        "Missing the 10 best market days per decade can halve your long-run returns.",
+      ruleOfThumb: "Automate investing so emotion can't override the decision.",
     },
     rightEffects: [
-      { triggerMonthOffset: 12, label: "You sat out a recovery rally. Opportunity cost stings.", stressDelta: 8 }
+      {
+        triggerMonthOffset: 12,
+        label: "You sat out a recovery rally. Opportunity cost stings.",
+        stressDelta: 8,
+      },
     ],
     leftEffects: [
-      { triggerMonthOffset: 6, label: "Consistent contributions compounding. Buffer feels more secure.", stressDelta: -4 }
-    ]
+      {
+        triggerMonthOffset: 6,
+        label:
+          "Consistent contributions compounding. Buffer feels more secure.",
+        stressDelta: -4,
+      },
+    ],
   };
 }
 function obligationsEvent(monthIndex, cashTight) {
@@ -160,7 +203,8 @@ function obligationsEvent(monthIndex, cashTight) {
     id: `obligations:${monthIndex}`,
     tag: "budget",
     title: "Obligations don't care about markets",
-    description: "Some expenses are non-negotiable. The question is how you design the rest of your life around them.",
+    description:
+      "Some expenses are non-negotiable. The question is how you design the rest of your life around them.",
     crisis: cashTight,
     left: {
       id: "left",
@@ -168,8 +212,8 @@ function obligationsEvent(monthIndex, cashTight) {
       bullets: [
         "Protects non-negotiable obligations",
         "Predictability reduces stress",
-        "Short-term social friction"
-      ]
+        "Short-term social friction",
+      ],
     },
     right: {
       id: "right",
@@ -177,18 +221,27 @@ function obligationsEvent(monthIndex, cashTight) {
       bullets: [
         "Feels painless now",
         "APR compounds quickly",
-        "Utilization spike can hurt credit score"
-      ]
+        "Utilization spike can hurt credit score",
+      ],
     },
     debrief: {
-      principle: "Fixed obligations are the floor \u2014 your lifestyle must fit in what remains above them.",
-      whyItHappened: "Non-negotiable payments compressed your discretionary margin to near zero.",
-      counterfactual: "One month of credit bridging at 24.9% APR on $600 costs $12. The habit costs far more.",
-      ruleOfThumb: "Budget obligations first, savings second, discretionary last."
+      principle:
+        "Fixed obligations are the floor \u2014 your lifestyle must fit in what remains above them.",
+      whyItHappened:
+        "Non-negotiable payments compressed your discretionary margin to near zero.",
+      counterfactual:
+        "One month of credit bridging at 24.9% APR on $600 costs $12. The habit costs far more.",
+      ruleOfThumb:
+        "Budget obligations first, savings second, discretionary last.",
     },
     rightEffects: [
-      { triggerMonthOffset: 2, label: "The 'just this month' bridge became a habit. Interest compounding.", debtAdd: { kind: "credit-card", balance: 400, apr: 0.249 } }
-    ]
+      {
+        triggerMonthOffset: 2,
+        label:
+          "The 'just this month' bridge became a habit. Interest compounding.",
+        debtAdd: { kind: "credit-card", balance: 400, apr: 0.249 },
+      },
+    ],
   };
 }
 function dtiCrisisEvent(monthIndex) {
@@ -196,7 +249,8 @@ function dtiCrisisEvent(monthIndex) {
     id: `dti:${monthIndex}`,
     tag: "credit",
     title: "Your DTI is a silent gatekeeper",
-    description: "High monthly debt payments reduce loan eligibility and raise stress. Paying down expensive debt is a guaranteed return equal to the APR.",
+    description:
+      "High monthly debt payments reduce loan eligibility and raise stress. Paying down expensive debt is a guaranteed return equal to the APR.",
     crisis: true,
     left: {
       id: "left",
@@ -204,8 +258,8 @@ function dtiCrisisEvent(monthIndex) {
       bullets: [
         "Guaranteed return equals the APR",
         "DTI improves over months",
-        "Immediate stress relief"
-      ]
+        "Immediate stress relief",
+      ],
     },
     right: {
       id: "right",
@@ -213,21 +267,33 @@ function dtiCrisisEvent(monthIndex) {
       bullets: [
         "Avoids short-term sacrifice",
         "Interest drag persists for years",
-        "Loan options shrink when you need them most"
-      ]
+        "Loan options shrink when you need them most",
+      ],
     },
     debrief: {
-      principle: "Paying off a 22% APR debt is a guaranteed 22% return \u2014 better than almost any investment.",
-      whyItHappened: "Your debt-to-income ratio exceeded 35%, the threshold lenders use to deny new credit.",
-      counterfactual: "Paying $200/month extra on a $2,400 credit card at 22% APR eliminates it 18 months sooner and saves $480.",
-      ruleOfThumb: "Avalanche method: always attack the highest APR first."
+      principle:
+        "Paying off a 22% APR debt is a guaranteed 22% return \u2014 better than almost any investment.",
+      whyItHappened:
+        "Your debt-to-income ratio exceeded 35%, the threshold lenders use to deny new credit.",
+      counterfactual:
+        "Paying $200/month extra on a $2,400 credit card at 22% APR eliminates it 18 months sooner and saves $480.",
+      ruleOfThumb: "Avalanche method: always attack the highest APR first.",
     },
     leftEffects: [
-      { triggerMonthOffset: 4, label: "Debt paydown working. DTI dropped, stress eased.", stressDelta: -10, creditDelta: 15 }
+      {
+        triggerMonthOffset: 4,
+        label: "Debt paydown working. DTI dropped, stress eased.",
+        stressDelta: -10,
+        creditDelta: 15,
+      },
     ],
     rightEffects: [
-      { triggerMonthOffset: 6, label: "Minimum payments kept debt alive. Interest eroded your buffer.", cashDelta: -250 }
-    ]
+      {
+        triggerMonthOffset: 6,
+        label: "Minimum payments kept debt alive. Interest eroded your buffer.",
+        cashDelta: -250,
+      },
+    ],
   };
 }
 function healthcareShockEvent(monthIndex, severe, healthcare) {
@@ -235,17 +301,23 @@ function healthcareShockEvent(monthIndex, severe, healthcare) {
   return {
     id: `health:${monthIndex}`,
     tag: "health",
-    title: severe ? "Unexpected medical bill arrives" : "Minor health expense, big question",
-    description: severe ? "A significant medical bill landed. This is why the emergency fund exists." : "A minor health issue requires out-of-pocket spending. Pay cash or use credit?",
+    title: severe
+      ? "Unexpected medical bill arrives"
+      : "Minor health expense, big question",
+    description: severe
+      ? "A significant medical bill landed. This is why the emergency fund exists."
+      : "A minor health issue requires out-of-pocket spending. Pay cash or use credit?",
     crisis: severe,
     left: {
       id: "left",
-      title: severe ? "Pay from emergency fund / savings" : "Pay cash, rebuild buffer next month",
+      title: severe
+        ? "Pay from emergency fund / savings"
+        : "Pay cash, rebuild buffer next month",
       bullets: [
         "Avoids high-interest debt",
         "Buffer takes a hit -- rebuild it",
-        "Credit score unaffected"
-      ]
+        "Credit score unaffected",
+      ],
     },
     right: {
       id: "right",
@@ -253,21 +325,33 @@ function healthcareShockEvent(monthIndex, severe, healthcare) {
       bullets: [
         "Preserves cash short-term",
         `$${cost} at 22%+ APR grows quickly`,
-        "Stress often rises when debt is unresolved"
-      ]
+        "Stress often rises when debt is unresolved",
+      ],
     },
     debrief: {
-      principle: "Health emergencies are not 'if' -- they're 'when'. Insurance and an emergency fund are the answer.",
+      principle:
+        "Health emergencies are not 'if' -- they're 'when'. Insurance and an emergency fund are the answer.",
       whyItHappened: `Healthcare risk in your scenario is ${Math.round(healthcare * 100)}% annual probability of a significant expense.`,
       counterfactual: `With $3,000 in an emergency fund, a $${cost} bill is a setback, not a crisis.`,
-      ruleOfThumb: "Budget 3-5% of annual income for healthcare surprises. It is not an optional line item."
+      ruleOfThumb:
+        "Budget 3-5% of annual income for healthcare surprises. It is not an optional line item.",
     },
     rightEffects: [
-      { triggerMonthOffset: 3, label: "Medical debt compounding. Utilization rose, dinging your credit.", creditDelta: -12, stressDelta: 8 }
+      {
+        triggerMonthOffset: 3,
+        label:
+          "Medical debt compounding. Utilization rose, dinging your credit.",
+        creditDelta: -12,
+        stressDelta: 8,
+      },
     ],
     leftEffects: [
-      { triggerMonthOffset: 1, label: "Emergency fund absorbed the shock. Rebuild the buffer now.", stressDelta: -5 }
-    ]
+      {
+        triggerMonthOffset: 1,
+        label: "Emergency fund absorbed the shock. Rebuild the buffer now.",
+        stressDelta: -5,
+      },
+    ],
   };
 }
 function careerOpportunityEvent(monthIndex, currentIncome) {
@@ -276,7 +360,8 @@ function careerOpportunityEvent(monthIndex, currentIncome) {
     id: `career:${monthIndex}`,
     tag: "career",
     title: "A better offer landed in your inbox",
-    description: "Another company wants you. The offer is meaningfully higher but changing jobs means rebuilding relationships and short-term uncertainty.",
+    description:
+      "Another company wants you. The offer is meaningfully higher but changing jobs means rebuilding relationships and short-term uncertainty.",
     crisis: false,
     left: {
       id: "left",
@@ -284,8 +369,8 @@ function careerOpportunityEvent(monthIndex, currentIncome) {
       bullets: [
         "Salary resets your income ceiling",
         "Job-switching is historically the fastest raise",
-        "Short-term disruption, long-term compounding"
-      ]
+        "Short-term disruption, long-term compounding",
+      ],
     },
     right: {
       id: "right",
@@ -293,22 +378,37 @@ function careerOpportunityEvent(monthIndex, currentIncome) {
       bullets: [
         "Less disruption risk",
         "Counter-offer may fall short",
-        "Loyalty raises rarely match market rates"
-      ]
+        "Loyalty raises rarely match market rates",
+      ],
     },
     debrief: {
-      principle: "Job-switching is the fastest salary growth lever for most workers under 40.",
-      whyItHappened: "Your skills increased, but your employer's raise budget didn't keep pace with market rates.",
+      principle:
+        "Job-switching is the fastest salary growth lever for most workers under 40.",
+      whyItHappened:
+        "Your skills increased, but your employer's raise budget didn't keep pace with market rates.",
       counterfactual: `A $${raiseAmount.toLocaleString()} raise compounded over 10 years at 3.5% annual growth adds over $${Math.round(raiseAmount * 11.7).toLocaleString()} in cumulative income.`,
-      ruleOfThumb: "Benchmark your salary annually. Switching every 2-4 years when underpaid is rational, not disloyal."
+      ruleOfThumb:
+        "Benchmark your salary annually. Switching every 2-4 years when underpaid is rational, not disloyal.",
     },
     leftEffects: [
-      { triggerMonthOffset: 0, label: `New job confirmed. Income up by $${raiseAmount.toLocaleString()}/year.`, incomeMultiplier: 1.12 },
-      { triggerMonthOffset: 2, label: "New role demanding. Burnout ticked up slightly.", stressDelta: 7 }
+      {
+        triggerMonthOffset: 0,
+        label: `New job confirmed. Income up by $${raiseAmount.toLocaleString()}/year.`,
+        incomeMultiplier: 1.12,
+      },
+      {
+        triggerMonthOffset: 2,
+        label: "New role demanding. Burnout ticked up slightly.",
+        stressDelta: 7,
+      },
     ],
     rightEffects: [
-      { triggerMonthOffset: 1, label: "Counter-offer came in below market. You accepted anyway.", incomeMultiplier: 1.04 }
-    ]
+      {
+        triggerMonthOffset: 1,
+        label: "Counter-offer came in below market. You accepted anyway.",
+        incomeMultiplier: 1.04,
+      },
+    ],
   };
 }
 function housingRentVsBuyEvent(monthIndex, creditScore, cash) {
@@ -318,25 +418,70 @@ function housingRentVsBuyEvent(monthIndex, creditScore, cash) {
     id: `housing:${monthIndex}`,
     tag: "housing",
     title: "Your lease is up. Buy or keep renting?",
-    description: canAffordDown && goodCredit ? "You are approaching the threshold where buying could make financial sense \u2014 if you plan to stay 5+ years." : "Buying may be premature given your current reserves. Renting preserves optionality, but rent inflation is real.",
+    description:
+      canAffordDown && goodCredit
+        ? "You are approaching the threshold where buying could make financial sense \u2014 if you plan to stay 5+ years."
+        : "Buying may be premature given your current reserves. Renting preserves optionality, but rent inflation is real.",
     crisis: false,
     left: {
       id: "left",
-      title: canAffordDown && goodCredit ? "Explore buying (lock in fixed cost)" : "Stay renting (preserve mobility)",
-      bullets: canAffordDown && goodCredit ? ["Fixed mortgage beats rent inflation long-term", "Down payment is a large cash hit", "Only worth it if you stay 5+ years"] : ["No down payment drain", "Full flexibility to move for income", "Rent will rise with inflation"]
+      title:
+        canAffordDown && goodCredit
+          ? "Explore buying (lock in fixed cost)"
+          : "Stay renting (preserve mobility)",
+      bullets:
+        canAffordDown && goodCredit
+          ? [
+              "Fixed mortgage beats rent inflation long-term",
+              "Down payment is a large cash hit",
+              "Only worth it if you stay 5+ years",
+            ]
+          : [
+              "No down payment drain",
+              "Full flexibility to move for income",
+              "Rent will rise with inflation",
+            ],
     },
     right: {
       id: "right",
-      title: canAffordDown && goodCredit ? "Keep renting (flexibility)" : "Start saving aggressively for a down payment",
-      bullets: canAffordDown && goodCredit ? ["Rent increases compound over time", "No equity but no illiquidity either", "Good if you expect to move within 3 years"] : ["A 20% down payment avoids PMI (~$100-200/month)", "Requires 2-3 years of focused saving", "Better credit means better rates"]
+      title:
+        canAffordDown && goodCredit
+          ? "Keep renting (flexibility)"
+          : "Start saving aggressively for a down payment",
+      bullets:
+        canAffordDown && goodCredit
+          ? [
+              "Rent increases compound over time",
+              "No equity but no illiquidity either",
+              "Good if you expect to move within 3 years",
+            ]
+          : [
+              "A 20% down payment avoids PMI (~$100-200/month)",
+              "Requires 2-3 years of focused saving",
+              "Better credit means better rates",
+            ],
     },
     debrief: {
-      principle: "The rent-vs-buy decision is primarily about time horizon, not monthly payment.",
-      whyItHappened: "Housing is a major financial decision tied to credit, liquidity, and expected tenure.",
-      counterfactual: "Buying with less than 5% down and under 700 credit score often costs more than renting in the first 5 years due to PMI, closing costs, and higher rates.",
-      ruleOfThumb: "Run the 5% rule: annual buy cost = 5% of home value. If rent < that, renting may win."
+      principle:
+        "The rent-vs-buy decision is primarily about time horizon, not monthly payment.",
+      whyItHappened:
+        "Housing is a major financial decision tied to credit, liquidity, and expected tenure.",
+      counterfactual:
+        "Buying with less than 5% down and under 700 credit score often costs more than renting in the first 5 years due to PMI, closing costs, and higher rates.",
+      ruleOfThumb:
+        "Run the 5% rule: annual buy cost = 5% of home value. If rent < that, renting may win.",
     },
-    leftEffects: canAffordDown && goodCredit ? [{ triggerMonthOffset: 2, label: "Mortgage locked. Fixed housing cost replaces rising rent.", expenseMultiplier: 0.97 }] : []
+    leftEffects:
+      canAffordDown && goodCredit
+        ? [
+            {
+              triggerMonthOffset: 2,
+              label:
+                "Mortgage locked. Fixed housing cost replaces rising rent.",
+              expenseMultiplier: 0.97,
+            },
+          ]
+        : [],
   };
 }
 function jobLossEvent(monthIndex, layoffProb) {
@@ -344,7 +489,8 @@ function jobLossEvent(monthIndex, layoffProb) {
     id: `layoff:${monthIndex}`,
     tag: "career",
     title: "Your position has been eliminated",
-    description: "It came without much warning. Your runway is your lifeline. Every month without income matters.",
+    description:
+      "It came without much warning. Your runway is your lifeline. Every month without income matters.",
     crisis: true,
     left: {
       id: "left",
@@ -352,8 +498,8 @@ function jobLossEvent(monthIndex, layoffProb) {
       bullets: [
         "Extends runway significantly",
         "Preserves emergency fund",
-        "Reduces stress by restoring perceived control"
-      ]
+        "Reduces stress by restoring perceived control",
+      ],
     },
     right: {
       id: "right",
@@ -361,23 +507,45 @@ function jobLossEvent(monthIndex, layoffProb) {
       bullets: [
         "Less lifestyle disruption",
         "Buffer depletes 30-40% faster",
-        "Hiring takes 3-6 months on average"
-      ]
+        "Hiring takes 3-6 months on average",
+      ],
     },
     debrief: {
-      principle: "In a layoff, cash runway IS your negotiating power -- with recruiters, landlords, and yourself.",
+      principle:
+        "In a layoff, cash runway IS your negotiating power -- with recruiters, landlords, and yourself.",
       whyItHappened: `Your scenario has a ${Math.round(layoffProb * 100)}% annual layoff probability. Macro downturns amplify this.`,
-      counterfactual: "A 6-month emergency fund transforms a job loss from a crisis into a planned transition.",
-      ruleOfThumb: "Cut non-essentials within 2 weeks of a layoff. Every month of runway is a month of negotiating power."
+      counterfactual:
+        "A 6-month emergency fund transforms a job loss from a crisis into a planned transition.",
+      ruleOfThumb:
+        "Cut non-essentials within 2 weeks of a layoff. Every month of runway is a month of negotiating power.",
     },
     leftEffects: [
-      { triggerMonthOffset: 0, label: "Expenses cut. Runway extended. Stress high but manageable.", expenseMultiplier: 0.6, stressDelta: 15, incomeMultiplier: 0 },
-      { triggerMonthOffset: 5, label: "New job found. Income restored with negotiated raise.", incomeMultiplier: 1.07 }
+      {
+        triggerMonthOffset: 0,
+        label: "Expenses cut. Runway extended. Stress high but manageable.",
+        expenseMultiplier: 0.6,
+        stressDelta: 15,
+        incomeMultiplier: 0,
+      },
+      {
+        triggerMonthOffset: 5,
+        label: "New job found. Income restored with negotiated raise.",
+        incomeMultiplier: 1.07,
+      },
     ],
     rightEffects: [
-      { triggerMonthOffset: 0, label: "Lifestyle maintained. Buffer draining fast.", stressDelta: 20, incomeMultiplier: 0 },
-      { triggerMonthOffset: 4, label: "Hired under pressure. Starting salary matched old one only.", incomeMultiplier: 1 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label: "Lifestyle maintained. Buffer draining fast.",
+        stressDelta: 20,
+        incomeMultiplier: 0,
+      },
+      {
+        triggerMonthOffset: 4,
+        label: "Hired under pressure. Starting salary matched old one only.",
+        incomeMultiplier: 1,
+      },
+    ],
   };
 }
 function insuranceGapEvent(monthIndex) {
@@ -385,7 +553,8 @@ function insuranceGapEvent(monthIndex) {
     id: `insurance:${monthIndex}`,
     tag: "insurance",
     title: "Your renter's insurance lapsed",
-    description: "You have been paying for insurance but wondering if it is worth it. A single incident could wipe out everything you own.",
+    description:
+      "You have been paying for insurance but wondering if it is worth it. A single incident could wipe out everything you own.",
     crisis: false,
     left: {
       id: "left",
@@ -393,8 +562,8 @@ function insuranceGapEvent(monthIndex) {
       bullets: [
         "$15-25/month covers tens of thousands in loss",
         "Liability coverage protects against lawsuits",
-        "Peace of mind has real economic value"
-      ]
+        "Peace of mind has real economic value",
+      ],
     },
     right: {
       id: "right",
@@ -402,23 +571,27 @@ function insuranceGapEvent(monthIndex) {
       bullets: [
         "Saves ~$200/year",
         "One incident could cost $5,000-$50,000",
-        "Self-insuring only works with significant assets"
-      ]
+        "Self-insuring only works with significant assets",
+      ],
     },
     debrief: {
-      principle: "Insurance protects against low-probability, high-impact events -- the ones that wipe out years of savings.",
-      whyItHappened: "Insurance costs feel like waste until the moment they are not.",
-      counterfactual: "A $15/month renter's policy costs $180/year. A single uninsured theft or fire event can cost $5,000-$15,000.",
-      ruleOfThumb: "Insure against things you could not afford to replace. Self-insure only on things you could pay out-of-pocket easily."
+      principle:
+        "Insurance protects against low-probability, high-impact events -- the ones that wipe out years of savings.",
+      whyItHappened:
+        "Insurance costs feel like waste until the moment they are not.",
+      counterfactual:
+        "A $15/month renter's policy costs $180/year. A single uninsured theft or fire event can cost $5,000-$15,000.",
+      ruleOfThumb:
+        "Insure against things you could not afford to replace. Self-insure only on things you could pay out-of-pocket easily.",
     },
     rightEffects: [
       {
         triggerMonthOffset: 7,
         label: "Uninsured incident. Absorbing the full cost.",
         debtAdd: { kind: "medical", balance: 2800, apr: 0 },
-        stressDelta: 20
-      }
-    ]
+        stressDelta: 20,
+      },
+    ],
   };
 }
 function retirementContributionEvent(monthIndex, age) {
@@ -426,37 +599,60 @@ function retirementContributionEvent(monthIndex, age) {
   return {
     id: `retirement:${monthIndex}`,
     tag: "retirement",
-    title: earlyAge ? "Your 401(k) enrollment window opens" : "Increase retirement contribution?",
-    description: earlyAge ? "Your employer offers a 401(k) with a 50% match up to 6% of salary. Not using the match is leaving money on the table." : "Bumping your retirement contribution by 2% reduces take-home pay but significantly increases long-run wealth.",
+    title: earlyAge
+      ? "Your 401(k) enrollment window opens"
+      : "Increase retirement contribution?",
+    description: earlyAge
+      ? "Your employer offers a 401(k) with a 50% match up to 6% of salary. Not using the match is leaving money on the table."
+      : "Bumping your retirement contribution by 2% reduces take-home pay but significantly increases long-run wealth.",
     crisis: false,
     left: {
       id: "left",
       title: earlyAge ? "Enroll at 6% (capture full match)" : "Increase by 2%",
       bullets: [
-        earlyAge ? "Employer match is a 50% instant return" : "2% more now = years less work later",
+        earlyAge
+          ? "Employer match is a 50% instant return"
+          : "2% more now = years less work later",
         "Pre-tax contribution reduces taxable income",
-        "Compounding over decades is the most powerful force here"
-      ]
+        "Compounding over decades is the most powerful force here",
+      ],
     },
     right: {
       id: "right",
       title: "Skip / keep contribution flat",
       bullets: [
         "Higher take-home pay now",
-        earlyAge ? "Missing the match is forfeiting free money" : "Flexibility to allocate elsewhere",
-        "Harder to increase later due to lifestyle inflation"
-      ]
+        earlyAge
+          ? "Missing the match is forfeiting free money"
+          : "Flexibility to allocate elsewhere",
+        "Harder to increase later due to lifestyle inflation",
+      ],
     },
     debrief: {
-      principle: "Employer match is a 50-100% instant guaranteed return -- always capture it first.",
-      whyItHappened: earlyAge ? "Early career is when contribution habits form. Compounding needs decades to work." : "Each 1% increase in contribution rate can reduce required working years by 1-2 years.",
-      counterfactual: earlyAge ? "Contributing $2,400/year (6% of $40k) with a 50% match at 7% returns grows to ~$680k by age 65." : "Increasing contributions by 2% now saves ~3.5 years of work over a 30-year career.",
-      ruleOfThumb: "Maximize employer match before anything else. It is the only guaranteed return in investing."
+      principle:
+        "Employer match is a 50-100% instant guaranteed return -- always capture it first.",
+      whyItHappened: earlyAge
+        ? "Early career is when contribution habits form. Compounding needs decades to work."
+        : "Each 1% increase in contribution rate can reduce required working years by 1-2 years.",
+      counterfactual: earlyAge
+        ? "Contributing $2,400/year (6% of $40k) with a 50% match at 7% returns grows to ~$680k by age 65."
+        : "Increasing contributions by 2% now saves ~3.5 years of work over a 30-year career.",
+      ruleOfThumb:
+        "Maximize employer match before anything else. It is the only guaranteed return in investing.",
     },
     leftEffects: [
-      { triggerMonthOffset: 0, label: "Retirement contribution increased. Tax bill slightly reduced.", cashDelta: -80 },
-      { triggerMonthOffset: 12, label: "First year of retirement compounding underway. Growing silently.", stressDelta: -3 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label: "Retirement contribution increased. Tax bill slightly reduced.",
+        cashDelta: -80,
+      },
+      {
+        triggerMonthOffset: 12,
+        label:
+          "First year of retirement compounding underway. Growing silently.",
+        stressDelta: -3,
+      },
+    ],
   };
 }
 function behavioralTemptationEvent(monthIndex) {
@@ -464,7 +660,8 @@ function behavioralTemptationEvent(monthIndex) {
     id: `behavioral:${monthIndex}`,
     tag: "behavioral",
     title: "Social comparison is expensive",
-    description: "Your social circle upgraded their lifestyle -- new cars, vacations, renovations. The pressure to keep up is subtle but real.",
+    description:
+      "Your social circle upgraded their lifestyle -- new cars, vacations, renovations. The pressure to keep up is subtle but real.",
     crisis: false,
     left: {
       id: "left",
@@ -472,8 +669,8 @@ function behavioralTemptationEvent(monthIndex) {
       bullets: [
         "Your net worth compounds quietly",
         "Others' spending is often financed invisibly",
-        "The wealth gap widens in your favor"
-      ]
+        "The wealth gap widens in your favor",
+      ],
     },
     right: {
       id: "right",
@@ -481,19 +678,31 @@ function behavioralTemptationEvent(monthIndex) {
       bullets: [
         "Short-term satisfaction is real",
         "Lifestyle inflation is very hard to reverse",
-        "Hedonic adaptation means the boost fades quickly"
-      ]
+        "Hedonic adaptation means the boost fades quickly",
+      ],
     },
     debrief: {
-      principle: "Lifestyle inflation is the silent killer of wealth -- income rises but savings rate stays flat or falls.",
-      whyItHappened: "Social comparison triggers spending that feels rational in the moment but undermines long-term goals.",
-      counterfactual: "The car your neighbor bought on credit costs ~$600/month. That same $600/month invested at 7% is $1.02M over 30 years.",
-      ruleOfThumb: "When tempted to match others: ask if you know their balance sheet. Most wealth is hidden in both directions."
+      principle:
+        "Lifestyle inflation is the silent killer of wealth -- income rises but savings rate stays flat or falls.",
+      whyItHappened:
+        "Social comparison triggers spending that feels rational in the moment but undermines long-term goals.",
+      counterfactual:
+        "The car your neighbor bought on credit costs ~$600/month. That same $600/month invested at 7% is $1.02M over 30 years.",
+      ruleOfThumb:
+        "When tempted to match others: ask if you know their balance sheet. Most wealth is hidden in both directions.",
     },
     rightEffects: [
-      { triggerMonthOffset: 0, label: "Lifestyle upgrade locked in. New baseline expenses higher.", expenseMultiplier: 1.06 },
-      { triggerMonthOffset: 3, label: "The hedonic boost faded. Expenses are still elevated.", stressDelta: 5 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label: "Lifestyle upgrade locked in. New baseline expenses higher.",
+        expenseMultiplier: 1.06,
+      },
+      {
+        triggerMonthOffset: 3,
+        label: "The hedonic boost faded. Expenses are still elevated.",
+        stressDelta: 5,
+      },
+    ],
   };
 }
 function taxPlanningEvent(monthIndex) {
@@ -501,7 +710,8 @@ function taxPlanningEvent(monthIndex) {
     id: `tax:${monthIndex}`,
     tag: "tax",
     title: "Tax optimization window",
-    description: "You could max out your HSA if on a high-deductible plan, harvest a capital loss, or move money to a Roth. Small tax moves compound significantly.",
+    description:
+      "You could max out your HSA if on a high-deductible plan, harvest a capital loss, or move money to a Roth. Small tax moves compound significantly.",
     crisis: false,
     left: {
       id: "left",
@@ -509,8 +719,8 @@ function taxPlanningEvent(monthIndex) {
       bullets: [
         "HSA is triple-tax advantaged",
         "Roth contributions grow tax-free forever",
-        "Tax harvesting is a guaranteed after-tax return"
-      ]
+        "Tax harvesting is a guaranteed after-tax return",
+      ],
     },
     right: {
       id: "right",
@@ -518,18 +728,26 @@ function taxPlanningEvent(monthIndex) {
       bullets: [
         "No action required",
         "Missed tax alpha is invisible until retirement",
-        "Compounding cost is years away"
-      ]
+        "Compounding cost is years away",
+      ],
     },
     debrief: {
-      principle: "Tax-advantaged accounts are the highest guaranteed return available -- better than any investment pick.",
-      whyItHappened: "Tax decisions are time-sensitive and easy to defer. Deferring them is itself a costly decision.",
-      counterfactual: "Maxing an HSA ($4,150/year) saves ~$1,000 in taxes annually at a 24% bracket -- $20,000+ difference over 20 years.",
-      ruleOfThumb: "Order: 401k to match, then HSA, then Roth IRA, then taxable. Never skip a step before filling the one before it."
+      principle:
+        "Tax-advantaged accounts are the highest guaranteed return available -- better than any investment pick.",
+      whyItHappened:
+        "Tax decisions are time-sensitive and easy to defer. Deferring them is itself a costly decision.",
+      counterfactual:
+        "Maxing an HSA ($4,150/year) saves ~$1,000 in taxes annually at a 24% bracket -- $20,000+ difference over 20 years.",
+      ruleOfThumb:
+        "Order: 401k to match, then HSA, then Roth IRA, then taxable. Never skip a step before filling the one before it.",
     },
     leftEffects: [
-      { triggerMonthOffset: 0, label: "Tax move made. After-tax income effectively increased.", cashDelta: 220 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label: "Tax move made. After-tax income effectively increased.",
+        cashDelta: 220,
+      },
+    ],
   };
 }
 function founderEquityEvent(monthIndex) {
@@ -537,7 +755,8 @@ function founderEquityEvent(monthIndex) {
     id: `equity:${monthIndex}`,
     tag: "investing",
     title: "Your equity is diluting -- act or accept?",
-    description: "A new funding round is closing. Your equity stake dilutes unless you participate or negotiate protective provisions.",
+    description:
+      "A new funding round is closing. Your equity stake dilutes unless you participate or negotiate protective provisions.",
     crisis: false,
     left: {
       id: "left",
@@ -545,8 +764,8 @@ function founderEquityEvent(monthIndex) {
       bullets: [
         "Protects your equity percentage",
         "Requires capital or strong negotiating leverage",
-        "Signals sophistication to investors"
-      ]
+        "Signals sophistication to investors",
+      ],
     },
     right: {
       id: "right",
@@ -554,15 +773,19 @@ function founderEquityEvent(monthIndex) {
       bullets: [
         "A smaller % of a bigger company can be worth more",
         "Dilution is normal and expected",
-        "Upside depends entirely on exit outcome"
-      ]
+        "Upside depends entirely on exit outcome",
+      ],
     },
     debrief: {
-      principle: "Equity value = (% ownership) x (exit valuation). Dilution lowers %, but a bigger company raises the exit multiple.",
-      whyItHappened: "Fundraising dilutes early equity. Founders must decide whether maintaining percentage or velocity matters more.",
-      counterfactual: "Going from 0.6% to 0.5% at a $100M exit is a $100k difference. Growth from $20M to $100M valuation is a $400k+ gain on the same stake.",
-      ruleOfThumb: "Dilution is not failure. Losing equity to build a larger pie usually beats protecting a small slice of a stagnant one."
-    }
+      principle:
+        "Equity value = (% ownership) x (exit valuation). Dilution lowers %, but a bigger company raises the exit multiple.",
+      whyItHappened:
+        "Fundraising dilutes early equity. Founders must decide whether maintaining percentage or velocity matters more.",
+      counterfactual:
+        "Going from 0.6% to 0.5% at a $100M exit is a $100k difference. Growth from $20M to $100M valuation is a $400k+ gain on the same stake.",
+      ruleOfThumb:
+        "Dilution is not failure. Losing equity to build a larger pie usually beats protecting a small slice of a stagnant one.",
+    },
   };
 }
 function elderCareEvent(monthIndex) {
@@ -570,7 +793,8 @@ function elderCareEvent(monthIndex) {
     id: `family:elder:${monthIndex}`,
     tag: "family",
     title: "A family member needs financial support",
-    description: "An aging parent or family member needs financial help. This is one of the most common and least planned-for financial obligations adults face.",
+    description:
+      "An aging parent or family member needs financial help. This is one of the most common and least planned-for financial obligations adults face.",
     crisis: true,
     left: {
       id: "left",
@@ -578,8 +802,8 @@ function elderCareEvent(monthIndex) {
       bullets: [
         "Defines what you can sustainably give",
         "Protects your own financial stability",
-        "Prevents resentment from open-ended commitments"
-      ]
+        "Prevents resentment from open-ended commitments",
+      ],
     },
     right: {
       id: "right",
@@ -587,29 +811,68 @@ function elderCareEvent(monthIndex) {
       bullets: [
         "Full family support in the short term",
         "Can erode your savings and retirement",
-        "Open-ended commitments grow silently"
-      ]
+        "Open-ended commitments grow silently",
+      ],
     },
     debrief: {
-      principle: "You cannot help others from an empty vessel. Sustainable support requires defined limits.",
-      whyItHappened: "Elder care and family financial support are major, underdiscussed drains on household wealth.",
-      counterfactual: "An open-ended $500/month commitment is $6,000/year -- equal to maxing a Roth IRA contribution.",
-      ruleOfThumb: "Treat family support like a bill: set a fixed sustainable amount, then communicate it clearly."
+      principle:
+        "You cannot help others from an empty vessel. Sustainable support requires defined limits.",
+      whyItHappened:
+        "Elder care and family financial support are major, underdiscussed drains on household wealth.",
+      counterfactual:
+        "An open-ended $500/month commitment is $6,000/year -- equal to maxing a Roth IRA contribution.",
+      ruleOfThumb:
+        "Treat family support like a bill: set a fixed sustainable amount, then communicate it clearly.",
     },
     rightEffects: [
-      { triggerMonthOffset: 0, label: "Open-ended financial support ongoing. Monthly expenses increased.", expenseMultiplier: 1.08, stressDelta: 10 },
-      { triggerMonthOffset: 6, label: "Open-ended family support straining your retirement contributions.", stressDelta: 8 }
+      {
+        triggerMonthOffset: 0,
+        label:
+          "Open-ended financial support ongoing. Monthly expenses increased.",
+        expenseMultiplier: 1.08,
+        stressDelta: 10,
+      },
+      {
+        triggerMonthOffset: 6,
+        label:
+          "Open-ended family support straining your retirement contributions.",
+        stressDelta: 8,
+      },
     ],
     leftEffects: [
-      { triggerMonthOffset: 0, label: "Structured support agreed. Clear boundary -- manageable long-term.", expenseMultiplier: 1.04, stressDelta: 3 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label:
+          "Structured support agreed. Clear boundary -- manageable long-term.",
+        expenseMultiplier: 1.04,
+        stressDelta: 3,
+      },
+    ],
   };
 }
 function randomShockEvent(monthIndex) {
   const shocks = [
-    { title: "Car broke down", description: "Unexpected repair cost. Transportation is a job prerequisite.", tag: "car", cost: 1200 },
-    { title: "Apartment flooding -- unexpected damages", description: "Water damage requires repairs. Insurance coverage determines the real cost.", tag: "housing", cost: 2200 },
-    { title: "Laptop failure -- critical equipment", description: "Your primary work tool died. Replacement is non-negotiable.", tag: "shock", cost: 900 }
+    {
+      title: "Car broke down",
+      description:
+        "Unexpected repair cost. Transportation is a job prerequisite.",
+      tag: "car",
+      cost: 1200,
+    },
+    {
+      title: "Apartment flooding -- unexpected damages",
+      description:
+        "Water damage requires repairs. Insurance coverage determines the real cost.",
+      tag: "housing",
+      cost: 2200,
+    },
+    {
+      title: "Laptop failure -- critical equipment",
+      description:
+        "Your primary work tool died. Replacement is non-negotiable.",
+      tag: "shock",
+      cost: 900,
+    },
   ];
   const shock = shocks[monthIndex % shocks.length];
   return {
@@ -624,8 +887,8 @@ function randomShockEvent(monthIndex) {
       bullets: [
         "Avoids interest and debt",
         "Emergency fund depleted -- rebuild immediately",
-        "That is exactly what it is for"
-      ]
+        "That is exactly what it is for",
+      ],
     },
     right: {
       id: "right",
@@ -633,21 +896,33 @@ function randomShockEvent(monthIndex) {
       bullets: [
         `$${shock.cost} at 22%+ APR grows quickly`,
         "Cash preserved short-term",
-        "Stress persists while balance exists"
-      ]
+        "Stress persists while balance exists",
+      ],
     },
     debrief: {
-      principle: "Shocks are not exceptions -- they are the normal texture of life. The emergency fund is the shock absorber.",
-      whyItHappened: "Average households face one $500+ unexpected expense every 4-6 months.",
+      principle:
+        "Shocks are not exceptions -- they are the normal texture of life. The emergency fund is the shock absorber.",
+      whyItHappened:
+        "Average households face one $500+ unexpected expense every 4-6 months.",
       counterfactual: `A $3,000 emergency fund means a $${shock.cost} shock is an inconvenience. Without it, it is a debt spiral entry point.`,
-      ruleOfThumb: "Build 3 months of expenses before investing. Then invest. Then build to 6 months."
+      ruleOfThumb:
+        "Build 3 months of expenses before investing. Then invest. Then build to 6 months.",
     },
     rightEffects: [
-      { triggerMonthOffset: 0, label: "Financed the repair. Interest clock is ticking.", debtAdd: { kind: "credit-card", balance: shock.cost, apr: 0.219 }, stressDelta: 8 }
+      {
+        triggerMonthOffset: 0,
+        label: "Financed the repair. Interest clock is ticking.",
+        debtAdd: { kind: "credit-card", balance: shock.cost, apr: 0.219 },
+        stressDelta: 8,
+      },
     ],
     leftEffects: [
-      { triggerMonthOffset: 0, label: "Emergency fund absorbed the shock. Rebuild the buffer now.", stressDelta: 5 }
-    ]
+      {
+        triggerMonthOffset: 0,
+        label: "Emergency fund absorbed the shock. Rebuild the buffer now.",
+        stressDelta: 5,
+      },
+    ],
   };
 }
 function generateEvent({
@@ -661,7 +936,7 @@ function generateEvent({
   ageYears,
   grossIncomeAnnual,
   scenarioFlags,
-  macro
+  macro,
 }) {
   const cashTight = cash < 1200;
   const creditThin = creditScore < 660 || scenarioFlags.restrictedCredit;
@@ -678,26 +953,43 @@ function generateEvent({
   const push = (card, w) => pool.push({ card, weight: w });
   push(budgetSurplusEvent(monthIndex, cashTight), cashTight ? 3.5 : 1.5);
   push(investingPatience(monthIndex, macroCrisis), macroCrisis ? 3 : 1.2);
-  if (creditThin) push(creditLineEvent(monthIndex, scenarioFlags.restrictedCredit), 2.5);
+  if (creditThin)
+    push(creditLineEvent(monthIndex, scenarioFlags.restrictedCredit), 2.5);
   if (highDti) push(dtiCrisisEvent(monthIndex), 3.5);
   if (scenarioFlags.childcareMonthly > 0 || scenarioFlags.remittanceMonthly > 0)
     push(obligationsEvent(monthIndex, cashTight), cashTight ? 3 : 1.8);
   const healthcareMonthlyProb = scenarioFlags.healthcareRiskAnnual / 12;
   if (healthRoll < healthcareMonthlyProb * 1.5) {
     const severe = healthRoll < healthcareMonthlyProb * 0.4;
-    push(healthcareShockEvent(monthIndex, severe, scenarioFlags.healthcareRiskAnnual), severe ? 4 : 2);
+    push(
+      healthcareShockEvent(
+        monthIndex,
+        severe,
+        scenarioFlags.healthcareRiskAnnual,
+      ),
+      severe ? 4 : 2,
+    );
   }
   if (midGame || lateGame)
-    push(careerOpportunityEvent(monthIndex, grossIncomeAnnual), highBurnout ? 1 : 2);
-  if (macroCrisis && layoffRoll < scenarioFlags.layoffProbAnnual / 12 * 2.5)
+    push(
+      careerOpportunityEvent(monthIndex, grossIncomeAnnual),
+      highBurnout ? 1 : 2,
+    );
+  if (macroCrisis && layoffRoll < (scenarioFlags.layoffProbAnnual / 12) * 2.5)
     push(jobLossEvent(monthIndex, scenarioFlags.layoffProbAnnual), 4.5);
-  if (midGame || lateGame) push(housingRentVsBuyEvent(monthIndex, creditScore, cash), 1.2);
+  if (midGame || lateGame)
+    push(housingRentVsBuyEvent(monthIndex, creditScore, cash), 1.2);
   if (earlyGame || rng.next() < 0.15) push(insuranceGapEvent(monthIndex), 1.5);
   if (earlyGame) push(retirementContributionEvent(monthIndex, ageYears), 2.5);
-  else if (midGame) push(retirementContributionEvent(monthIndex, ageYears), 1.2);
-  push(behavioralTemptationEvent(monthIndex), highStress || highBurnout ? 2 : 1);
+  else if (midGame)
+    push(retirementContributionEvent(monthIndex, ageYears), 1.2);
+  push(
+    behavioralTemptationEvent(monthIndex),
+    highStress || highBurnout ? 2 : 1,
+  );
   if (monthIndex % 4 === 0) push(taxPlanningEvent(monthIndex), 1.5);
-  if (scenarioFlags.hasEquity && (midGame || lateGame)) push(founderEquityEvent(monthIndex), 2.5);
+  if (scenarioFlags.hasEquity && (midGame || lateGame))
+    push(founderEquityEvent(monthIndex), 2.5);
   if (midGame) push(elderCareEvent(monthIndex), 0.8);
   if (lateGame) push(elderCareEvent(monthIndex), 1.5);
   push(randomShockEvent(monthIndex), cashTight ? 2.5 : 1);
@@ -710,7 +1002,8 @@ function generateEvent({
   return pool[pool.length - 1].card;
 }
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  generateEvent,
-  rollMacro
-});
+0 &&
+  (module.exports = {
+    generateEvent,
+    rollMacro,
+  });

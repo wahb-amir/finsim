@@ -33,7 +33,9 @@ function formatUserProfile(profile) {
   if (pastGames?.gamesCompleted > 0) {
     lines.push(`Past games completed: ${pastGames.gamesCompleted}`);
     if (pastGames.dominantPatternLabel) {
-      lines.push(`Recurring mistake pattern: ${pastGames.dominantPatternLabel}`);
+      lines.push(
+        `Recurring mistake pattern: ${pastGames.dominantPatternLabel}`,
+      );
     }
     if (pastGames.averageScore != null) {
       lines.push(`Average debrief score: ${pastGames.averageScore}/1000`);
@@ -46,7 +48,8 @@ function formatUserProfile(profile) {
 }
 
 function buildSystemPrompt(chunks, context) {
-  const { round, metrics, choiceContext, currentMistakes, userProfile } = context;
+  const { round, metrics, choiceContext, currentMistakes, userProfile } =
+    context;
 
   return `You are FinSim Advisor — a Socratic financial educator inside a 10-round life simulation.
 

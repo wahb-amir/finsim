@@ -17,8 +17,15 @@ function DebriefContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("sessionId");
   const { user, loading: authLoading } = useAuth();
-  const { playerName, metrics, debriefData, setDebriefData, resetGame, scenarioId, hydrateGameView } =
-    useGame();
+  const {
+    playerName,
+    metrics,
+    debriefData,
+    setDebriefData,
+    resetGame,
+    scenarioId,
+    hydrateGameView,
+  } = useGame();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serverMetrics, setServerMetrics] = useState(null);
@@ -73,7 +80,8 @@ function DebriefContent() {
 
   const debrief = debriefData;
   const displayMetrics = serverMetrics || metrics;
-  const netWorth = displayMetrics?.netWorth ?? debrief?.finalMetrics?.netWorth ?? 0;
+  const netWorth =
+    displayMetrics?.netWorth ?? debrief?.finalMetrics?.netWorth ?? 0;
   const isPositive = netWorth >= 0;
 
   const optimalPath = debrief?.optimalPath || [];
@@ -190,7 +198,9 @@ function DebriefContent() {
             &ldquo;{debrief.verdict}&rdquo;
           </p>
           {debrief.subverdict ? (
-            <p className="text-[#6B6B6B] text-sm mt-3 max-w-lg mx-auto">{debrief.subverdict}</p>
+            <p className="text-[#6B6B6B] text-sm mt-3 max-w-lg mx-auto">
+              {debrief.subverdict}
+            </p>
           ) : null}
         </div>
 
@@ -228,7 +238,9 @@ function DebriefContent() {
               label: "Retirement",
               value: `$${(displayMetrics?.retirementBalance ?? 0).toLocaleString()}`,
               color:
-                (displayMetrics?.retirementBalance ?? 0) > 5000 ? "#10B981" : "#F59E0B",
+                (displayMetrics?.retirementBalance ?? 0) > 5000
+                  ? "#10B981"
+                  : "#F59E0B",
             },
           ].map((stat) => (
             <div
@@ -303,7 +315,9 @@ function DebriefContent() {
                     {item.round}
                   </div>
                   <div>
-                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">You chose</div>
+                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">
+                      You chose
+                    </div>
                     <div
                       className="text-[12px] font-medium"
                       style={{ color: item.match ? "#10B981" : "#EF4444" }}
@@ -312,15 +326,21 @@ function DebriefContent() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">Optimal</div>
-                    <div className="text-[12px] font-medium text-[#A1A1A1]">{item.optimal}</div>
+                    <div className="text-[11px] text-[#6B6B6B] mb-0.5">
+                      Optimal
+                    </div>
+                    <div className="text-[12px] font-medium text-[#A1A1A1]">
+                      {item.optimal}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="mt-4 pt-4 border-t border-[#1F1F1F] flex items-center justify-between">
-              <span className="text-[11px] text-[#6B6B6B]">Optimal decisions matched</span>
+              <span className="text-[11px] text-[#6B6B6B]">
+                Optimal decisions matched
+              </span>
               <div className="flex items-center gap-2">
                 <div className="w-32 h-1.5 rounded-full bg-[#1F1F1F] overflow-hidden">
                   <div
@@ -359,9 +379,13 @@ function DebriefContent() {
                   <div className="text-sm font-semibold text-[#F5F5F5] mb-1">
                     {item.title}
                   </div>
-                  <p className="text-[12px] text-[#A1A1A1] leading-relaxed">{item.body}</p>
+                  <p className="text-[12px] text-[#A1A1A1] leading-relaxed">
+                    {item.body}
+                  </p>
                   {item.estimatedImpact ? (
-                    <p className="text-[11px] text-[#F59E0B] mt-2">{item.estimatedImpact}</p>
+                    <p className="text-[11px] text-[#F59E0B] mt-2">
+                      {item.estimatedImpact}
+                    </p>
                   ) : null}
                 </div>
               ))}
@@ -377,7 +401,8 @@ function DebriefContent() {
             Financial Report Card
           </h2>
           <p className="text-[11px] text-[#6B6B6B] mb-6">
-            Scenario: {scenarioId || debrief.scenarioId} · Server-authoritative metrics
+            Scenario: {scenarioId || debrief.scenarioId} · Server-authoritative
+            metrics
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] p-4">
@@ -396,7 +421,11 @@ function DebriefContent() {
                 Debt Fitness
               </div>
               <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
-                {Math.max(0, 100 - Math.round(displayMetrics?.debtToIncome ?? 0))}/100
+                {Math.max(
+                  0,
+                  100 - Math.round(displayMetrics?.debtToIncome ?? 0),
+                )}
+                /100
               </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Derived from debt-to-income and total debt load at finish.
@@ -406,7 +435,9 @@ function DebriefContent() {
               <div className="text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-2">
                 Decision Quality
               </div>
-              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">{matchRate}/100</div>
+              <div className="text-2xl font-bold text-[#F5F5F5] mb-1">
+                {matchRate}/100
+              </div>
               <div className="text-[12px] text-[#A1A1A1]">
                 Alignment with heuristic optimal path from your round history.
               </div>
@@ -418,8 +449,10 @@ function DebriefContent() {
                 Macro Conditions At Finish
               </div>
               <div className="text-sm text-[#D1D1D1]">
-                Inflation: {(displayMetrics.inflationAnnual * 100).toFixed(1)}% · Recession
-                risk: {(displayMetrics.recessionProbAnnual * 100).toFixed(1)}% ({macroRiskLabel})
+                Inflation: {(displayMetrics.inflationAnnual * 100).toFixed(1)}%
+                · Recession risk:{" "}
+                {(displayMetrics.recessionProbAnnual * 100).toFixed(1)}% (
+                {macroRiskLabel})
               </div>
             </div>
           ) : null}

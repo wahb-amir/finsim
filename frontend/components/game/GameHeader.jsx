@@ -34,14 +34,25 @@ export function GameHeader({
             className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2A2A2A] text-[#A1A1A1] text-[11px] font-medium hover:border-[#3A3A3A] hover:text-[#F5F5F5] transition-colors disabled:opacity-50"
             aria-label="Exit game"
           >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M4.5 2.5L2 5v5.5h8V5L7.5 2.5H4.5Z"
                 stroke="currentColor"
                 strokeWidth="1.1"
                 strokeLinejoin="round"
               />
-              <path d="M5 6h2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+              <path
+                d="M5 6h2"
+                stroke="currentColor"
+                strokeWidth="1.1"
+                strokeLinecap="round"
+              />
             </svg>
             {exiting ? "Exiting…" : "Exit Game"}
           </button>

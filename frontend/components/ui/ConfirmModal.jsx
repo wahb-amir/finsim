@@ -54,7 +54,13 @@ export function ConfirmModal({
       <div className="relative w-full max-w-md rounded-3xl border border-[#2A2A2A] bg-[#0F0F0F] p-6 shadow-2xl animate-fade-in-up">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-[#2A2A2A] bg-[#161616]">
           {confirmVariant === "danger" ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
                 stroke="#EF4444"
@@ -64,7 +70,13 @@ export function ConfirmModal({
               />
             </svg>
           ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 stroke="#F59E0B"

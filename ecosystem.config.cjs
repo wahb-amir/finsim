@@ -16,7 +16,7 @@ module.exports = {
         PORT: 8081,
       },
       // Explicitly tell PM2 to load your local .env file variables
-      dot_env: "/root/finsim/backend/.env" 
+      dot_env: "/root/finsim/backend/.env",
     },
   ],
 };

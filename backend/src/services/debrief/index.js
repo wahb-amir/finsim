@@ -7,7 +7,16 @@ const { toUIMetrics } = require("../simulation/metrics");
 const { getVisibleMetrics } = require("../simulation/engine");
 
 const OPTIMAL_CHOICES = {
-  1: "A", 2: "A", 3: "B", 4: "B", 5: "A", 6: "A", 7: "B", 8: "A", 9: "A", 10: "A",
+  1: "A",
+  2: "A",
+  3: "B",
+  4: "B",
+  5: "A",
+  6: "A",
+  7: "B",
+  8: "A",
+  9: "A",
+  10: "A",
 };
 
 function normalizeChoice(choice) {
@@ -21,11 +30,8 @@ function buildOptimalComparisonFromRounds(rounds) {
     const player = r.metricsAfter?.netWorth ?? 0;
     const optimalRound = r.round;
     const optimalChoice = OPTIMAL_CHOICES[optimalRound];
-    const playerMatchesOptimal =
-      normalizeChoice(r.choice) === optimalChoice;
-    const optimal = playerMatchesOptimal
-      ? player
-      : Math.round(player * 1.08);
+    const playerMatchesOptimal = normalizeChoice(r.choice) === optimalChoice;
+    const optimal = playerMatchesOptimal ? player : Math.round(player * 1.08);
     return {
       round: r.round,
       player,
@@ -36,8 +42,10 @@ function buildOptimalComparisonFromRounds(rounds) {
 
   const last = rounds[rounds.length - 1];
   const finalPlayer = last?.metricsAfter?.netWorth ?? 0;
-  const finalOptimal =
-    netWorthByRound.reduce((max, row) => Math.max(max, row.optimal), finalPlayer);
+  const finalOptimal = netWorthByRound.reduce(
+    (max, row) => Math.max(max, row.optimal),
+    finalPlayer,
+  );
 
   return {
     optimalNetWorth: finalOptimal,
@@ -85,11 +93,14 @@ function finalMetricsToUI(finalMetrics, simState) {
         bufferMonths: finalMetrics.emergencyFundMonths ?? 0,
         outcomeScore: { composite: 0 },
       };
-  return toUIMetrics(visible, simState || {
-    portfolio: {
-      retirement: finalMetrics.retirementBalance ?? 0,
+  return toUIMetrics(
+    visible,
+    simState || {
+      portfolio: {
+        retirement: finalMetrics.retirementBalance ?? 0,
+      },
     },
-  });
+  );
 }
 
 /**
@@ -176,7 +187,9 @@ async function generateAndPersistDebrief(session) {
   }
 
   if (session.status !== "completed" || (session.rounds?.length || 0) < 10) {
-    const err = new Error("Game must be completed with 10 rounds before debrief");
+    const err = new Error(
+      "Game must be completed with 10 rounds before debrief",
+    );
     err.statusCode = 400;
     throw err;
   }
@@ -187,15 +200,15 @@ async function generateAndPersistDebrief(session) {
   session.debriefData = report;
   session.debriefSources = sources;
   session.aiSummary =
-    report?.headline?.verdict ||
-    report?.headline?.subverdict ||
-    null;
+    report?.headline?.verdict || report?.headline?.subverdict || null;
   session.aiAdvice = report?.realLifeTakeaways || [];
   session.debriefGeneratedAt = new Date();
 
   if (report?.optimalComparison) {
     session.optimalComparison = {
-      ...session.optimalComparison?.toObject?.() || session.optimalComparison || {},
+      ...(session.optimalComparison?.toObject?.() ||
+        session.optimalComparison ||
+        {}),
       optimalNetWorth:
         report.optimalComparison.optimalNetWorth ??
         session.optimalComparison?.optimalNetWorth,
@@ -210,7 +223,9 @@ async function generateAndPersistDebrief(session) {
 
   if (report?.netWorthByRound?.length) {
     session.optimalComparison = {
-      ...(session.optimalComparison?.toObject?.() || session.optimalComparison || {}),
+      ...(session.optimalComparison?.toObject?.() ||
+        session.optimalComparison ||
+        {}),
       netWorthByRound: report.netWorthByRound,
     };
   }

@@ -8,7 +8,9 @@ router.post("/setup", authMiddleware, async (req, res) => {
     const { name, confidence, goal } = req.body;
 
     if (!name || !confidence || !goal) {
-      return res.status(401).json({ success: false, message: "please fill all fields" });
+      return res
+        .status(401)
+        .json({ success: false, message: "please fill all fields" });
     }
 
     const existingSetup = await Setup.findOne({ userId: req.user._id });
@@ -30,7 +32,9 @@ router.post("/setup", authMiddleware, async (req, res) => {
 
     await newSetup.save();
 
-    return res.status(200).json({ success: true, message: "Setup Created Successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Setup Created Successfully" });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
@@ -41,7 +45,9 @@ router.put("/setup", authMiddleware, async (req, res) => {
     const { name, confidence, goal } = req.body;
 
     if (!name || !confidence || !goal) {
-      return res.status(401).json({ success: false, message: "please fill all fields" });
+      return res
+        .status(401)
+        .json({ success: false, message: "please fill all fields" });
     }
 
     const updatedSetup = await Setup.findOneAndUpdate(
@@ -52,11 +58,13 @@ router.put("/setup", authMiddleware, async (req, res) => {
         goal,
         email: req.user.email,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedSetup) {
-      return res.status(404).json({ success: false, message: "Setup not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Setup not found" });
     }
 
     return res.status(200).json({

@@ -39,7 +39,9 @@ const requestAdvisor = async (req, res) => {
           advisorCallsUsed: session.advisorCallsUsed || 0,
         });
       }
-      return res.status(400).json({ message: "No active decision for advisor" });
+      return res
+        .status(400)
+        .json({ message: "No active decision for advisor" });
     }
 
     const context = await buildAdvisorContext(session);

@@ -49,7 +49,13 @@ function formatDate(dateStr) {
   });
 }
 
-export function SessionDetailModal({ session, loading, onClose, onViewDebrief, onContinue }) {
+export function SessionDetailModal({
+  session,
+  loading,
+  onClose,
+  onViewDebrief,
+  onContinue,
+}) {
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === "Escape") onClose?.();
@@ -71,9 +77,11 @@ export function SessionDetailModal({ session, loading, onClose, onViewDebrief, o
 
   const rounds = session.rounds || [];
   const netWorth = session.finalMetrics?.netWorth;
-  const score = session.debriefData?.headline?.score ?? session.debriefData?.score;
+  const score =
+    session.debriefData?.headline?.score ?? session.debriefData?.score;
   const scoreLabel =
-    session.debriefData?.headline?.scoreLabel ?? session.debriefData?.scoreLabel;
+    session.debriefData?.headline?.scoreLabel ??
+    session.debriefData?.scoreLabel;
 
   return (
     <div
@@ -160,7 +168,9 @@ export function SessionDetailModal({ session, loading, onClose, onViewDebrief, o
                   className="mt-1 text-sm font-semibold"
                   style={{
                     color: item.highlight
-                      ? (netWorth >= 0 ? "#10B981" : "#EF4444")
+                      ? netWorth >= 0
+                        ? "#10B981"
+                        : "#EF4444"
                       : "#F5F5F5",
                   }}
                 >
@@ -206,11 +216,13 @@ export function SessionDetailModal({ session, loading, onClose, onViewDebrief, o
                         {round.eventTitle || `Round ${round.round}`}
                       </div>
                       <div className="mt-1 text-sm text-[#10B981]">
-                        Chose: {round.selectedOptionTitle || `Option ${round.choice}`}
+                        Chose:{" "}
+                        {round.selectedOptionTitle || `Option ${round.choice}`}
                       </div>
                       {round.metricsAfter?.netWorth != null ? (
                         <div className="mt-2 text-[11px] text-[#6B6B6B]">
-                          Net worth after: {formatCurrency(round.metricsAfter.netWorth)}
+                          Net worth after:{" "}
+                          {formatCurrency(round.metricsAfter.netWorth)}
                         </div>
                       ) : null}
                     </div>

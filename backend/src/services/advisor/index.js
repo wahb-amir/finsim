@@ -85,16 +85,22 @@ function buildAdvisorQuery(round, metrics, choiceContext, mistakes) {
   const parts = [`Round ${round}: ${choiceContext.title}`];
 
   if (metrics.creditCardDebt > 0) parts.push("credit card debt compounding");
-  if ((metrics.emergencyFundMonths ?? 0) < 3) parts.push("insufficient emergency fund");
+  if ((metrics.emergencyFundMonths ?? 0) < 3)
+    parts.push("insufficient emergency fund");
   if ((metrics.debtToIncome ?? 0) > 36) parts.push("high debt-to-income ratio");
   if ((metrics.stressIndex ?? 0) > 65) parts.push("high financial stress");
   if (!metrics.is401kActive) parts.push("employer 401k match");
-  if ((metrics.investmentBalance ?? 0) === 0) parts.push("no investment portfolio");
-  if (metrics.creditScore && metrics.creditScore < 660) parts.push("low credit score");
+  if ((metrics.investmentBalance ?? 0) === 0)
+    parts.push("no investment portfolio");
+  if (metrics.creditScore && metrics.creditScore < 660)
+    parts.push("low credit score");
 
   if (mistakes.length) {
-    const patterns = [...new Set(mistakes.map((m) => m.pattern).filter(Boolean))];
-    if (patterns.length) parts.push(`behavioral patterns: ${patterns.join(", ")}`);
+    const patterns = [
+      ...new Set(mistakes.map((m) => m.pattern).filter(Boolean)),
+    ];
+    if (patterns.length)
+      parts.push(`behavioral patterns: ${patterns.join(", ")}`);
   }
 
   parts.push(`career: ${metrics.careerLabel || "general"}`);
@@ -112,7 +118,9 @@ async function fetchUserAdvisorProfile(userId, currentSessionId) {
       status: "completed",
       _id: { $ne: currentSessionId },
     })
-      .select("rounds debriefData.headline.score debriefData.headline.scoreLabel career goal")
+      .select(
+        "rounds debriefData.headline.score debriefData.headline.scoreLabel career goal",
+      )
       .sort({ createdAt: -1 })
       .limit(3)
       .lean(),
@@ -146,7 +154,9 @@ async function fetchUserAdvisorProfile(userId, currentSessionId) {
       dominantPatternLabel: PATTERN_LABELS[dominantPastPattern] || null,
       averageScore:
         recentScores.length > 0
-          ? Math.round(recentScores.reduce((sum, n) => sum + n, 0) / recentScores.length)
+          ? Math.round(
+              recentScores.reduce((sum, n) => sum + n, 0) / recentScores.length,
+            )
           : null,
       recentScoreLabels: pastSessions
         .map((s) => s.debriefData?.headline?.scoreLabel)
@@ -170,8 +180,16 @@ async function buildAdvisorContext(session) {
   const metrics = buildSessionMetrics(session);
   const choiceContext = buildChoiceContext(session.currentEvent);
   const currentMistakes = buildCurrentMistakes(session.rounds);
-  const userProfile = await fetchUserAdvisorProfile(session.userId, session._id);
-  const query = buildAdvisorQuery(round, metrics, choiceContext, currentMistakes);
+  const userProfile = await fetchUserAdvisorProfile(
+    session.userId,
+    session._id,
+  );
+  const query = buildAdvisorQuery(
+    round,
+    metrics,
+    choiceContext,
+    currentMistakes,
+  );
 
   return {
     round,

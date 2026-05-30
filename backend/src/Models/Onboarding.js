@@ -14,7 +14,7 @@ const onboardingSchema = new mongoose.Schema(
         type: String,
         enum: ["variable-income", "lifestyle-creep", "paycheck-to-paycheck"],
         required: function () {
-          return this.completed; 
+          return this.completed;
         },
       },
       confidenceLevel: {
@@ -50,8 +50,8 @@ const onboardingSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
-  }
+    timestamps: true,
+  },
 );
 
 // Pre-save hook to automatically manage the completedAt timestamp

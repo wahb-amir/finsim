@@ -2,8 +2,17 @@
 import { useState } from "react";
 import Modal from "../components/ui/Modal";
 import { Nav, Footer, Ticker } from "../components/layout/HeaderFooter";
-import { HeroSection, StatsSection, MythBusterSection, HowItWorksSection, FinalCTA } from "../components/sections/CoreSections";
-import { CompoundCalculator, DecisionSimulator } from "../components/features/InteractiveTools";
+import {
+  HeroSection,
+  StatsSection,
+  MythBusterSection,
+  HowItWorksSection,
+  FinalCTA,
+} from "../components/sections/CoreSections";
+import {
+  CompoundCalculator,
+  DecisionSimulator,
+} from "../components/features/InteractiveTools";
 
 export default function LandingPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +25,8 @@ export default function LandingPage() {
       style={{
         minHeight: "100vh",
         background: "#08090A",
-        fontFamily: "'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif",
+        fontFamily:
+          "'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif",
         fontFeatureSettings: '"cv01", "ss03"',
         color: "#F7F8F8",
         overflowX: "hidden",
@@ -48,9 +58,9 @@ export default function LandingPage() {
         <Footer />
       </div>
 
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         title="Simulation Starting"
         message="You are about to enter the full 10-year financial simulator. You will be redirected to connect your account."
       />

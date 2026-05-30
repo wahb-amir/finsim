@@ -98,8 +98,9 @@ export function AdvisorPanel({
       <div className="flex-1 overflow-y-auto min-h-0 rounded-xl bg-[#0D0D0D] border border-[#1A1A1A] p-4 mb-3">
         {advisorMessages.length === 0 && !isLoading && !typingId ? (
           <p className="text-[12px] leading-relaxed text-[#6B6B6B]">
-            Need a nudge before you decide? Ask the advisor for a Socratic question
-            grounded in your current finances — up to {MAX_ADVISOR_CALLS} times per game.
+            Need a nudge before you decide? Ask the advisor for a Socratic
+            question grounded in your current finances — up to{" "}
+            {MAX_ADVISOR_CALLS} times per game.
           </p>
         ) : (
           <div className="space-y-4">
@@ -109,12 +110,19 @@ export function AdvisorPanel({
               const text = isLatestTyping ? displayedText : entry.message;
 
               return (
-                <div key={`${entry.round}-${entry.timestamp}-${index}`} className="flex gap-2">
+                <div
+                  key={`${entry.round}-${entry.timestamp}-${index}`}
+                  className="flex gap-2"
+                >
                   <div className="w-5 h-5 rounded flex-shrink-0 mt-0.5 bg-[#F59E0B]/10 border border-[#F59E0B]/20 flex items-center justify-center">
-                    <span className="text-[8px] text-[#F59E0B] font-bold">AI</span>
+                    <span className="text-[8px] text-[#F59E0B] font-bold">
+                      AI
+                    </span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] text-[#6B6B6B] mb-1">Round {entry.round}</p>
+                    <p className="text-[10px] text-[#6B6B6B] mb-1">
+                      Round {entry.round}
+                    </p>
                     <p
                       className={`text-[12px] leading-relaxed text-[#D1D1D1] ${isLatestTyping && typingId ? "cursor-blink" : ""}`}
                     >

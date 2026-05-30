@@ -18,13 +18,16 @@ function buildDebriefQueries(session) {
 
   const firstScore = rounds[0]?.metricsAfter?.creditScore;
   const totalInvested = m.investmentBalance + m.retirementBalance;
-  const retirementStartRound = rounds.findIndex((r) => r.metricsAfter?.retirementBalance > 0) + 1;
+  const retirementStartRound =
+    rounds.findIndex((r) => r.metricsAfter?.retirementBalance > 0) + 1;
 
   // Dominant behavioral pattern from wrong choices
   const wrongRounds = rounds.filter(
     (r) => normalizeChoice(r.choice) !== getOptimalChoice(r.round),
   );
-  const patterns = wrongRounds.map((r) => getBehavioralPattern(r.round)).filter(Boolean);
+  const patterns = wrongRounds
+    .map((r) => getBehavioralPattern(r.round))
+    .filter(Boolean);
   const dominantPattern = mode(patterns) || "present_bias";
 
   const midNetWorth = rounds[4]?.metricsAfter?.netWorth ?? 0;
@@ -32,38 +35,56 @@ function buildDebriefQueries(session) {
   return [
     {
       query: `credit score journey from ${firstScore ?? "no score"} to ${m.creditScore} over 10 years`,
-      opts:  { topK: 4, topic: "credit_scores" },
+      opts: { topK: 4, topic: "credit_scores" },
     },
     {
       query: `compound growth investing $${totalInvested} over 10 years retirement`,
-      opts:  { topK: 4, topic: "investing" },
+      opts: { topK: 4, topic: "investing" },
     },
     {
       query: `total interest paid on debt ${m.totalInterestPaid} debt payoff cost`,
-      opts:  { topK: 3, topic: "debt" },
+      opts: { topK: 3, topic: "debt" },
     },
     {
       query: `retirement savings gap started round ${retirementStartRound} balance ${m.retirementBalance}`,
-      opts:  { topK: 3, topic: "investing" },
+      opts: { topK: 3, topic: "investing" },
     },
     {
       query: `behavioral patterns ${dominantPattern} financial decisions`,
-      opts:  { topK: 4, topic: "behavioral_finance" },
+      opts: { topK: 4, topic: "behavioral_finance" },
     },
     {
       query: `net worth trajectory midpoint ${midNetWorth} final ${m.netWorth}`,
-      opts:  { topK: 3 },
+      opts: { topK: 3 },
     },
   ];
 }
 
 // ── Optimal choice map (mirrors finsim-internal.json) ────────────────────────
 
-const OPTIMAL_CHOICES = { 1:"A", 2:"A", 3:"B", 4:"B", 5:"A", 6:"A", 7:"B", 8:"A", 9:"A", 10:"A" };
+const OPTIMAL_CHOICES = {
+  1: "A",
+  2: "A",
+  3: "B",
+  4: "B",
+  5: "A",
+  6: "A",
+  7: "B",
+  8: "A",
+  9: "A",
+  10: "A",
+};
 const BEHAVIORAL_PATTERNS = {
-  1: "present_bias", 2: "availability_heuristic", 3: "lifestyle_inflation",
-  4: "loss_aversion", 5: "availability_heuristic", 6: "present_bias",
-  7: "loss_aversion", 8: "present_bias", 9: "present_bias", 10: "mental_accounting",
+  1: "present_bias",
+  2: "availability_heuristic",
+  3: "lifestyle_inflation",
+  4: "loss_aversion",
+  5: "availability_heuristic",
+  6: "present_bias",
+  7: "loss_aversion",
+  8: "present_bias",
+  9: "present_bias",
+  10: "mental_accounting",
 };
 
 function normalizeChoice(choice) {
@@ -72,8 +93,12 @@ function normalizeChoice(choice) {
   return choice;
 }
 
-function getOptimalChoice(round) { return OPTIMAL_CHOICES[round]; }
-function getBehavioralPattern(round) { return BEHAVIORAL_PATTERNS[round]; }
+function getOptimalChoice(round) {
+  return OPTIMAL_CHOICES[round];
+}
+function getBehavioralPattern(round) {
+  return BEHAVIORAL_PATTERNS[round];
+}
 function mode(arr) {
   if (!arr.length) return null;
   const freq = arr.reduce((a, v) => ({ ...a, [v]: (a[v] || 0) + 1 }), {});
@@ -220,19 +245,27 @@ async function generateDebriefReport(session) {
     stream: false,
     response_format: { type: "json_object" },
     messages: [
-      { role: "system", content: "You are a financial analysis engine. Output only valid JSON." },
+      {
+        role: "system",
+        content: "You are a financial analysis engine. Output only valid JSON.",
+      },
       { role: "user", content: prompt },
     ],
   });
 
   const raw = response.choices[0]?.message?.content || "";
-  const cleaned = raw.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+  const cleaned = raw
+    .replace(/^```json\s*/i, "")
+    .replace(/```\s*$/i, "")
+    .trim();
 
   let report;
   try {
     report = JSON.parse(cleaned);
   } catch (err) {
-    throw new Error(`Debrief JSON parse failed: ${err.message}\nRaw: ${cleaned.slice(0, 200)}`);
+    throw new Error(
+      `Debrief JSON parse failed: ${err.message}\nRaw: ${cleaned.slice(0, 200)}`,
+    );
   }
 
   const sources = (chunks || []).map((c) => ({

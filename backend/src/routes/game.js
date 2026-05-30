@@ -1,5 +1,5 @@
 const express = require("express");
-const router  = express.Router();
+const router = express.Router();
 const { authMiddleware } = require("../middleware/authMiddleware");
 const {
   createSession,
@@ -8,15 +8,15 @@ const {
   getSessionDebrief,
   getSession,
   listSessions,
-  userData
+  userData,
 } = require("../controller/game");
 const { requestAdvisor } = require("../controller/advisor");
 
 // POST /api/game/session          — start a new game session
-router.post("/session",            authMiddleware, createSession);
+router.post("/session", authMiddleware, createSession);
 
 // POST /api/game/session/round    — submit a round choice
-router.post("/session/round",      authMiddleware, submitRound);
+router.post("/session/round", authMiddleware, submitRound);
 
 // POST /api/game/session/:id/abandon — exit game; preserves session data
 router.post("/session/:id/abandon", authMiddleware, abandonSession);
@@ -28,11 +28,11 @@ router.post("/session/:id/advisor", authMiddleware, requestAdvisor);
 router.get("/session/:id/debrief", authMiddleware, getSessionDebrief);
 
 // GET  /api/game/session/:id      — get session by id
-router.get("/session/:id",         authMiddleware, getSession);
+router.get("/session/:id", authMiddleware, getSession);
 
 // GET  /api/game/sessions         — list user's past sessions
-router.get("/sessions",            authMiddleware, listSessions);
+router.get("/sessions", authMiddleware, listSessions);
 
-router.get("/sessions/userData",            authMiddleware, userData);
+router.get("/sessions/userData", authMiddleware, userData);
 
 module.exports = router;

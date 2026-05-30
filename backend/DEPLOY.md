@@ -19,7 +19,7 @@ Keys must match `.env.example` exactly. The pipeline fails if a key is missing o
  cd /var/www/finsim
  pm2 start ecosystem.config.cjs
  pm2 save
- pm2 startup  
+ pm2 startup
 ```
 
 5. **Git access** — the VPS must clone/pull your repo. Options:

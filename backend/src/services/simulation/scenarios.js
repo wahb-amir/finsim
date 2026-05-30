@@ -8,18 +8,22 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toCommonJS = (mod) =>
+  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var scenarios_exports = {};
 __export(scenarios_exports, {
   SCENARIOS: () => SCENARIOS,
-  getScenario: () => getScenario
+  getScenario: () => getScenario,
 });
 module.exports = __toCommonJS(scenarios_exports);
 const SCENARIOS = [
@@ -36,7 +40,7 @@ const SCENARIOS = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.04
+      healthcareRiskAnnual: 0.04,
     },
     start: {
       ageYears: 22,
@@ -45,8 +49,8 @@ const SCENARIOS = [
       baseExpensesMonthly: 1800,
       creditScore: 680,
       debt: { kind: "none", balance: 0, apr: 0 },
-      investments: { taxable: 0, retirement: 0, equity: 0 }
-    }
+      investments: { taxable: 0, retirement: 0, equity: 0 },
+    },
   },
   {
     id: "recession",
@@ -61,7 +65,7 @@ const SCENARIOS = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.06
+      healthcareRiskAnnual: 0.06,
     },
     start: {
       ageYears: 22,
@@ -70,8 +74,8 @@ const SCENARIOS = [
       baseExpensesMonthly: 1750,
       creditScore: 660,
       debt: { kind: "credit-card", balance: 600, apr: 0.219 },
-      investments: { taxable: 0, retirement: 0, equity: 0 }
-    }
+      investments: { taxable: 0, retirement: 0, equity: 0 },
+    },
   },
   {
     id: "startup-founder",
@@ -86,7 +90,7 @@ const SCENARIOS = [
       restrictedCredit: true,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.05
+      healthcareRiskAnnual: 0.05,
     },
     start: {
       ageYears: 24,
@@ -95,9 +99,9 @@ const SCENARIOS = [
       baseExpensesMonthly: 2200,
       creditScore: 640,
       debt: { kind: "none", balance: 0, apr: 0 },
-      investments: { taxable: 0, retirement: 0, equity: 6e-3 }
+      investments: { taxable: 0, retirement: 0, equity: 6e-3 },
       // 0.6% fully diluted — drives equity events
-    }
+    },
   },
   {
     id: "immigrant-household",
@@ -112,7 +116,7 @@ const SCENARIOS = [
       restrictedCredit: true,
       remittanceMonthly: 350,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.05
+      healthcareRiskAnnual: 0.05,
     },
     start: {
       ageYears: 25,
@@ -121,8 +125,8 @@ const SCENARIOS = [
       baseExpensesMonthly: 1900,
       creditScore: 620,
       debt: { kind: "student", balance: 9e3, apr: 0.055, termMonths: 120 },
-      investments: { taxable: 0, retirement: 0, equity: 0 }
-    }
+      investments: { taxable: 0, retirement: 0, equity: 0 },
+    },
   },
   {
     id: "single-parent",
@@ -137,7 +141,7 @@ const SCENARIOS = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 650,
-      healthcareRiskAnnual: 0.085
+      healthcareRiskAnnual: 0.085,
     },
     start: {
       ageYears: 27,
@@ -146,9 +150,9 @@ const SCENARIOS = [
       baseExpensesMonthly: 2100,
       creditScore: 650,
       debt: { kind: "credit-card", balance: 1400, apr: 0.249 },
-      investments: { taxable: 0, retirement: 800, equity: 0 }
-    }
-  }
+      investments: { taxable: 0, retirement: 800, equity: 0 },
+    },
+  },
 ];
 function getScenario(id) {
   const s = SCENARIOS.find((x) => x.id === id);
@@ -156,7 +160,8 @@ function getScenario(id) {
   return s;
 }
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  SCENARIOS,
-  getScenario
-});
+0 &&
+  (module.exports = {
+    SCENARIOS,
+    getScenario,
+  });

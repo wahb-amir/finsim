@@ -5,21 +5,8 @@
     "topic": "behavioral_finance",
     "subtopic": "loss_aversion",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -28,21 +15,8 @@
     "topic": "behavioral_finance",
     "subtopic": "present_bias",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -51,21 +25,8 @@
     "topic": "behavioral_finance",
     "subtopic": "lifestyle_inflation",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -74,21 +35,8 @@
     "topic": "behavioral_finance",
     "subtopic": "mental_accounting",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -97,21 +45,8 @@
     "topic": "behavioral_finance",
     "subtopic": "sunk_cost_fallacy",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -120,21 +55,8 @@
     "topic": "behavioral_finance",
     "subtopic": "availability_heuristic",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -143,21 +65,8 @@
     "topic": "behavioral_finance",
     "subtopic": "anchoring",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -166,21 +75,8 @@
     "topic": "compound_interest",
     "subtopic": "formula_and_basics",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -189,21 +85,8 @@
     "topic": "compound_interest",
     "subtopic": "rule_of_72",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -212,21 +95,8 @@
     "topic": "compound_interest",
     "subtopic": "credit_card_minimum_payment_spiral",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -235,21 +105,8 @@
     "topic": "compound_interest",
     "subtopic": "savings_compound_growth",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -258,21 +115,8 @@
     "topic": "compound_interest",
     "subtopic": "retirement_start_age_impact",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -281,21 +125,8 @@
     "topic": "compound_interest",
     "subtopic": "inflation_negative_compounding",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -304,21 +135,8 @@
     "topic": "compound_interest",
     "subtopic": "employer_match_compounding",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -327,20 +145,8 @@
     "topic": "credit_scores",
     "subtopic": "fico_factors_overview",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -349,20 +155,8 @@
     "topic": "credit_scores",
     "subtopic": "utilization_ratio",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -371,20 +165,8 @@
     "topic": "credit_scores",
     "subtopic": "thin_file",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -393,20 +175,8 @@
     "topic": "credit_scores",
     "subtopic": "hard_vs_soft_inquiry",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -415,20 +185,8 @@
     "topic": "credit_scores",
     "subtopic": "negative_item_timeline",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -437,20 +195,8 @@
     "topic": "credit_scores",
     "subtopic": "score_thresholds_loan_pricing",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -459,20 +205,8 @@
     "topic": "credit_scores",
     "subtopic": "credit_score_myths",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -481,20 +215,8 @@
     "topic": "credit_scores",
     "subtopic": "credit_building_strategy",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -503,20 +225,8 @@
     "topic": "debt",
     "subtopic": "credit_card_debt",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -525,20 +235,8 @@
     "topic": "debt",
     "subtopic": "auto_loan_true_cost",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -547,20 +245,8 @@
     "topic": "debt",
     "subtopic": "student_loans",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -569,20 +255,8 @@
     "topic": "debt",
     "subtopic": "mortgage_amortization",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -591,20 +265,8 @@
     "topic": "debt",
     "subtopic": "medical_debt",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -613,20 +275,8 @@
     "topic": "debt",
     "subtopic": "good_debt_bad_debt_framework",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -635,20 +285,8 @@
     "topic": "debt",
     "subtopic": "debt_avalanche_vs_snowball",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -657,12 +295,8 @@
     "topic": "emergency_fund",
     "subtopic": "round_1_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -671,12 +305,8 @@
     "topic": "credit_scores",
     "subtopic": "round_2_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      2
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [2],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -685,12 +315,8 @@
     "topic": "debt",
     "subtopic": "round_3_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -699,12 +325,8 @@
     "topic": "debt",
     "subtopic": "round_4_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      4
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [4],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -713,12 +335,8 @@
     "topic": "investing",
     "subtopic": "round_5_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      5
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [5],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -727,12 +345,8 @@
     "topic": "investing",
     "subtopic": "round_6_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      6
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [6],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -741,12 +355,8 @@
     "topic": "behavioral_finance",
     "subtopic": "round_7_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      7
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [7],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -755,13 +365,8 @@
     "topic": "taxes",
     "subtopic": "round_8_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      8
-    ],
-    "career_relevance": [
-      "freelancer",
-      "small-business"
-    ],
+    "applies_to_rounds": [8],
+    "career_relevance": ["freelancer", "small-business"],
     "last_updated": "2024-01"
   },
   {
@@ -770,12 +375,8 @@
     "topic": "investing",
     "subtopic": "round_9_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      9
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [9],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -784,12 +385,8 @@
     "topic": "retirement",
     "subtopic": "round_10_decision",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -798,19 +395,8 @@
     "topic": "insurance",
     "subtopic": "health_insurance_mechanics",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -819,19 +405,8 @@
     "topic": "insurance",
     "subtopic": "hsa_triple_tax_advantage",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -840,19 +415,8 @@
     "topic": "insurance",
     "subtopic": "disability_insurance",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -861,19 +425,8 @@
     "topic": "insurance",
     "subtopic": "renters_insurance",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -882,19 +435,8 @@
     "topic": "insurance",
     "subtopic": "life_insurance_when_needed",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -903,19 +445,8 @@
     "topic": "investing",
     "subtopic": "index_funds_vs_active",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -924,19 +455,8 @@
     "topic": "investing",
     "subtopic": "asset_allocation_by_age",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -945,19 +465,8 @@
     "topic": "investing",
     "subtopic": "401k_mechanics",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -966,19 +475,8 @@
     "topic": "investing",
     "subtopic": "roth_vs_traditional_ira",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -987,19 +485,8 @@
     "topic": "investing",
     "subtopic": "emergency_fund_before_investing",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1008,19 +495,8 @@
     "topic": "investing",
     "subtopic": "dollar_cost_averaging_vs_lump_sum",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1029,19 +505,8 @@
     "topic": "investing",
     "subtopic": "sequence_of_returns_risk",
     "difficulty": "advanced",
-    "applies_to_rounds": [
-      1,
-      3,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [1, 3, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1050,19 +515,8 @@
     "topic": "taxes",
     "subtopic": "marginal_vs_effective_rate",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1071,19 +525,8 @@
     "topic": "taxes",
     "subtopic": "w2_vs_1099",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1092,19 +535,8 @@
     "topic": "taxes",
     "subtopic": "pretax_vs_posttax_accounts",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1113,19 +545,8 @@
     "topic": "taxes",
     "subtopic": "capital_gains_tax",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1134,19 +555,8 @@
     "topic": "taxes",
     "subtopic": "standard_deduction_vs_itemizing",
     "difficulty": "foundational",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   },
   {
@@ -1155,19 +565,8 @@
     "topic": "taxes",
     "subtopic": "quarterly_estimated_taxes",
     "difficulty": "intermediate",
-    "applies_to_rounds": [
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ],
-    "career_relevance": [
-      "all"
-    ],
+    "applies_to_rounds": [3, 4, 5, 6, 7, 8, 9, 10],
+    "career_relevance": ["all"],
     "last_updated": "2024-01"
   }
 ]

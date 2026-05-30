@@ -23,21 +23,32 @@ const LogoutModal = ({ onConfirm, onCancel, loading }) => (
       className="relative z-10 w-[360px] bg-[#111111] border border-[#1f1f1f] rounded-2xl p-7 shadow-2xl"
       style={{ animation: "slideUp 0.25s cubic-bezier(0.16,1,0.3,1) both" }}
     >
-      <div
-        className="w-11 h-11 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <div className="w-11 h-11 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#f87171"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />
           <line x1="21" y1="12" x2="9" y2="12" />
         </svg>
       </div>
 
-      <div className="font-display text-[1.15rem] font-bold tracking-[-0.02em] mb-1.5" style={{ fontFamily: "'Syne', sans-serif" }}>
+      <div
+        className="font-display text-[1.15rem] font-bold tracking-[-0.02em] mb-1.5"
+        style={{ fontFamily: "'Syne', sans-serif" }}
+      >
         Sign out?
       </div>
       <div className="text-[0.82rem] text-[#6b6b6b] leading-relaxed mb-7">
-        Your session will end. Any active game in progress will be saved automatically.
+        Your session will end. Any active game in progress will be saved
+        automatically.
       </div>
 
       <div className="flex flex-col gap-2.5">
@@ -53,7 +64,16 @@ const LogoutModal = ({ onConfirm, onCancel, loading }) => (
             </>
           ) : (
             <>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
@@ -74,7 +94,16 @@ const LogoutModal = ({ onConfirm, onCancel, loading }) => (
   </div>
 );
 
-const MetricCard = ({ label, value, variant, badge, badgeType, sub, icon, delay }) => {
+const MetricCard = ({
+  label,
+  value,
+  variant,
+  badge,
+  badgeType,
+  sub,
+  icon,
+  delay,
+}) => {
   const variantStyles = {
     amber: {
       card: "border-amber-500/15 bg-gradient-to-br from-amber-500/[0.04] to-transparent hover:border-amber-500/35",
@@ -108,12 +137,20 @@ const MetricCard = ({ label, value, variant, badge, badgeType, sub, icon, delay 
       style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
     >
       <div className="text-sm mb-2 opacity-50">{icon}</div>
-      <div className="font-mono text-[0.68rem] uppercase tracking-widest text-[#6b6b6b] mb-1.5">{label}</div>
-      <div className={`font-display text-[1.85rem] font-extrabold tracking-[-0.04em] leading-none ${s.value}`}>
+      <div className="font-mono text-[0.68rem] uppercase tracking-widest text-[#6b6b6b] mb-1.5">
+        {label}
+      </div>
+      <div
+        className={`font-display text-[1.85rem] font-extrabold tracking-[-0.04em] leading-none ${s.value}`}
+      >
         {value}
       </div>
       <div className="flex items-center gap-1.5 mt-2">
-        <span className={`text-[0.65rem] font-mono px-1.5 py-0.5 rounded ${badgeStyles[badgeType]}`}>{badge}</span>
+        <span
+          className={`text-[0.65rem] font-mono px-1.5 py-0.5 rounded ${badgeStyles[badgeType]}`}
+        >
+          {badge}
+        </span>
         <span className="text-[0.72rem] text-[#6b6b6b]">{sub}</span>
       </div>
     </div>
@@ -121,9 +158,24 @@ const MetricCard = ({ label, value, variant, badge, badgeType, sub, icon, delay 
 };
 
 const statusStyles = {
-  completed: { dot: "bg-emerald-400", label: "text-emerald-400", bg: "bg-emerald-500/8 border-emerald-500/20", text: "Completed" },
-  active: { dot: "bg-amber-400", label: "text-amber-400", bg: "bg-amber-500/8 border-amber-500/20", text: "In Progress" },
-  abandoned: { dot: "bg-[#6b6b6b]", label: "text-[#6b6b6b]", bg: "bg-white/5 border-white/10", text: "Abandoned" },
+  completed: {
+    dot: "bg-emerald-400",
+    label: "text-emerald-400",
+    bg: "bg-emerald-500/8 border-emerald-500/20",
+    text: "Completed",
+  },
+  active: {
+    dot: "bg-amber-400",
+    label: "text-amber-400",
+    bg: "bg-amber-500/8 border-amber-500/20",
+    text: "In Progress",
+  },
+  abandoned: {
+    dot: "bg-[#6b6b6b]",
+    label: "text-[#6b6b6b]",
+    bg: "bg-white/5 border-white/10",
+    text: "Abandoned",
+  },
 };
 
 const SessionRow = ({ session, index }) => {
@@ -132,12 +184,21 @@ const SessionRow = ({ session, index }) => {
   const rounds = session.rounds?.length ?? 0;
   const career = session.career ?? "—";
   const goal = session.goal ?? "—";
-  const date = session.createdAt ? new Date(session.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+  const date = session.createdAt
+    ? new Date(session.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "—";
 
   return (
     <div
       className="flex items-center gap-4 px-4 py-3.5 bg-[#111111] border border-[#1f1f1f] rounded-xl hover:border-[#2a2a2a] transition-all duration-200 animate-fade-in-up"
-      style={{ animationDelay: `${560 + index * 50}ms`, animationFillMode: "both" }}
+      style={{
+        animationDelay: `${560 + index * 50}ms`,
+        animationFillMode: "both",
+      }}
     >
       <div className="w-8 h-8 rounded-lg bg-[#1c1c1c] border border-[#242424] flex items-center justify-center font-mono text-[0.7rem] text-[#6b6b6b] flex-shrink-0">
         {index + 1}
@@ -145,23 +206,35 @@ const SessionRow = ({ session, index }) => {
 
       <div className="flex-1 min-w-0 grid grid-cols-[1fr_auto_auto_auto] items-center gap-4">
         <div className="min-w-0">
-          <div className="text-[0.82rem] text-[#f5f5f5] capitalize truncate">{career.replace(/-/g, " ")}</div>
-          <div className="font-mono text-[0.68rem] text-[#6b6b6b] mt-0.5 capitalize">{goal.replace(/-/g, " ")} · {date}</div>
+          <div className="text-[0.82rem] text-[#f5f5f5] capitalize truncate">
+            {career.replace(/-/g, " ")}
+          </div>
+          <div className="font-mono text-[0.68rem] text-[#6b6b6b] mt-0.5 capitalize">
+            {goal.replace(/-/g, " ")} · {date}
+          </div>
         </div>
 
         <div className="text-right">
           <div className="font-mono text-[0.75rem] text-[#a1a1a1]">Round</div>
-          <div className="font-display text-[0.95rem] font-bold text-amber-400">{rounds}</div>
+          <div className="font-display text-[0.95rem] font-bold text-amber-400">
+            {rounds}
+          </div>
         </div>
 
         <div className="text-right">
-          <div className="font-mono text-[0.75rem] text-[#a1a1a1]">Net Worth</div>
-          <div className={`font-display text-[0.95rem] font-bold ${netWorth ? "text-emerald-400" : "text-[#6b6b6b]"}`}>
+          <div className="font-mono text-[0.75rem] text-[#a1a1a1]">
+            Net Worth
+          </div>
+          <div
+            className={`font-display text-[0.95rem] font-bold ${netWorth ? "text-emerald-400" : "text-[#6b6b6b]"}`}
+          >
             {netWorth ? `$${Number(netWorth).toLocaleString()}` : "—"}
           </div>
         </div>
 
-        <div className={`inline-flex items-center gap-1.5 border text-[0.68rem] font-mono px-2.5 py-1 rounded-full ${s.bg} ${s.label}`}>
+        <div
+          className={`inline-flex items-center gap-1.5 border text-[0.68rem] font-mono px-2.5 py-1 rounded-full ${s.bg} ${s.label}`}
+        >
           <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${s.dot}`} />
           {s.text}
         </div>
@@ -200,7 +273,10 @@ const Profile = () => {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await fetch(`${API}/auth/logout`, { method: "POST", credentials: "include" });
+      await fetch(`${API}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
       window.location.href = "/auth";
     } catch {
       setLoggingOut(false);
@@ -211,10 +287,20 @@ const Profile = () => {
   const active = gameData.filter((g) => g.status === "active");
   const abandoned = gameData.filter((g) => g.status === "abandoned");
 
-  const totalNetWorth = completed.reduce((sum, g) => sum + (g.finalMetrics?.netWorth ?? 0), 0);
-  const totalRounds = gameData.reduce((sum, g) => sum + (g.rounds?.length ?? 0), 0);
-  const bestNetWorth = completed.length ? Math.max(...completed.map((g) => g.finalMetrics?.netWorth ?? 0)) : null;
-  const winRate = gameData.length ? Math.round((completed.length / gameData.length) * 100) : 0;
+  const totalNetWorth = completed.reduce(
+    (sum, g) => sum + (g.finalMetrics?.netWorth ?? 0),
+    0,
+  );
+  const totalRounds = gameData.reduce(
+    (sum, g) => sum + (g.rounds?.length ?? 0),
+    0,
+  );
+  const bestNetWorth = completed.length
+    ? Math.max(...completed.map((g) => g.finalMetrics?.netWorth ?? 0))
+    : null;
+  const winRate = gameData.length
+    ? Math.round((completed.length / gameData.length) * 100)
+    : 0;
 
   const metrics = [
     {
@@ -259,7 +345,11 @@ const Profile = () => {
     },
     {
       label: "Best Net Worth",
-      value: gameLoading ? "…" : bestNetWorth ? `$${Number(bestNetWorth).toLocaleString()}` : "—",
+      value: gameLoading
+        ? "…"
+        : bestNetWorth
+          ? `$${Number(bestNetWorth).toLocaleString()}`
+          : "—",
       variant: "amber",
       badge: completed.length ? "peak" : "no data",
       badgeType: bestNetWorth ? "up" : "neutral",
@@ -303,7 +393,10 @@ const Profile = () => {
         />
       )}
 
-      <div className="max-w-[1100px] mx-auto px-6 py-10 font-body" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+      <div
+        className="max-w-[1100px] mx-auto px-6 py-10 font-body"
+        style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+      >
         <div className="flex items-center justify-between mb-12 animate-fade-in-up">
           <div className="flex items-center gap-6">
             <button
@@ -313,7 +406,10 @@ const Profile = () => {
             >
               ← Back to Dashboard
             </button>
-            <div className="font-display text-lg font-bold tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <div
+              className="font-display text-lg font-bold tracking-tight"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
               fin<span className="text-amber-400">.</span>arc
             </div>
           </div>
@@ -321,7 +417,16 @@ const Profile = () => {
             onClick={() => setShowLogoutModal(true)}
             className="flex items-center gap-2 bg-[#111111] border border-[#1f1f1f] text-[#a1a1a1] text-[0.8rem] px-4 py-2 rounded-md cursor-pointer transition-all duration-250 hover:border-red-500/60 hover:text-red-400 hover:bg-red-500/10"
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
@@ -332,10 +437,17 @@ const Profile = () => {
 
         <div
           className="grid grid-cols-[1fr_auto] items-start gap-8 mb-10 p-8 bg-[#111111] border border-[#1f1f1f] rounded-2xl relative overflow-hidden animate-fade-in-up"
-          style={{ animationDelay: "60ms", background: "radial-gradient(ellipse at top right, rgba(245,158,11,0.05) 0%, #111111 60%)" }}
+          style={{
+            animationDelay: "60ms",
+            background:
+              "radial-gradient(ellipse at top right, rgba(245,158,11,0.05) 0%, #111111 60%)",
+          }}
         >
           <div className="flex flex-col gap-1.5">
-            <div className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[#6b6b6b] mb-1" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[#6b6b6b] mb-1"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
               Welcome back
             </div>
 
@@ -346,7 +458,10 @@ const Profile = () => {
               </div>
             ) : (
               <>
-                <div className="font-display text-[2.2rem] font-extrabold tracking-[-0.03em] leading-none" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <div
+                  className="font-display text-[2.2rem] font-extrabold tracking-[-0.03em] leading-none"
+                  style={{ fontFamily: "'Syne', sans-serif" }}
+                >
                   {user?.name ?? "Guest User"}
                 </div>
                 <div className="text-[0.82rem] text-[#6b6b6b] font-light mt-1 tracking-[0.01em]">
@@ -355,7 +470,10 @@ const Profile = () => {
               </>
             )}
 
-            <div className="inline-flex items-center gap-1.5 bg-emerald-500/8 border border-emerald-500/20 text-emerald-400 text-[0.72rem] px-3 py-1.5 rounded-full mt-2 w-fit font-mono" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              className="inline-flex items-center gap-1.5 bg-emerald-500/8 border border-emerald-500/20 text-emerald-400 text-[0.72rem] px-3 py-1.5 rounded-full mt-2 w-fit font-mono"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
               <span className="status-dot w-1.5 h-1.5 bg-emerald-400 rounded-full" />
               Active Session
             </div>
@@ -369,7 +487,13 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-[#6b6b6b] mb-4 animate-fade-in-up" style={{ animationDelay: "140ms", fontFamily: "'JetBrains Mono', monospace" }}>
+        <div
+          className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-[#6b6b6b] mb-4 animate-fade-in-up"
+          style={{
+            animationDelay: "140ms",
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
+        >
           Game Overview
         </div>
         <div className="grid grid-cols-3 gap-3 mb-6">
@@ -383,10 +507,16 @@ const Profile = () => {
           style={{ animationDelay: "560ms", animationFillMode: "both" }}
         >
           <div className="flex items-center justify-between mb-5">
-            <div className="font-display text-[0.95rem] font-bold tracking-[-0.01em]" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <div
+              className="font-display text-[0.95rem] font-bold tracking-[-0.01em]"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
               Game Sessions
             </div>
-            <div className="font-mono text-[0.65rem] text-[#6b6b6b] bg-[#1c1c1c] border border-[#1f1f1f] px-2 py-0.5 rounded" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              className="font-mono text-[0.65rem] text-[#6b6b6b] bg-[#1c1c1c] border border-[#1f1f1f] px-2 py-0.5 rounded"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
               {gameData.length} total
             </div>
           </div>
@@ -398,8 +528,12 @@ const Profile = () => {
             </div>
           ) : gameData.length === 0 ? (
             <div className="text-center py-10">
-              <div className="text-[#6b6b6b] text-[0.82rem]">No game sessions yet.</div>
-              <div className="font-mono text-[0.7rem] text-[#3a3a3a] mt-1">Start your first game to see data here.</div>
+              <div className="text-[#6b6b6b] text-[0.82rem]">
+                No game sessions yet.
+              </div>
+              <div className="font-mono text-[0.7rem] text-[#3a3a3a] mt-1">
+                Start your first game to see data here.
+              </div>
             </div>
           ) : (
             <div className="flex flex-col gap-2">

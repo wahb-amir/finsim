@@ -479,7 +479,9 @@ function SetupContent() {
                     >
                       <span className="text-2xl">{g.icon}</span>
                       <div>
-                        <div className="font-semibold text-white">{g.title}</div>
+                        <div className="font-semibold text-white">
+                          {g.title}
+                        </div>
                         <div className="text-[12px] leading-5 text-[#6B6B6B]">
                           {g.description}
                         </div>

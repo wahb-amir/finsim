@@ -58,7 +58,9 @@ const createSession = async (req, res) => {
     const { playerName, career, startSalary, goal, climateLabel } = req.body;
 
     if (!career || !startSalary) {
-      return res.status(400).json({ message: "career and startSalary are required" });
+      return res
+        .status(400)
+        .json({ message: "career and startSalary are required" });
     }
 
     const session = await GameSession.create({
@@ -102,7 +104,9 @@ const createSession = async (req, res) => {
     });
   } catch (err) {
     console.error("[createSession]", err.message);
-    res.status(500).json({ message: "Failed to create session", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create session", error: err.message });
   }
 };
 
@@ -111,28 +115,41 @@ const submitRound = async (req, res) => {
     const { sessionId, choice } = req.body;
 
     if (!sessionId || !choice) {
-      return res.status(400).json({ message: "sessionId and choice are required" });
+      return res
+        .status(400)
+        .json({ message: "sessionId and choice are required" });
     }
     if (!["left", "right", "A", "B"].includes(choice)) {
-      return res.status(400).json({ message: 'choice must be "left", "right", "A", or "B"' });
+      return res
+        .status(400)
+        .json({ message: 'choice must be "left", "right", "A", or "B"' });
     }
 
-    const session = await GameSession.findOne({ _id: sessionId, userId: req.user._id });
+    const session = await GameSession.findOne({
+      _id: sessionId,
+      userId: req.user._id,
+    });
     if (!session) return res.status(404).json({ message: "Session not found" });
     if (session.status === "completed") {
       return res.status(400).json({ message: "Game already completed" });
     }
     if (session.status === "abandoned") {
-      return res.status(400).json({ message: "Session was abandoned — start a new game" });
+      return res
+        .status(400)
+        .json({ message: "Session was abandoned — start a new game" });
     }
     if (!session.simState || !session.currentEvent) {
-      return res.status(400).json({ message: "Session has no active simulation state" });
+      return res
+        .status(400)
+        .json({ message: "Session has no active simulation state" });
     }
 
     const round = session.currentRound;
     const alreadySubmitted = session.rounds.find((r) => r.round === round);
     if (alreadySubmitted) {
-      return res.status(400).json({ message: `Round ${round} already submitted` });
+      return res
+        .status(400)
+        .json({ message: `Round ${round} already submitted` });
     }
 
     const eventBefore = session.currentEvent;
@@ -171,7 +188,9 @@ const submitRound = async (req, res) => {
       const finalStored = toStoredMetrics(result.metrics, result.state);
       session.finalMetrics = buildFinalMetrics(finalStored, result.state);
       session.finalSalary = result.state.grossIncomeAnnual;
-      session.optimalComparison = buildOptimalComparisonFromRounds(session.rounds);
+      session.optimalComparison = buildOptimalComparisonFromRounds(
+        session.rounds,
+      );
       session.status = "completed";
       session.currentEvent = null;
       session.currentNarrative = null;
@@ -197,7 +216,9 @@ const submitRound = async (req, res) => {
     });
   } catch (err) {
     console.error("[submitRound]", err.message);
-    res.status(500).json({ message: "Failed to submit round", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to submit round", error: err.message });
   }
 };
 
@@ -210,7 +231,9 @@ const abandonSession = async (req, res) => {
     if (!session) return res.status(404).json({ message: "Session not found" });
 
     if (session.status === "completed") {
-      return res.status(400).json({ message: "Cannot abandon a completed session" });
+      return res
+        .status(400)
+        .json({ message: "Cannot abandon a completed session" });
     }
 
     if (session.status !== "abandoned") {
@@ -222,11 +245,14 @@ const abandonSession = async (req, res) => {
       success: true,
       sessionId: session._id,
       status: session.status,
-      message: "Session saved. You can review it from your dashboard or start a new game.",
+      message:
+        "Session saved. You can review it from your dashboard or start a new game.",
     });
   } catch (err) {
     console.error("[abandonSession]", err.message);
-    res.status(500).json({ message: "Failed to abandon session", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to abandon session", error: err.message });
   }
 };
 
@@ -260,7 +286,8 @@ const getSessionDebrief = async (req, res) => {
     const status = err.statusCode || 500;
     console.error("[getSessionDebrief]", err.message);
     res.status(status).json({
-      message: err.statusCode === 400 ? err.message : "Debrief generation failed",
+      message:
+        err.statusCode === 400 ? err.message : "Debrief generation failed",
       error: err.message,
     });
   }
@@ -293,7 +320,9 @@ const getSession = async (req, res) => {
     });
   } catch (err) {
     console.error("[getSession]", err.message);
-    res.status(500).json({ message: "Failed to get session", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to get session", error: err.message });
   }
 };
 
@@ -308,15 +337,17 @@ const listSessions = async (req, res) => {
     res.status(200).json({ success: true, sessions });
   } catch (err) {
     console.error("[listSessions]", err.message);
-    res.status(500).json({ message: "Failed to list sessions", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to list sessions", error: err.message });
   }
 };
 
 const userData = async (req, res) => {
   try {
-    const gameData = await GameSession
-      .find({ userId: req.user._id })
-      .sort({ createdAt: -1 });
+    const gameData = await GameSession.find({ userId: req.user._id }).sort({
+      createdAt: -1,
+    });
 
     if (!gameData.length) {
       return res.status(404).json({
@@ -344,5 +375,5 @@ module.exports = {
   getSessionDebrief,
   getSession,
   listSessions,
-  userData
+  userData,
 };

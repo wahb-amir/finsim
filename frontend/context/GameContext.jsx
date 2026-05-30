@@ -43,8 +43,15 @@ function gameReducer(state, action) {
     case "SET_GOAL":
       return { ...state, goal: action.payload };
     case "HYDRATE_GAME_VIEW": {
-      const { currentRound, metrics, event, narrative, scenarioId, ageYears, debrief } =
-        action.payload;
+      const {
+        currentRound,
+        metrics,
+        event,
+        narrative,
+        scenarioId,
+        ageYears,
+        debrief,
+      } = action.payload;
       return {
         ...state,
         ...(scenarioId ? { scenarioId } : {}),
@@ -118,7 +125,8 @@ export function GameProvider({ children }) {
     [],
   );
   const recordRoundSnapshot = useCallback(
-    (snapshot) => dispatch({ type: "RECORD_ROUND_SNAPSHOT", payload: snapshot }),
+    (snapshot) =>
+      dispatch({ type: "RECORD_ROUND_SNAPSHOT", payload: snapshot }),
     [],
   );
   const addAdvisorMessage = useCallback(

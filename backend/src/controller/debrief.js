@@ -14,17 +14,24 @@ const {
 const debriefController = async (req, res) => {
   try {
     const { sessionId } = req.body;
-    if (!sessionId) return res.status(400).json({ message: "sessionId is required" });
+    if (!sessionId)
+      return res.status(400).json({ message: "sessionId is required" });
 
-    const session = await GameSession.findOne({ _id: sessionId, userId: req.user._id });
+    const session = await GameSession.findOne({
+      _id: sessionId,
+      userId: req.user._id,
+    });
     if (!session) return res.status(404).json({ message: "Session not found" });
 
     if (session.status !== "completed") {
-      return res.status(400).json({ message: "Game must be completed before generating debrief" });
+      return res
+        .status(400)
+        .json({ message: "Game must be completed before generating debrief" });
     }
 
     const hadDebrief = Boolean(session.debriefData);
-    const { cached, report, sources } = await generateAndPersistDebrief(session);
+    const { cached, report, sources } =
+      await generateAndPersistDebrief(session);
     const debrief = toDebriefUIPayload(session);
     const metrics = finalMetricsToUI(session.finalMetrics, session.simState);
 

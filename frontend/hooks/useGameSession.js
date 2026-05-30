@@ -12,7 +12,9 @@ export function useGameSession({
   setGoal,
   showToast,
 }) {
-  const [sessionId, setSessionId] = useState(routeSessionId || querySessionId || "");
+  const [sessionId, setSessionId] = useState(
+    routeSessionId || querySessionId || "",
+  );
   const [session, setSession] = useState(null);
   const [loadingSession, setLoadingSession] = useState(true);
 

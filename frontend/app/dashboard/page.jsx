@@ -26,9 +26,11 @@ function formatDate(dateStr) {
 function SessionCard({ session, onSelect }) {
   const config = STATUS_CONFIG[session.status] || STATUS_CONFIG.abandoned;
   const netWorth = session.finalMetrics?.netWorth;
-  const roundsPlayed = session.rounds?.length ?? Math.max(0, session.currentRound - 1);
+  const roundsPlayed =
+    session.rounds?.length ?? Math.max(0, session.currentRound - 1);
   const scoreLabel =
-    session.debriefData?.headline?.scoreLabel ?? session.debriefData?.scoreLabel;
+    session.debriefData?.headline?.scoreLabel ??
+    session.debriefData?.scoreLabel;
 
   return (
     <button
@@ -98,10 +100,14 @@ function SessionCard({ session, onSelect }) {
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[#6B6B6B]">
         <span>{formatDate(session.createdAt)}</span>
         {session.startSalary ? (
-          <span>Started at ${Number(session.startSalary).toLocaleString()}/yr</span>
+          <span>
+            Started at ${Number(session.startSalary).toLocaleString()}/yr
+          </span>
         ) : null}
         {session.scenarioId ? (
-          <span className="capitalize">{session.scenarioId.replace(/-/g, " ")}</span>
+          <span className="capitalize">
+            {session.scenarioId.replace(/-/g, " ")}
+          </span>
         ) : null}
       </div>
     </button>
@@ -152,7 +158,11 @@ export default function DashboardPage() {
       });
       const data = await res.json();
       if (data?.success && data.session) {
-        setSelectedSession({ ...session, ...data.session, rounds: data.session.rounds });
+        setSelectedSession({
+          ...session,
+          ...data.session,
+          rounds: data.session.rounds,
+        });
       }
     } catch (err) {
       console.error(err);
@@ -186,7 +196,9 @@ export default function DashboardPage() {
       <div className="flex min-h-screen items-center justify-center bg-[#0A0A0A] text-[#F59E0B]">
         <div className="text-center">
           <div className="mb-3 text-2xl">Loading dashboard…</div>
-          <div className="text-sm text-[#6B6B6B]">Fetching your simulation history</div>
+          <div className="text-sm text-[#6B6B6B]">
+            Fetching your simulation history
+          </div>
         </div>
       </div>
     );
@@ -234,7 +246,13 @@ export default function DashboardPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#111111] px-5 py-3 text-sm font-semibold text-[#F5F5F5] transition hover:border-[#F59E0B]/40 hover:text-[#F59E0B]"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <circle cx="7" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+                  <circle
+                    cx="7"
+                    cy="4.5"
+                    r="2.5"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                  />
                   <path
                     d="M2.5 12.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"
                     stroke="currentColor"
@@ -293,7 +311,11 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between gap-4">
               <div className="flex min-w-0 flex-1 items-center gap-4">
                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#F59E0B] to-[#D97706] text-lg font-bold text-black">
-                  {user?.name?.split(" ").map((w) => w[0]?.toUpperCase()).join("").slice(0, 2) || "?"}
+                  {user?.name
+                    ?.split(" ")
+                    .map((w) => w[0]?.toUpperCase())
+                    .join("")
+                    .slice(0, 2) || "?"}
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-[#F59E0B]">
@@ -306,7 +328,8 @@ export default function DashboardPage() {
                     Account & financial overview
                   </h2>
                   <p className="mt-1 text-sm text-[#6B6B6B]">
-                    View your account details, financial metrics, and sign out from your profile page.
+                    View your account details, financial metrics, and sign out
+                    from your profile page.
                   </p>
                 </div>
               </div>
@@ -349,10 +372,12 @@ export default function DashboardPage() {
           {filteredSessions.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-[#2A2A2A] bg-[#101010]/50 py-20 text-center">
               <div className="mb-4 text-4xl">📊</div>
-              <h2 className="text-xl font-bold text-[#F5F5F5]">No simulations yet</h2>
+              <h2 className="text-xl font-bold text-[#F5F5F5]">
+                No simulations yet
+              </h2>
               <p className="mx-auto mt-2 max-w-sm text-sm text-[#6B6B6B]">
-                Start your first financial life simulation to see your history, decisions, and
-                debriefs here.
+                Start your first financial life simulation to see your history,
+                decisions, and debriefs here.
               </p>
               <button
                 type="button"

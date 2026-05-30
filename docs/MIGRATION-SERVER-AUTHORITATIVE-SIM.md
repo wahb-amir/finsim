@@ -4,12 +4,12 @@ FinSim’s financial simulation now runs entirely on the backend. The frontend o
 
 ## Summary of architectural change
 
-| Layer | Before | After |
-|-------|--------|-------|
-| Simulation | `frontend/lib/sim/*` (client) | `backend/src/services/simulation/*` (server) |
-| Round outcomes | Client computed, sent as `metricsAfter` | Server computes and persists |
-| Session state | Not stored (client replayed rounds) | `GameSession.simulationState` + `currentEvent` |
-| Choices | Mixed `left`/`right` (UI) and `A`/`B` (DB) | `left` / `right` everywhere |
+| Layer          | Before                                     | After                                          |
+| -------------- | ------------------------------------------ | ---------------------------------------------- |
+| Simulation     | `frontend/lib/sim/*` (client)              | `backend/src/services/simulation/*` (server)   |
+| Round outcomes | Client computed, sent as `metricsAfter`    | Server computes and persists                   |
+| Session state  | Not stored (client replayed rounds)        | `GameSession.simulationState` + `currentEvent` |
+| Choices        | Mixed `left`/`right` (UI) and `A`/`B` (DB) | `left` / `right` everywhere                    |
 
 ---
 
@@ -137,7 +137,9 @@ FinSim’s financial simulation now runs entirely on the backend. The frontend o
 ```json
 {
   "success": true,
-  "session": { /* Mongo document only */ }
+  "session": {
+    /* Mongo document only */
+  }
 }
 ```
 
@@ -146,11 +148,19 @@ FinSim’s financial simulation now runs entirely on the backend. The frontend o
 ```json
 {
   "success": true,
-  "session": { /* Mongo document including simulationState */ },
+  "session": {
+    /* Mongo document including simulationState */
+  },
   "currentRound": 3,
-  "metrics": { /* UI metrics for current state */ },
-  "event": { /* current EventCard */ },
-  "narrative": { /* optional */ },
+  "metrics": {
+    /* UI metrics for current state */
+  },
+  "event": {
+    /* current EventCard */
+  },
+  "narrative": {
+    /* optional */
+  },
   "scenarioId": "baseline",
   "ageYears": 22.17
 }
@@ -188,7 +198,7 @@ Server returns display metrics (no raw `SimState` on the wire):
   "investments": 0,
   "burnout": 15,
   "bufferMonths": 0.38,
-  "outcomeScore": { "composite": 42, /* … */ }
+  "outcomeScore": { "composite": 42 /* … */ }
 }
 ```
 
@@ -219,14 +229,14 @@ Server returns display metrics (no raw `SimState` on the wire):
 
 ## Frontend changes
 
-| File | Change |
-|------|--------|
-| `frontend/lib/sim/*` | **Removed** — logic moved to backend |
-| `frontend/lib/game-types.ts` | **Added** — types only for UI |
-| `frontend/context/GameContext.jsx` | No `createNewGame` / `applyChoice`; `hydrateGameView()` from API |
-| `frontend/app/game/page.jsx` | Round submit: `{ sessionId, choice }` only; load via GET hydration |
-| `frontend/app/onboarding/page.jsx` | Redirects to `/setup` (no local sim start) |
-| `frontend/components/game/SwipeDecisionCard.tsx` | Imports types from `@/lib/game-types` |
+| File                                             | Change                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------ |
+| `frontend/lib/sim/*`                             | **Removed** — logic moved to backend                               |
+| `frontend/lib/game-types.ts`                     | **Added** — types only for UI                                      |
+| `frontend/context/GameContext.jsx`               | No `createNewGame` / `applyChoice`; `hydrateGameView()` from API   |
+| `frontend/app/game/page.jsx`                     | Round submit: `{ sessionId, choice }` only; load via GET hydration |
+| `frontend/app/onboarding/page.jsx`               | Redirects to `/setup` (no local sim start)                         |
+| `frontend/components/game/SwipeDecisionCard.tsx` | Imports types from `@/lib/game-types`                              |
 
 **Client must not:**
 

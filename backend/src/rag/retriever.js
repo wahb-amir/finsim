@@ -16,7 +16,7 @@ const supabase = createClient(
     realtime: {
       transport: WebSocket,
     },
-  }
+  },
 );
 
 // Lazy-loaded local embedding model
@@ -51,10 +51,10 @@ async function retrieve(queryText, opts = {}) {
 
   const { data, error } = await supabase.rpc("match_chunks", {
     query_embedding: embedding,
-    match_count:     topK,
-    filter_rounds:   rounds,
-    filter_career:   career,
-    filter_topic:    topic,
+    match_count: topK,
+    filter_rounds: rounds,
+    filter_career: career,
+    filter_topic: topic,
   });
 
   if (error) throw new Error(`Retrieval failed: ${error.message}`);
@@ -69,7 +69,7 @@ async function retrieve(queryText, opts = {}) {
  */
 async function retrieveMulti(queries, finalTopK = 8) {
   const results = await Promise.all(
-    queries.map(({ query, opts }) => retrieve(query, opts))
+    queries.map(({ query, opts }) => retrieve(query, opts)),
   );
 
   const seen = new Map();
@@ -93,8 +93,9 @@ async function retrieveMulti(queries, finalTopK = 8) {
 function formatChunksForPrompt(chunks) {
   if (!chunks?.length) return "(no context retrieved)";
   return chunks
-    .map((c, i) =>
-      `[${i + 1}] Source: ${c.source} | Topic: ${c.topic}${c.subtopic ? ` > ${c.subtopic}` : ""}\n${c.content}`
+    .map(
+      (c, i) =>
+        `[${i + 1}] Source: ${c.source} | Topic: ${c.topic}${c.subtopic ? ` > ${c.subtopic}` : ""}\n${c.content}`,
     )
     .join("\n\n---\n\n");
 }

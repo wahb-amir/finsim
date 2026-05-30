@@ -6,7 +6,9 @@ export default function Modal({ isOpen, onClose, title, message }) {
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "unset";
-    return () => { document.body.style.overflow = "unset"; };
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -44,14 +46,30 @@ export default function Modal({ isOpen, onClose, title, message }) {
           maxWidth: "420px",
           width: "90%",
           textAlign: "center",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.5), 0 0 40px rgba(245,158,11,0.1)",
+          boxShadow:
+            "0 20px 40px rgba(0,0,0,0.5), 0 0 40px rgba(245,158,11,0.1)",
         }}
       >
         <div style={{ fontSize: 40, marginBottom: 16 }}>🚀</div>
-        <h3 style={{ color: "#F7F8F8", fontSize: 24, fontWeight: 590, margin: "0 0 12px", letterSpacing: "-0.5px" }}>
+        <h3
+          style={{
+            color: "#F7F8F8",
+            fontSize: 24,
+            fontWeight: 590,
+            margin: "0 0 12px",
+            letterSpacing: "-0.5px",
+          }}
+        >
           {title}
         </h3>
-        <p style={{ color: "#8A8F98", fontSize: 15, lineHeight: 1.6, margin: "0 0 24px" }}>
+        <p
+          style={{
+            color: "#8A8F98",
+            fontSize: 15,
+            lineHeight: 1.6,
+            margin: "0 0 24px",
+          }}
+        >
           {message}
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>

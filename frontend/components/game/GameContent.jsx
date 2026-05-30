@@ -112,7 +112,13 @@ export function GameContent() {
   }, [authLoading, user, router]);
 
   const handleConfirm = useCallback(async () => {
-    if (!selectedChoice || isConfirming || savingRound || !currentEvent || !sessionId) {
+    if (
+      !selectedChoice ||
+      isConfirming ||
+      savingRound ||
+      !currentEvent ||
+      !sessionId
+    ) {
       return;
     }
 
@@ -273,7 +279,10 @@ export function GameContent() {
         </aside>
       </div>
 
-      <GameFooter currentRound={currentRound} remainingRounds={remainingRounds} />
+      <GameFooter
+        currentRound={currentRound}
+        remainingRounds={remainingRounds}
+      />
 
       <BottomSheet
         open={advisorOpen}
