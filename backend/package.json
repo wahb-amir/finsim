@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "dev": "node --watch server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "chunk": "node src/rag/chunk-knowledge.js",
+    "seed": "node src/rag/embed-and-seed.js",
+    "seed:fresh": "node src/rag/embed-and-seed.js --fresh",
+    "build-kb": "npm run chunk && npm run seed:fresh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.2",
