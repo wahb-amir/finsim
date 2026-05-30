@@ -13,7 +13,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const KNOWLEDGE_DIR = path.join(__dirname, "../knowledge");
-const OUTPUT_PATH = path.join(__dirname, "../../chunks.json");
+const OUTPUT_PATH = path.join(__dirname, "chunks.json");
 
 // ─── Text file parser ─────────────────────────────────────────────────────────
 // Format expected in .txt files:
