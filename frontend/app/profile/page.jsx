@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AppNavbar } from "@/components/layout/AppNavbar";
 
 const getInitials = (name) => {
   if (!name) return "--";
@@ -393,47 +394,35 @@ const Profile = () => {
         />
       )}
 
-      <div
-        className="max-w-[1100px] mx-auto px-6 py-10 font-body"
-        style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
-      >
-        <div className="flex items-center justify-between mb-12 animate-fade-in-up">
-          <div className="flex items-center gap-6">
+      <div className="min-h-screen bg-[#0A0A0A]">
+        <AppNavbar />
+
+        <div
+          className="mx-auto max-w-[1100px] px-6 py-10 font-body"
+          style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+        >
+          <div className="mb-12 flex animate-fade-in-up items-center justify-end">
             <button
-              type="button"
-              onClick={() => router.push("/dashboard")}
-              className="text-[11px] text-[#6B6B6B] transition hover:text-[#F59E0B]"
+              onClick={() => setShowLogoutModal(true)}
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-[#1f1f1f] bg-[#111111] px-4 py-2 text-[0.8rem] text-[#a1a1a1] transition-all duration-250 hover:border-red-500/60 hover:bg-red-500/10 hover:text-red-400"
             >
-              ← Back to Dashboard
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Sign Out
             </button>
-            <div
-              className="font-display text-lg font-bold tracking-tight"
-              style={{ fontFamily: "'Syne', sans-serif" }}
-            >
-              fin<span className="text-amber-400">.</span>arc
-            </div>
           </div>
-          <button
-            onClick={() => setShowLogoutModal(true)}
-            className="flex items-center gap-2 bg-[#111111] border border-[#1f1f1f] text-[#a1a1a1] text-[0.8rem] px-4 py-2 rounded-md cursor-pointer transition-all duration-250 hover:border-red-500/60 hover:text-red-400 hover:bg-red-500/10"
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Sign Out
-          </button>
-        </div>
 
         <div
           className="grid grid-cols-[1fr_auto] items-start gap-8 mb-10 p-8 bg-[#111111] border border-[#1f1f1f] rounded-2xl relative overflow-hidden animate-fade-in-up"
@@ -543,6 +532,7 @@ const Profile = () => {
             </div>
           )}
         </div>
+      </div>
       </div>
     </>
   );

@@ -1,3 +1,5 @@
+import { BrandLogo } from "@/components/brand/BrandLogo";
+
 export function GameHeader({
   userName,
   exiting,
@@ -7,22 +9,10 @@ export function GameHeader({
 }) {
   return (
     <header className="flex-shrink-0 h-12 border-b border-[#1A1A1A] flex items-center px-4 gap-4 bg-[#0A0A0A] z-30">
-      <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded bg-[#F59E0B] flex items-center justify-center">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path
-              d="M5 1L6.2 4H9.5L7 5.8L8 9L5 7.2L2 9L3 5.8L0.5 4H3.8L5 1Z"
-              fill="#0A0A0A"
-            />
-          </svg>
-        </div>
-        <span
-          className="text-[13px] font-bold tracking-tight text-[#F5F5F5]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          FinSim
-        </span>
-      </div>
+      <BrandLogo
+        size="sm"
+        wordmarkClassName="text-[13px] font-bold"
+      />
       <div className="h-4 w-px bg-[#2A2A2A]" />
       <span className="text-[11px] text-[#6B6B6B]">{userName}</span>
       <div className="ml-auto">

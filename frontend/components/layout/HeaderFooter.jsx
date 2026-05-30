@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { tickerFacts } from "../../lib/data";
 
 export function Ticker() {
@@ -80,32 +81,7 @@ export function Nav({ onStart }) {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <div
-          style={{
-            width: 28,
-            height: 28,
-            background: "#F59E0B",
-            borderRadius: 6,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 14,
-            fontWeight: 800,
-            color: "#0A0A0A",
-          }}
-        >
-          F
-        </div>
-        <span
-          style={{
-            color: "#F7F8F8",
-            fontSize: 15,
-            fontWeight: 590,
-            letterSpacing: "-0.165px",
-          }}
-        >
-          FinSim
-        </span>
+        <BrandLogo size="md" />
         <span
           style={{
             fontSize: 10,
@@ -173,22 +149,7 @@ export function Footer() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <div
-          style={{
-            width: 22,
-            height: 22,
-            background: "#F59E0B",
-            borderRadius: 5,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 11,
-            fontWeight: 800,
-            color: "#0A0A0A",
-          }}
-        >
-          F
-        </div>
+        <BrandLogo size="sm" />
         <span style={{ color: "#62666D", fontSize: 12 }}>
           FinSim · Built for the Hackathon
         </span>

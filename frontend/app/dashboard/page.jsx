@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { SessionDetailModal } from "@/components/dashboard/SessionDetailModal";
+import { AppNavbar } from "@/components/layout/AppNavbar";
 import { formatCurrency, prettifyLabel } from "@/lib/format";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -193,11 +194,14 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0A0A0A] text-[#F59E0B]">
-        <div className="text-center">
-          <div className="mb-3 text-2xl">Loading dashboard…</div>
-          <div className="text-sm text-[#6B6B6B]">
-            Fetching your simulation history
+      <div className="min-h-screen bg-[#0A0A0A]">
+        <AppNavbar />
+        <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center text-[#F59E0B]">
+          <div className="text-center">
+            <div className="mb-3 text-2xl">Loading dashboard…</div>
+            <div className="text-sm text-[#6B6B6B]">
+              Fetching your simulation history
+            </div>
           </div>
         </div>
       </div>
@@ -214,7 +218,8 @@ export default function DashboardPage() {
         onContinue={handleContinue}
       />
 
-      <div className="min-h-screen bg-[#0A0A0A] px-4 py-10 text-white">
+      <div className="min-h-screen bg-[#0A0A0A] text-white">
+        <AppNavbar />
         <div
           className="pointer-events-none fixed left-1/2 top-0 h-[400px] w-[800px] -translate-x-1/2 opacity-[0.05]"
           style={{
@@ -222,8 +227,8 @@ export default function DashboardPage() {
           }}
         />
 
-        <div className="relative z-10 mx-auto max-w-4xl">
-          <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="relative z-10 mx-auto max-w-4xl px-4 py-10">
+          <div className="mb-10">
             <div>
               <p className="text-[11px] uppercase tracking-[0.35em] text-[#6B6B6B]">
                 Your Dashboard
@@ -237,46 +242,6 @@ export default function DashboardPage() {
               <p className="mt-2 text-sm text-[#A1A1A1]">
                 Review past simulations, revisit debriefs, or start a new run.
               </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => router.push("/profile")}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#111111] px-5 py-3 text-sm font-semibold text-[#F5F5F5] transition hover:border-[#F59E0B]/40 hover:text-[#F59E0B]"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <circle
-                    cx="7"
-                    cy="4.5"
-                    r="2.5"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                  />
-                  <path
-                    d="M2.5 12.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Profile
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/setup")}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-black transition hover:opacity-95"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M7 1v12M1 7h12"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                New Simulation
-              </button>
             </div>
           </div>
 
