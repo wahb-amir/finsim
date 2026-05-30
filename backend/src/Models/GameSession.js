@@ -9,6 +9,8 @@
 
 const GameSession = require("../Models/GameSession");
 
+const MAX_ROUNDS = 10;
+
 // ── Create session ────────────────────────────────────────────────────────────
 
 const createSession = async (req, res) => {
@@ -20,15 +22,15 @@ const createSession = async (req, res) => {
     }
 
     const session = await GameSession.create({
-      userId:      req.user._id,
-      playerName:  playerName || req.user.name || "Player",
+      userId: req.user._id,
+      playerName: playerName || req.user.name || "Player",
       career,
       startSalary,
-      goal:        goal        || "Build wealth",
+      goal: goal || "Build wealth",
       climateLabel: climateLabel || "Stable",
       currentRound: 1,
-      status:      "active",
-      rounds:      [],
+      status: "active",
+      rounds: [],
     });
 
     res.status(201).json({ success: true, sessionId: session._id, session });
@@ -42,37 +44,84 @@ const createSession = async (req, res) => {
 
 const submitRound = async (req, res) => {
   try {
-    const { sessionId, round, title, choice, metricsAfter } = req.body;
+    const { sessionId, round, title, choice, metricsAfter, optimalComparison } = req.body;
+
+    const roundNumber = Number(round);
 
     if (!sessionId || !round || !choice || !metricsAfter) {
-      return res.status(400).json({ message: "sessionId, round, choice, and metricsAfter are required" });
+      return res.status(400).json({
+        message: "sessionId, round, choice, and metricsAfter are required",
+      });
     }
+
+    if (!Number.isInteger(roundNumber)) {
+      return res.status(400).json({ message: "round must be an integer" });
+    }
+
+    if (roundNumber < 1 || roundNumber > MAX_ROUNDS) {
+      return res.status(400).json({
+        message: `Round must be between 1 and ${MAX_ROUNDS}`,
+      });
+    }
+
     if (!["A", "B"].includes(choice)) {
       return res.status(400).json({ message: "choice must be A or B" });
     }
 
-    const session = await GameSession.findOne({ _id: sessionId, userId: req.user._id });
-    if (!session)                      return res.status(404).json({ message: "Session not found" });
-    if (session.status === "completed") return res.status(400).json({ message: "Game already completed" });
+    const session = await GameSession.findOne({
+      _id: sessionId,
+      userId: req.user._id,
+    });
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    if (session.status === "completed") {
+      return res.status(400).json({ message: "Game already completed" });
+    }
+
+    if (roundNumber !== session.currentRound) {
+      return res.status(400).json({
+        message: `Expected round ${session.currentRound}, received round ${roundNumber}`,
+      });
+    }
 
     // Prevent duplicate round submissions
-    const alreadySubmitted = session.rounds.find((r) => r.round === round);
-    if (alreadySubmitted) return res.status(400).json({ message: `Round ${round} already submitted` });
+    const alreadySubmitted = session.rounds.find((r) => r.round === roundNumber);
+    if (alreadySubmitted) {
+      return res.status(400).json({ message: `Round ${roundNumber} already submitted` });
+    }
 
     // Append round
-    session.rounds.push({ round, title, choice, metricsAfter });
-    session.currentRound = round + 1;
+    session.rounds.push({
+      round: roundNumber,
+      title,
+      choice,
+      metricsAfter,
+    });
 
-    // If round 10 — freeze final metrics
-    if (round === 10) {
-      session.finalMetrics  = metricsAfter;
-      session.finalSalary   = metricsAfter.salary || session.startSalary;
-      // optimalComparison should be sent by the client (computed from game engine)
-      if (req.body.optimalComparison) session.optimalComparison = req.body.optimalComparison;
+    // Freeze final metrics on round 10 and complete the game
+    if (roundNumber === MAX_ROUNDS) {
+      session.finalMetrics = metricsAfter;
+      session.finalSalary = metricsAfter.salary || session.startSalary;
+      session.status = "completed";
+
+      if (optimalComparison) {
+        session.optimalComparison = optimalComparison;
+      }
+    } else {
+      session.currentRound = roundNumber + 1;
     }
 
     await session.save();
-    res.status(200).json({ success: true, currentRound: session.currentRound, session });
+
+    res.status(200).json({
+      success: true,
+      currentRound: session.currentRound,
+      status: session.status,
+      session,
+    });
   } catch (err) {
     console.error("[submitRound]", err.message);
     res.status(500).json({ message: "Failed to submit round", error: err.message });
@@ -83,8 +132,13 @@ const submitRound = async (req, res) => {
 
 const getSession = async (req, res) => {
   try {
-    const session = await GameSession.findOne({ _id: req.params.id, userId: req.user._id });
+    const session = await GameSession.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
     if (!session) return res.status(404).json({ message: "Session not found" });
+
     res.status(200).json({ success: true, session });
   } catch (err) {
     console.error("[getSession]", err.message);
@@ -100,6 +154,7 @@ const listSessions = async (req, res) => {
       .select("_id career goal status currentRound createdAt finalMetrics.netWorth")
       .sort({ createdAt: -1 })
       .limit(10);
+
     res.status(200).json({ success: true, sessions });
   } catch (err) {
     console.error("[listSessions]", err.message);
