@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const roundSchema = new mongoose.Schema({
   round:        { type: Number, required: true },
   title:        { type: String },
-  choice:       { type: String, enum: ["A", "B"], required: true },
+  eventId:      { type: String },
+  choice:       { type: String, enum: ["left", "right"], required: true },
   metricsAfter: {
     netWorth:            Number,
     creditScore:         Number,
@@ -17,6 +18,7 @@ const roundSchema = new mongoose.Schema({
     debtToIncome:        Number,
     is401kActive:        Boolean,
     creditCardDebt:      Number,
+    salary:              Number,
   },
 }, { _id: false });
 
@@ -32,7 +34,12 @@ const gameSessionSchema = new mongoose.Schema({
   status:        { type: String, enum: ["active", "completed"], default: "active" },
   rounds:        [roundSchema],
 
-  // Final metrics — populated after round 10
+  scenarioId:      { type: String },
+  simSeed:         { type: Number },
+  simulationState: { type: mongoose.Schema.Types.Mixed, default: null },
+  currentEvent:    { type: mongoose.Schema.Types.Mixed, default: null },
+  currentNarrative:{ type: mongoose.Schema.Types.Mixed, default: null },
+
   finalMetrics: {
     netWorth:            Number,
     creditScore:         Number,
@@ -44,14 +51,12 @@ const gameSessionSchema = new mongoose.Schema({
     stressIndex:         Number,
   },
 
-  // Optimal comparison — computed server-side
   optimalComparison: {
     optimalNetWorth:    Number,
     optimalCredit:      Number,
     optimalRetirement:  Number,
   },
 
-  // Cached debrief — never re-generated once set
   debriefReport: { type: mongoose.Schema.Types.Mixed, default: null },
 
 }, { timestamps: true });

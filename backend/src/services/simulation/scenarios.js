@@ -1,46 +1,28 @@
-export type ScenarioId =
-  | "baseline"
-  | "recession"
-  | "startup-founder"
-  | "immigrant-household"
-  | "single-parent";
-
-export type Scenario = {
-  id: ScenarioId;
-  name: string;
-  tagline: string;
-  modifiers: {
-    wageGrowthAnnual: number;
-    inflationAnnual: number;
-    recessionProbAnnual: number;
-    layoffProbAnnual: number;      // now wired into event selection (fix #2)
-    burnoutDriftMonthly: number;
-    restrictedCredit: boolean;
-    remittanceMonthly: number;
-    childcareMonthly: number;
-    healthcareRiskAnnual: number;  // now wired into event selection (fix #2)
-  };
-  start: {
-    ageYears: number;
-    cash: number;
-    grossSalaryAnnual: number;
-    baseExpensesMonthly: number;
-    creditScore: number;
-    debt: {
-      kind: "none" | "credit-card" | "student" | "car";
-      balance: number;
-      apr: number;
-      termMonths?: number;
-    };
-    investments: {
-      taxable: number;
-      retirement: number;
-      equity: number; // founder equity fraction — now wired into event selection (fix #2)
-    };
-  };
+"use strict";
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
-
-export const SCENARIOS: readonly Scenario[] = [
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var scenarios_exports = {};
+__export(scenarios_exports, {
+  SCENARIOS: () => SCENARIOS,
+  getScenario: () => getScenario
+});
+module.exports = __toCommonJS(scenarios_exports);
+const SCENARIOS = [
   {
     id: "baseline",
     name: "Baseline",
@@ -54,17 +36,17 @@ export const SCENARIOS: readonly Scenario[] = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.04,
+      healthcareRiskAnnual: 0.04
     },
     start: {
       ageYears: 22,
       cash: 800,
-      grossSalaryAnnual: 48000,
+      grossSalaryAnnual: 48e3,
       baseExpensesMonthly: 1800,
       creditScore: 680,
       debt: { kind: "none", balance: 0, apr: 0 },
-      investments: { taxable: 0, retirement: 0, equity: 0 },
-    },
+      investments: { taxable: 0, retirement: 0, equity: 0 }
+    }
   },
   {
     id: "recession",
@@ -79,42 +61,43 @@ export const SCENARIOS: readonly Scenario[] = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.06,
+      healthcareRiskAnnual: 0.06
     },
     start: {
       ageYears: 22,
       cash: 700,
-      grossSalaryAnnual: 46000,
+      grossSalaryAnnual: 46e3,
       baseExpensesMonthly: 1750,
       creditScore: 660,
       debt: { kind: "credit-card", balance: 600, apr: 0.219 },
-      investments: { taxable: 0, retirement: 0, equity: 0 },
-    },
+      investments: { taxable: 0, retirement: 0, equity: 0 }
+    }
   },
   {
     id: "startup-founder",
     name: "Startup Founder Mode",
     tagline: "$0 salary. Equity upside. Burnout danger.",
     modifiers: {
-      wageGrowthAnnual: 0.0,
+      wageGrowthAnnual: 0,
       inflationAnnual: 0.03,
       recessionProbAnnual: 0.18,
-      layoffProbAnnual: 0.0,
+      layoffProbAnnual: 0,
       burnoutDriftMonthly: 0.75,
       restrictedCredit: true,
       remittanceMonthly: 0,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.05,
+      healthcareRiskAnnual: 0.05
     },
     start: {
       ageYears: 24,
-      cash: 6000,
+      cash: 6e3,
       grossSalaryAnnual: 0,
       baseExpensesMonthly: 2200,
       creditScore: 640,
       debt: { kind: "none", balance: 0, apr: 0 },
-      investments: { taxable: 0, retirement: 0, equity: 0.006 }, // 0.6% fully diluted — drives equity events
-    },
+      investments: { taxable: 0, retirement: 0, equity: 6e-3 }
+      // 0.6% fully diluted — drives equity events
+    }
   },
   {
     id: "immigrant-household",
@@ -129,17 +112,17 @@ export const SCENARIOS: readonly Scenario[] = [
       restrictedCredit: true,
       remittanceMonthly: 350,
       childcareMonthly: 0,
-      healthcareRiskAnnual: 0.05,
+      healthcareRiskAnnual: 0.05
     },
     start: {
       ageYears: 25,
       cash: 1200,
-      grossSalaryAnnual: 52000,
+      grossSalaryAnnual: 52e3,
       baseExpensesMonthly: 1900,
       creditScore: 620,
-      debt: { kind: "student", balance: 9000, apr: 0.055, termMonths: 120 },
-      investments: { taxable: 0, retirement: 0, equity: 0 },
-    },
+      debt: { kind: "student", balance: 9e3, apr: 0.055, termMonths: 120 },
+      investments: { taxable: 0, retirement: 0, equity: 0 }
+    }
   },
   {
     id: "single-parent",
@@ -154,22 +137,26 @@ export const SCENARIOS: readonly Scenario[] = [
       restrictedCredit: false,
       remittanceMonthly: 0,
       childcareMonthly: 650,
-      healthcareRiskAnnual: 0.085,
+      healthcareRiskAnnual: 0.085
     },
     start: {
       ageYears: 27,
       cash: 900,
-      grossSalaryAnnual: 54000,
+      grossSalaryAnnual: 54e3,
       baseExpensesMonthly: 2100,
       creditScore: 650,
       debt: { kind: "credit-card", balance: 1400, apr: 0.249 },
-      investments: { taxable: 0, retirement: 800, equity: 0 },
-    },
-  },
-] as const;
-
-export function getScenario(id: ScenarioId): Scenario {
-  const s = SCENARIOS.find(x => x.id === id);
+      investments: { taxable: 0, retirement: 800, equity: 0 }
+    }
+  }
+];
+function getScenario(id) {
+  const s = SCENARIOS.find((x) => x.id === id);
   if (!s) throw new Error(`Unknown scenario: ${id}`);
   return s;
 }
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  SCENARIOS,
+  getScenario
+});

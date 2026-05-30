@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useGame } from "@/context/GameContext";
 
 const GOALS = [
   {
@@ -25,171 +24,185 @@ const GOALS = [
   },
 ];
 
-const CONFIDENCE_LABELS = {
-  1: "Not at all",
-  2: "A little",
-  3: "Somewhat",
-  4: "Pretty confident",
-  5: "Very confident",
-};
+const CLIMATE_OPTIONS = [
+  {
+    id: "Stable",
+    title: "Stable",
+    description: "Predictable income, normal costs, low turbulence",
+    icon: "🌤️",
+  },
+  {
+    id: "Inflation",
+    title: "Inflationary",
+    description: "Prices rise faster than your paycheck",
+    icon: "📈",
+  },
+  {
+    id: "Recession",
+    title: "Recession",
+    description: "Tighter job market and tougher decisions",
+    icon: "🌧️",
+  },
+  {
+    id: "Volatile",
+    title: "Volatile",
+    description: "High upside, high risk, sharp swings",
+    icon: "⚡",
+  },
+];
 
 function SetupContent() {
   const router = useRouter();
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
-  const {
-    playerName,
-    setPlayerName,
-    confidence,
-    setConfidence,
-    goal,
-    setGoal,
-    startSimulation,
-  } = useGame();
+  const [loading, setLoading] = useState(true);
+  const [checkingSessions, setCheckingSessions] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const [step, setStep] = useState(1);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
-  const [hasSetup, setHasSetup] = useState(false);
 
-  const API = process.env.NEXT_PUBLIC_API_URL;
+  const [userName, setUserName] = useState("");
+  const [career, setCareer] = useState("");
+  const [startSalary, setStartSalary] = useState("");
+  const [goal, setGoal] = useState("build-wealth");
+  const [climateLabel, setClimateLabel] = useState("Stable");
+
+  const [activeSession, setActiveSession] = useState(null);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+
+  const [toast, setToast] = useState(null);
 
   const showToast = (type, message) => {
     setToast({ type, message });
-
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
+    setTimeout(() => setToast(null), 3000);
   };
 
+  const canProceedStep1 = career.trim().length >= 2 && Number(startSalary) > 0;
+  const canProceedStep2 = goal !== "";
+  const canProceedStep3 = climateLabel !== "";
+
+  const formattedSalary = useMemo(() => {
+    const value = Number(startSalary);
+    if (!Number.isFinite(value) || value <= 0) return "";
+    return new Intl.NumberFormat().format(value);
+  }, [startSalary]);
+
   useEffect(() => {
-    const getUser = async () => {
+    const loadUserAndSession = async () => {
       try {
-        const res = await fetch(`${API}/auth/me`, {
+        const userRes = await fetch(`${API}/auth/me`, {
           method: "GET",
           credentials: "include",
         });
 
-        const data = await res.json();
+        const userData = await userRes.json();
 
-        if (data.success && data.user) {
-          setPlayerName(data.user.name);
-          setHasSetup(data.user.setupExists);
-
-          setTimeout(() => {
-            setStep(2);
-          }, 700);
-        } else {
+        if (!userData?.success || !userData?.user) {
           router.push("/auth");
+          return;
+        }
+
+        setUserName(userData.user.name || "Player");
+
+        const sessionsRes = await fetch(`${API}/game/sessions`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const sessionsData = await sessionsRes.json();
+
+        if (sessionsData?.success && Array.isArray(sessionsData.sessions)) {
+          const unfinished = sessionsData.sessions.find(
+            (s) => s.status !== "completed"
+          );
+
+          if (unfinished) {
+            setActiveSession(unfinished);
+            setShowResumePrompt(true);
+          }
         }
       } catch (err) {
         router.push("/auth");
       } finally {
-        setLoadingUser(false);
+        setLoading(false);
+        setCheckingSessions(false);
       }
     };
 
-    getUser();
-  }, [API, router, setPlayerName]);
+    if (API) loadUserAndSession();
+  }, [API, router]);
 
-  const canProceedStep1 = playerName.trim().length >= 2;
-  const canProceedStep2 = confidence >= 1;
-  const canProceedStep3 = goal !== "";
+  const handleContinueSession = () => {
+    if (!activeSession?._id) return;
 
-const handleBegin = async () => {
-  if (!canProceedStep3) return;
+    localStorage.setItem("gameSessionId", activeSession._id);
+    router.push(`/game?sessionId=${activeSession._id}`);
+  };
 
-  setSubmitting(true);
+  const handleStartFresh = () => {
+    setShowResumePrompt(false);
+    setActiveSession(null);
+    setStep(1);
+  };
 
-  try {
-    const methodToUse = hasSetup ? "PUT" : "POST";
+  const handleBegin = async () => {
+    if (!canProceedStep1 || !canProceedStep2 || !canProceedStep3) return;
 
-    const res = await fetch(`${API}/setup`, {
-      method: methodToUse,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        name: playerName,
-        confidence,
+    setSubmitting(true);
+
+    try {
+      const payload = {
+        career: career.trim(),
+        startSalary: Number(startSalary),
         goal,
-      }),
-    });
+        climateLabel,
+      };
 
-    const data = await res.json();
-
-    if (res.status === 409) {
-      const updateRes = await fetch(`${API}/setup`, {
-        method: "PUT",
+      const res = await fetch(`${API}/game/session`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          name: playerName,
-          confidence,
-          goal,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const updateData = await updateRes.json();
+      const data = await res.json();
 
-      if (updateData.success) {
-        showToast("success", updateData.message);
-
-        const scenarioByGoal = {
-          "avoid-debt": "recession",
-          "build-wealth": confidence >= 4 ? "startup-founder" : "baseline",
-          "understand-basics": "single-parent",
-        };
-
-        const scenarioId = scenarioByGoal[goal] || "baseline";
-        const seed = Date.now();
-
-        startSimulation(scenarioId, seed);
-
-        setTimeout(() => {
-          router.push("/game");
-        }, 1200);
-      } else {
-        showToast("error", updateData.message || "Failed");
+      if (!res.ok || !data?.success) {
+        showToast("error", data?.message || "Failed to create game session");
+        return;
       }
 
-      return;
-    }
+      const sessionId = data.sessionId || data.session?._id;
 
-    if (data.success) {
-      showToast("success", data.message);
+      if (!sessionId) {
+        showToast("error", "Session created, but no session ID was returned");
+        return;
+      }
 
-      const scenarioByGoal = {
-        "avoid-debt": "recession",
-        "build-wealth": confidence >= 4 ? "startup-founder" : "baseline",
-        "understand-basics": "single-parent",
-      };
-
-      const scenarioId = scenarioByGoal[goal] || "baseline";
-      const seed = Date.now();
-
-      startSimulation(scenarioId, seed);
+      localStorage.setItem("gameSessionId", sessionId);
+      showToast("success", "Game session created");
 
       setTimeout(() => {
-        router.push("/game");
-      }, 1200);
-    } else {
-      showToast("error", data.message || "Failed");
+        router.push(`/game?sessionId=${sessionId}`);
+      }, 900);
+    } catch (err) {
+      showToast("error", "Server error");
+    } finally {
+      setSubmitting(false);
     }
-  } catch (err) {
-    showToast("error", "Server Error");
-  } finally {
-    setSubmitting(false);
-  }
-};
+  };
 
-  if (loadingUser) {
+  if (loading || checkingSessions) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-[#F59E0B]">
-        Loading...
+        <div className="text-center">
+          <div className="mb-3 text-2xl">Loading...</div>
+          <div className="text-sm text-[#6B6B6B]">
+            Preparing your simulation
+          </div>
+        </div>
       </div>
     );
   }
@@ -208,25 +221,76 @@ const handleBegin = async () => {
         </div>
       )}
 
-      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center px-4 relative overflow-hidden">
+      {showResumePrompt && activeSession && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-[#2A2A2A] bg-[#0F0F0F] p-6 shadow-2xl">
+            <div className="mb-4 text-3xl">⏳</div>
+
+            <h2 className="text-2xl font-bold text-white">
+              You already have an active game
+            </h2>
+
+            <p className="mt-2 text-sm text-[#A1A1A1]">
+              Round {activeSession.currentRound} of 10 ·{" "}
+              {activeSession.career || "Career not set"}
+            </p>
+
+            <p className="mt-4 text-sm leading-6 text-[#6B6B6B]">
+              Do you want to continue where you left off, or start a new
+              simulation?
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={handleContinueSession}
+                className="flex-1 rounded-xl bg-[#F59E0B] px-5 py-3 font-semibold text-black transition hover:opacity-95"
+              >
+                Continue game
+              </button>
+
+              <button
+                onClick={handleStartFresh}
+                className="flex-1 rounded-xl border border-[#2A2A2A] bg-[#111111] px-5 py-3 font-semibold text-white transition hover:border-[#444]"
+              >
+                Start new game
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="min-h-screen overflow-hidden bg-[#0A0A0A] px-4 py-10 text-white">
         <div
-          className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-[0.06] pointer-events-none"
+          className="fixed left-1/2 top-1/4 h-[300px] w-[700px] -translate-x-1/2 opacity-[0.06] pointer-events-none"
           style={{
             background: "radial-gradient(ellipse, #F59E0B, transparent 70%)",
           }}
         />
 
-        <div className="w-full max-w-lg relative z-10">
-          <div className="flex items-center justify-center gap-3 mb-10">
+        <div className="mx-auto w-full max-w-3xl relative z-10">
+          <div className="mb-8 text-center">
+            <p className="text-[11px] uppercase tracking-[0.35em] text-[#6B6B6B]">
+              Financial Life Simulation
+            </p>
+            <h1 className="mt-3 text-4xl font-bold text-[#F5F5F5]">
+              Welcome, {userName}
+            </h1>
+            <p className="mt-3 text-sm text-[#A1A1A1]">
+              Set up your run, then jump into the game with a live backend
+              session.
+            </p>
+          </div>
+
+          <div className="mb-10 flex items-center justify-center gap-3">
             {[1, 2, 3].map((s) => (
               <div key={s} className="flex items-center gap-3">
                 <div
-                  className={`flex items-center justify-center w-7 h-7 rounded-full text-[11px] font-bold transition-all duration-300 ${
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
                     s === step
                       ? "bg-[#F59E0B] text-black scale-110"
                       : s < step
-                        ? "bg-[#1A1A1A] border border-[#10B981]/40 text-[#10B981]"
-                        : "bg-[#1A1A1A] border border-[#2A2A2A] text-[#4A4A4A]"
+                        ? "border border-[#10B981]/40 bg-[#161616] text-[#10B981]"
+                        : "border border-[#2A2A2A] bg-[#161616] text-[#4A4A4A]"
                   }`}
                 >
                   {s < step ? (
@@ -246,10 +310,9 @@ const handleBegin = async () => {
 
                 {s < 3 && (
                   <div
-                    className="w-12 h-px"
+                    className="h-px w-16"
                     style={{
-                      background:
-                        s < step ? "rgba(16,185,129,0.3)" : "#1F1F1F",
+                      background: s < step ? "rgba(16,185,129,0.3)" : "#1F1F1F",
                     }}
                   />
                 )}
@@ -257,136 +320,165 @@ const handleBegin = async () => {
             ))}
           </div>
 
-          <div className="text-center mb-2">
-            <p className="text-[11px] text-[#6B6B6B] tracking-widest uppercase">
-              Step {step} of 3
-            </p>
-          </div>
-
-          {step === 1 && (
-            <div className="animate-fade-in-up">
-              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
-                What&apos;s your name?
-              </h2>
-
-              <p className="text-[#6B6B6B] text-center text-sm mb-8">
-                We&apos;ll track your decisions and results throughout the simulation.
+          <div className="mx-auto max-w-2xl rounded-[28px] border border-[#242424] bg-[#101010]/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-8">
+            <div className="text-center">
+              <p className="text-[11px] uppercase tracking-[0.35em] text-[#6B6B6B]">
+                Step {step} of 3
               </p>
-
-              <div className="rounded-xl bg-[#111111] border border-[#242424] p-6">
-                <label className="block text-[11px] text-[#6B6B6B] uppercase tracking-widest mb-3 font-medium">
-                  Your name
-                </label>
-
-                <input
-                  type="text"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full bg-[#0D0D0D] text-white border border-[#2A2A2A] rounded-lg px-4 py-3 text-base placeholder-[#3A3A3A] focus:outline-none focus:border-[#F59E0B]/60 transition-colors"
-                />
-              </div>
             </div>
-          )}
 
-          {step === 2 && (
-            <div className="animate-fade-in-up">
-              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
-                How confident are you with money?
-              </h2>
+            {step === 1 && (
+              <div className="mt-8 space-y-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-[#F5F5F5]">
+                    Your starting setup
+                  </h2>
+                  <p className="mt-2 text-sm text-[#A1A1A1]">
+                    Pick the career and starting salary for this run.
+                  </p>
+                </div>
 
-              <p className="text-[#6B6B6B] text-center text-sm mb-8">
-                No judgment here — this is just for flavor.
-              </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4">
+                    <label className="mb-2 block text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B]">
+                      Career
+                    </label>
+                    <input
+                      type="text"
+                      value={career}
+                      onChange={(e) => setCareer(e.target.value)}
+                      placeholder="e.g. Software Engineer"
+                      className="w-full rounded-xl border border-[#2A2A2A] bg-[#111111] px-4 py-3 text-base text-white placeholder:text-[#3A3A3A] outline-none transition focus:border-[#F59E0B]/60"
+                    />
+                  </div>
 
-              <div className="rounded-xl bg-[#111111] border border-[#242424] p-6">
-                <input
-                  type="range"
-                  min={1}
-                  max={5}
-                  value={confidence}
-                  onChange={(e) => setConfidence(Number(e.target.value))}
-                  className="w-full h-2 rounded-lg appearance-none cursor-pointer slider"
-                  style={{
-                    background: `linear-gradient(to right, #F59E0B ${
-                      ((confidence - 1) / 4) * 100
-                    }%, #2A2A2A ${((confidence - 1) / 4) * 100}%)`,
-                  }}
-                />
+                  <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4">
+                    <label className="mb-2 block text-[11px] font-medium uppercase tracking-widest text-[#6B6B6B]">
+                      Starting salary
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={startSalary}
+                      onChange={(e) => setStartSalary(e.target.value)}
+                      placeholder="50000"
+                      className="w-full rounded-xl border border-[#2A2A2A] bg-[#111111] px-4 py-3 text-base text-white placeholder:text-[#3A3A3A] outline-none transition focus:border-[#F59E0B]/60"
+                    />
+                  </div>
+                </div>
 
-                <div className="text-center mt-4">
-                  <span className="text-[#F59E0B] text-2xl font-bold">
-                    {confidence}
-                  </span>
+                {formattedSalary && (
+                  <p className="text-sm text-[#6B6B6B]">
+                    Starting salary preview:{" "}
+                    <span className="text-white">${formattedSalary}</span>
+                  </p>
+                )}
+              </div>
+            )}
 
-                  <span className="text-[#A1A1A1] text-sm ml-2">
-                    — {CONFIDENCE_LABELS[confidence]}
-                  </span>
+            {step === 2 && (
+              <div className="mt-8 space-y-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-[#F5F5F5]">
+                    What matters most?
+                  </h2>
+                  <p className="mt-2 text-sm text-[#A1A1A1]">
+                    This helps frame the decisions during the simulation.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  {GOALS.map((g) => (
+                    <button
+                      key={g.id}
+                      onClick={() => setGoal(g.id)}
+                      className={`w-full rounded-2xl border p-5 text-left transition-all duration-200 flex items-center gap-4 ${
+                        goal === g.id
+                          ? "border-[#F59E0B] bg-[#151515] shadow-[0_0_0_1px_rgba(245,158,11,0.2)]"
+                          : "border-[#242424] bg-[#111111] hover:border-[#363636]"
+                      }`}
+                    >
+                      <span className="text-2xl">{g.icon}</span>
+                      <div>
+                        <div className="font-semibold text-white">{g.title}</div>
+                        <div className="text-[12px] leading-5 text-[#6B6B6B]">
+                          {g.description}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {step === 3 && (
-            <div className="animate-fade-in-up">
-              <h2 className="text-3xl font-bold text-center mb-2 text-[#F5F5F5]">
-                What&apos;s your goal?
-              </h2>
+            {step === 3 && (
+              <div className="mt-8 space-y-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-[#F5F5F5]">
+                    Choose the climate
+                  </h2>
+                  <p className="mt-2 text-sm text-[#A1A1A1]">
+                    This is saved with the session and used to shape the run.
+                  </p>
+                </div>
 
-              <div className="space-y-3 mt-8">
-                {GOALS.map((g) => (
-                  <button
-                    key={g.id}
-                    onClick={() => setGoal(g.id)}
-                    className={`w-full text-left rounded-xl p-5 border transition-all duration-200 flex items-center gap-4 ${
-                      goal === g.id
-                        ? "border-[#F59E0B] bg-[#111111]"
-                        : "border-[#242424] bg-[#111111]"
-                    }`}
-                  >
-                    <span className="text-2xl">{g.icon}</span>
-
-                    <div>
-                      <div className="font-semibold text-white">
-                        {g.title}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {CLIMATE_OPTIONS.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setClimateLabel(option.id)}
+                      className={`rounded-2xl border p-4 text-left transition-all duration-200 ${
+                        climateLabel === option.id
+                          ? "border-[#F59E0B] bg-[#151515]"
+                          : "border-[#242424] bg-[#111111] hover:border-[#363636]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{option.icon}</span>
+                        <div>
+                          <div className="font-semibold text-white">
+                            {option.title}
+                          </div>
+                          <div className="mt-1 text-[12px] leading-5 text-[#6B6B6B]">
+                            {option.description}
+                          </div>
+                        </div>
                       </div>
-
-                      <div className="text-[12px] text-[#6B6B6B]">
-                        {g.description}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
+            )}
+
+            <div className="mt-8 flex gap-3">
+              {step > 1 && (
+                <button
+                  onClick={() => setStep((s) => s - 1)}
+                  className="flex-1 rounded-xl border border-[#2A2A2A] px-6 py-3.5 text-[#A1A1A1] transition hover:border-[#3A3A3A]"
+                >
+                  Back
+                </button>
+              )}
+
+              {step < 3 ? (
+                <button
+                  onClick={() => setStep((s) => s + 1)}
+                  disabled={step === 1 ? !canProceedStep1 : !canProceedStep2}
+                  className="flex-1 rounded-xl bg-[#F59E0B] px-6 py-3.5 text-sm font-semibold text-black transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Continue
+                </button>
+              ) : (
+                <button
+                  onClick={handleBegin}
+                  disabled={!canProceedStep1 || !canProceedStep2 || !canProceedStep3 || submitting}
+                  className="flex-1 rounded-xl bg-[#F59E0B] px-6 py-3.5 text-sm font-semibold text-black transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {submitting ? "Creating session..." : "Begin my life →"}
+                </button>
+              )}
             </div>
-          )}
-
-          <div className="flex gap-3 mt-8">
-            {step > 1 && (
-              <button
-                onClick={() => setStep(step - 1)}
-                className="flex-1 px-6 py-3.5 rounded-xl border border-[#2A2A2A] text-[#A1A1A1]"
-              >
-                Back
-              </button>
-            )}
-
-            {step < 3 ? (
-              <button
-                onClick={() => setStep(step + 1)}
-                disabled={step === 1 ? !canProceedStep1 : !canProceedStep2}
-                className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm bg-[#F59E0B] text-black disabled:opacity-40"
-              >
-                Continue
-              </button>
-            ) : (
-              <button
-                onClick={handleBegin}
-                disabled={!canProceedStep3 || submitting}
-                className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm bg-[#F59E0B] text-black disabled:opacity-40"
-              >
-                {submitting ? "Creating..." : "Begin my life →"}
-              </button>
-            )}
           </div>
         </div>
       </div>

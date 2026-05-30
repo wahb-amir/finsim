@@ -9,7 +9,8 @@
     "chunk": "node src/rag/chunk-knowledge.js",
     "seed": "node src/rag/embed-and-seed.js",
     "seed:fresh": "node src/rag/embed-and-seed.js --fresh",
-    "build-kb": "npm run chunk && npm run seed:fresh"
+    "build-kb": "npm run chunk && npm run seed:fresh",
+    "test:sim": "node -e \"const {createNewGame,applyChoice}=require('./src/services/simulation');const s=createNewGame({scenarioId:'baseline',seed:1});const r=applyChoice({state:s.state,choice:'left'});console.log('ok',r.event.id,r.metrics.netWorth);\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.2",

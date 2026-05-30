@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useGame } from "@/context/GameContext";
 import { useAuth } from "../context/AuthContext";
 import { MetricCard } from "@/components/ui/MetricCard";
@@ -10,18 +10,32 @@ import { AdvisorPanel } from "@/components/ui/AdvisorPanel";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { RoundProgress } from "@/components/ui/RoundProgress";
 
-function formatCurrency(n) {
-  if (n >= 1000) return `$${(n / 1000).toFixed(1)}k`;
-  return `$${n.toLocaleString()}`;
+const TOTAL_ROUNDS = 10;
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+function formatCurrency(n = 0) {
+  const value = Number(n) || 0;
+  if (value >= 1000) return `$${(value / 1000).toFixed(1)}k`;
+  return `$${value.toLocaleString()}`;
 }
 
-function CreditBadge({ score }) {
-  const color = score >= 700 ? "#10B981" : score >= 600 ? "#F59E0B" : "#EF4444";
-  const label = score >= 700 ? "Good" : score >= 600 ? "Fair" : "Poor";
+function prettifyLabel(label) {
+  if (!label) return "Unknown";
+  return String(label)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function CreditBadge({ score = 0 }) {
+  const safeScore = Number(score) || 0;
+  const color =
+    safeScore >= 700 ? "#10B981" : safeScore >= 600 ? "#F59E0B" : "#EF4444";
+  const label = safeScore >= 700 ? "Good" : safeScore >= 600 ? "Fair" : "Poor";
+
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm font-bold" style={{ color }}>
-        {score}
+        {safeScore}
       </span>
       <span
         className="text-[10px] px-1.5 py-0.5 rounded font-medium"
@@ -39,39 +53,62 @@ function CreditBadge({ score }) {
 
 function GameContent() {
   const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
   const { user, loading: authLoading } = useAuth();
 
   const {
     playerName,
+    setPlayerName,
+    setGoal,
+    hydrateGameView,
+    selectChoice,
+    recordRoundSnapshot,
+    setDebriefData,
     currentRound,
     metrics,
     selectedChoice,
-    selectChoice,
-    applySimChoice,
-    setDebriefData,
     currentEvent,
-    simState,
+    ageYears,
+    scenarioId,
   } = useGame();
 
+  const routeSessionId =
+    typeof params?.sessionId === "string" ? params.sessionId : null;
+  const querySessionId = searchParams.get("sessionId");
+  const [sessionId, setSessionId] = useState(
+    routeSessionId || querySessionId || ""
+  );
+
+  const [session, setSession] = useState(null);
+  const [loadingSession, setLoadingSession] = useState(true);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [savingRound, setSavingRound] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [toast, setToast] = useState(null);
 
-  const userName = user?.name || playerName || "Player";
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const userName = user?.name || session?.playerName || playerName || "Player";
 
   const roundData = useMemo(() => {
-    if (!currentEvent || !simState) return null;
-    const ageYears = Math.max(18, Math.floor(simState.ageYears));
+    if (!currentEvent) return null;
+    const displayAge = Math.max(18, Math.floor(ageYears));
     return {
-      year: `Age ${ageYears}`,
+      year: `Age ${displayAge}`,
       title: currentEvent.title,
       description: currentEvent.description,
       choices: [currentEvent.left, currentEvent.right],
       isCrisis: currentEvent.crisis,
     };
-  }, [currentEvent, simState]);
+  }, [currentEvent, ageYears]);
 
   const isCrisis = roundData?.isCrisis || false;
+  const remainingRounds = Math.max(0, TOTAL_ROUNDS - Math.min(currentRound, TOTAL_ROUNDS) + 1);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -80,48 +117,188 @@ function GameContent() {
   }, [authLoading, user, router]);
 
   useEffect(() => {
-    if (!playerName) {
-      router.replace("/setup");
+    if (!sessionId) {
+      const stored = typeof window !== "undefined"
+        ? window.localStorage.getItem("gameSessionId")
+        : "";
+      if (stored) setSessionId(stored);
     }
-  }, [playerName, router]);
-
-  const handleConfirm = useCallback(async () => {
-    if (!selectedChoice || isConfirming) return;
-    setIsConfirming(true);
-
-    try {
-      await new Promise((r) => setTimeout(r, 240));
-      applySimChoice(selectedChoice);
-      if (currentRound >= 10) {
-        setDebriefData(null);
-        router.push("/debrief");
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsConfirming(false);
-    }
-  }, [
-    selectedChoice,
-    isConfirming,
-    currentRound,
-    applySimChoice,
-    setDebriefData,
-    router,
-  ]);
+  }, [sessionId]);
 
   useEffect(() => {
-    if (!playerName || !simState || !currentEvent) {
-      router.replace("/setup");
+    const activeSessionId = routeSessionId || querySessionId || sessionId;
+    if (!activeSessionId) {
+      if (!authLoading) router.replace("/setup");
+      return;
     }
-  }, [playerName, simState, currentEvent, router]);
 
-  if (authLoading) return null;
-  if (!user || !playerName || !simState || !currentEvent || !roundData)
-    return null;
+    const loadSession = async () => {
+      try {
+        setLoadingSession(true);
+
+        const res = await fetch(`${API}/game/session/${activeSessionId}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data?.success || !data?.session) {
+          router.replace("/setup");
+          return;
+        }
+
+        const loadedSession = data.session;
+        setSession(loadedSession);
+        setSessionId(activeSessionId);
+
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("gameSessionId", activeSessionId);
+        }
+
+        if (loadedSession.status === "completed") {
+          router.replace(`/debrief?sessionId=${activeSessionId}`);
+          return;
+        }
+
+        setPlayerName(loadedSession.playerName || user?.name || "Player");
+        setGoal(loadedSession.goal || "");
+
+        if (!data.event || !data.metrics) {
+          showToast("error", "Session is missing simulation state");
+          router.replace("/setup");
+          return;
+        }
+
+        hydrateGameView({
+          currentRound: data.currentRound ?? loadedSession.currentRound,
+          metrics: data.metrics,
+          event: data.event,
+          narrative: data.narrative,
+          scenarioId: data.scenarioId ?? loadedSession.scenarioId,
+          ageYears: data.ageYears,
+        });
+      } catch (err) {
+        console.error("[loadSession]", err);
+        router.replace("/setup");
+      } finally {
+        setLoadingSession(false);
+      }
+    };
+
+    loadSession();
+  }, [
+    API,
+    authLoading,
+    hydrateGameView,
+    querySessionId,
+    routeSessionId,
+    router,
+    sessionId,
+    setGoal,
+    setPlayerName,
+    user?.name,
+  ]);
+
+  const handleConfirm = useCallback(async () => {
+    if (!selectedChoice || isConfirming || savingRound || !currentEvent || !sessionId) {
+      return;
+    }
+
+    setIsConfirming(true);
+    setSavingRound(true);
+
+    try {
+      const res = await fetch(`${API}/game/session/round`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          sessionId,
+          choice: selectedChoice,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || "Failed to submit round");
+      }
+
+      recordRoundSnapshot({
+        round: currentRound,
+        choice: selectedChoice,
+        eventId: currentEvent.id,
+        eventTitle: currentEvent.title,
+        metricSnapshot: { ...metrics },
+      });
+
+      if (data.completed || data.status === "completed") {
+        setDebriefData(null);
+        router.push(`/debrief?sessionId=${sessionId}`);
+        return;
+      }
+
+      hydrateGameView({
+        currentRound: data.currentRound,
+        metrics: data.metrics,
+        event: data.event,
+        narrative: data.narrative,
+        debrief: data.debrief,
+        ageYears: data.ageYears,
+        scenarioId: data.scenarioId,
+      });
+    } catch (e) {
+      console.error(e);
+      showToast("error", e.message || "Could not apply decision");
+    } finally {
+      setIsConfirming(false);
+      setSavingRound(false);
+    }
+  }, [
+    API,
+    selectedChoice,
+    isConfirming,
+    savingRound,
+    currentEvent,
+    currentRound,
+    sessionId,
+    metrics,
+    recordRoundSnapshot,
+    hydrateGameView,
+    router,
+    setDebriefData,
+  ]);
+
+  if (authLoading || loadingSession) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-[#F59E0B]">
+        <div className="text-center">
+          <div className="mb-3 text-2xl">Loading game...</div>
+          <div className="text-sm text-[#6B6B6B]">
+            Restoring your session
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || !session || !currentEvent || !roundData) return null;
 
   return (
     <div className="h-screen bg-[#0A0A0A] flex flex-col overflow-hidden">
+      {toast && (
+        <div
+          className={`fixed top-6 right-6 z-50 px-5 py-3 rounded-2xl text-sm font-medium backdrop-blur-xl border transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.35)] ${
+            toast.type === "success"
+              ? "bg-[#0F172A]/90 border-[#10B981]/30 text-[#10B981]"
+              : "bg-[#0F172A]/90 border-red-500/30 text-red-400"
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
+
       <header className="flex-shrink-0 h-12 border-b border-[#1A1A1A] flex items-center px-4 gap-4 bg-[#0A0A0A] z-30">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-[#F59E0B] flex items-center justify-center">
@@ -175,7 +352,7 @@ function GameContent() {
             md:translate-x-0
             fixed md:relative top-12 md:top-auto left-0 md:left-auto
             h-[calc(100vh-3rem)] md:h-auto
-            w-64 md:w-64 flex-shrink-0
+            w-72 md:w-72 flex-shrink-0
             bg-[#0A0A0A] md:bg-transparent border-r border-[#1A1A1A]
             overflow-y-auto
             flex flex-col
@@ -183,19 +360,28 @@ function GameContent() {
             p-3 gap-2
           `}
         >
-          <div className="rounded-xl bg-[#111111] border border-[#1F1F1F] p-4 mb-1">
+          <div className="rounded-2xl bg-[#111111] border border-[#1F1F1F] p-4 mb-1">
             <div
-              className="text-sm font-bold text-[#F5F5F5] truncate mb-0.5"
+              className="text-sm font-bold text-[#F5F5F5] truncate"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {userName}
             </div>
-            <div className="text-[11px] text-[#6B6B6B]">
-              {roundData.year} · Round {currentRound} of 10
+
+            <div className="mt-2 text-[11px] text-[#6B6B6B] space-y-1">
+              <div>{roundData.year} · Round {currentRound} of {TOTAL_ROUNDS}</div>
+              <div>Career: {prettifyLabel(session.career)}</div>
+              <div>Climate: {prettifyLabel(session.climateLabel)}</div>
+              <div>Goal: {prettifyLabel(session.goal)}</div>
+              <div>Starting salary: {formatCurrency(session.startSalary)}</div>
             </div>
-            <button className="mt-2 text-[16px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black
-            px-4 py-1 font-semibold rounded-[10px]"  onClick={()=>{router.push("/profile")}}>
-            Visit Profile</button>
+
+            <button
+              className="mt-3 text-[13px] bg-[#F59E0B] hover:bg-[#ffb11f] text-black px-4 py-2 font-semibold rounded-[10px]"
+              onClick={() => router.push("/profile")}
+            >
+              Visit Profile
+            </button>
           </div>
 
           <div className="space-y-1.5">
@@ -244,9 +430,7 @@ function GameContent() {
             <MetricCard
               label="Retirement"
               value={formatCurrency(metrics.retirementBalance)}
-              colorCode={
-                metrics.retirementBalance > 5000 ? "#10B981" : "#A1A1A1"
-              }
+              colorCode={metrics.retirementBalance > 5000 ? "#10B981" : "#A1A1A1"}
               compact
             />
             <MetricCard
@@ -319,6 +503,7 @@ function GameContent() {
                     </span>
                   )}
                 </div>
+
                 <h1
                   className="text-xl md:text-2xl font-bold text-[#F5F5F5] leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
@@ -329,7 +514,7 @@ function GameContent() {
             </div>
 
             <div
-              className="rounded-xl p-4 mb-6 text-sm text-[#A1A1A1] leading-relaxed border"
+              className="rounded-2xl p-4 mb-6 text-sm text-[#A1A1A1] leading-relaxed border"
               style={{
                 background: isCrisis
                   ? "rgba(239,68,68,0.04)"
@@ -344,7 +529,7 @@ function GameContent() {
               <SwipeDecisionCard
                 event={currentEvent}
                 selectedChoice={selectedChoice}
-                disabled={isConfirming}
+                disabled={isConfirming || savingRound}
                 onChoose={selectChoice}
               />
               {selectedChoice ? (
@@ -360,7 +545,7 @@ function GameContent() {
             <div className="flex justify-center">
               <button
                 onClick={handleConfirm}
-                disabled={!selectedChoice || isConfirming}
+                disabled={!selectedChoice || isConfirming || savingRound}
                 className="px-10 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] flex items-center gap-2"
                 style={{
                   background: selectedChoice ? "#F59E0B" : "#1A1A1A",
@@ -372,25 +557,18 @@ function GameContent() {
                     : "none",
                   transition: "all 0.25s ease",
                 }}
-                aria-busy={isConfirming}
+                aria-busy={isConfirming || savingRound}
               >
-                {isConfirming ? (
+                {isConfirming || savingRound ? (
                   <>
                     <div className="w-4 h-4 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
-                    Processing...
+                    Saving...
                   </>
                 ) : (
                   <>
-                    {selectedChoice
-                      ? "Confirm Decision"
-                      : "Select a choice first"}
+                    {selectedChoice ? "Confirm Decision" : "Select a choice first"}
                     {selectedChoice && (
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="none"
-                      >
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path
                           d="M3 7H11M11 7L7 3M11 7L7 11"
                           stroke="currentColor"
@@ -425,9 +603,11 @@ function GameContent() {
           </svg>
           Round progress
         </div>
-        <RoundProgress currentRound={currentRound} totalRounds={10} />
+
+        <RoundProgress currentRound={Math.min(currentRound, TOTAL_ROUNDS)} totalRounds={TOTAL_ROUNDS} />
+
         <div className="flex-shrink-0 text-[11px] text-[#4A4A4A]">
-          {10 - currentRound + 1} left
+          {remainingRounds} left
         </div>
       </footer>
 

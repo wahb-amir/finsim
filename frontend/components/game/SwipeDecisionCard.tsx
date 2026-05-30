@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, AlertTriangle, Sparkles } from "lucide-react";
 
-import type { EventCard, ChoiceId } from "@/lib/sim";
+import type { EventCard, ChoiceId } from "@/lib/game-types";
 
 type Props = {
   event: EventCard;

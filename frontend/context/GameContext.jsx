@@ -1,26 +1,8 @@
 "use client";
 
 import { createContext, useContext, useReducer, useCallback } from "react";
-import { applyChoice, createNewGame } from "@/lib/sim";
 
 const TOTAL_ROUNDS = 10;
-
-function toUIMetrics(visibleMetrics, simState) {
-  return {
-    monthlyIncome: visibleMetrics.monthlyIncomeNet,
-    monthlyExpenses: visibleMetrics.monthlyExpenses,
-    savingsBalance: visibleMetrics.cash,
-    totalDebt: visibleMetrics.totalDebt,
-    creditScore: visibleMetrics.creditScore,
-    retirementBalance: simState?.portfolio?.retirement ?? 0,
-    debtToIncome: visibleMetrics.dti * 100,
-    stressIndex: visibleMetrics.stress,
-    netWorth: visibleMetrics.netWorth,
-    inflationAnnual: visibleMetrics.inflationAnnual,
-    recessionProbAnnual: visibleMetrics.recessionProbAnnual,
-    investments: visibleMetrics.investments,
-  };
-}
 
 const INITIAL_STATE = {
   playerName: "",
@@ -43,12 +25,13 @@ const INITIAL_STATE = {
     recessionProbAnnual: 0.12,
     investments: 0,
   },
-  simState: null,
+  ageYears: 22,
   currentEvent: null,
   currentNarrative: null,
   roundHistory: [],
   advisorMessages: [],
   debriefData: null,
+  lastRoundDebrief: null,
 };
 
 function gameReducer(state, action) {
@@ -59,49 +42,28 @@ function gameReducer(state, action) {
       return { ...state, confidence: action.payload };
     case "SET_GOAL":
       return { ...state, goal: action.payload };
-    case "START_SIMULATION": {
-      const result = createNewGame({
-        scenarioId: action.payload.scenarioId,
-        seed: action.payload.seed,
-      });
+    case "HYDRATE_GAME_VIEW": {
+      const { currentRound, metrics, event, narrative, scenarioId, ageYears, debrief } =
+        action.payload;
       return {
         ...state,
-        scenarioId: action.payload.scenarioId,
-        currentRound: 1,
+        ...(scenarioId ? { scenarioId } : {}),
+        currentRound: currentRound ?? state.currentRound,
+        metrics: metrics ?? state.metrics,
+        currentEvent: event ?? null,
+        currentNarrative: narrative ?? null,
+        ageYears: ageYears ?? state.ageYears,
         selectedChoice: null,
-        simState: result.state,
-        currentEvent: result.event,
-        currentNarrative: result.narrative,
-        metrics: toUIMetrics(result.metrics, result.state),
-        roundHistory: [],
-        debriefData: null,
+        lastRoundDebrief: debrief ?? null,
       };
     }
     case "SELECT_CHOICE":
       return { ...state, selectedChoice: action.payload };
-    case "APPLY_SIM_CHOICE": {
-      if (!state.simState || !state.currentEvent) return state;
-      const { choice } = action.payload;
-      const result = applyChoice({ state: state.simState, choice });
-      const snapshot = {
-        round: state.currentRound,
-        choice: choice,
-        eventId: state.currentEvent.id,
-        eventTitle: state.currentEvent.title,
-        ageYears: Number(state.simState.ageYears.toFixed(1)),
-        metricSnapshot: { ...state.metrics },
-      };
-
-      const nextRound = Math.min(state.currentRound + 1, TOTAL_ROUNDS + 1);
+    case "RECORD_ROUND_SNAPSHOT": {
+      const snapshot = action.payload;
       return {
         ...state,
-        metrics: toUIMetrics(result.metrics, result.state),
         roundHistory: [...state.roundHistory, snapshot],
-        selectedChoice: null,
-        currentRound: nextRound,
-        simState: result.state,
-        currentEvent: result.event,
-        currentNarrative: result.narrative,
       };
     }
     case "ADD_ADVISOR_MESSAGE":
@@ -147,15 +109,16 @@ export function GameProvider({ children }) {
     (goal) => dispatch({ type: "SET_GOAL", payload: goal }),
     [],
   );
-  const startSimulation = useCallback((scenarioId, seed) => {
-    dispatch({ type: "START_SIMULATION", payload: { scenarioId, seed } });
-  }, []);
+  const hydrateGameView = useCallback(
+    (payload) => dispatch({ type: "HYDRATE_GAME_VIEW", payload }),
+    [],
+  );
   const selectChoice = useCallback(
     (id) => dispatch({ type: "SELECT_CHOICE", payload: id }),
     [],
   );
-  const applySimChoice = useCallback(
-    (choice) => dispatch({ type: "APPLY_SIM_CHOICE", payload: { choice } }),
+  const recordRoundSnapshot = useCallback(
+    (snapshot) => dispatch({ type: "RECORD_ROUND_SNAPSHOT", payload: snapshot }),
     [],
   );
   const addAdvisorMessage = useCallback(
@@ -172,12 +135,13 @@ export function GameProvider({ children }) {
     <GameContext.Provider
       value={{
         ...state,
+        totalRounds: TOTAL_ROUNDS,
         setPlayerName,
         setConfidence,
         setGoal,
-        startSimulation,
+        hydrateGameView,
         selectChoice,
-        applySimChoice,
+        recordRoundSnapshot,
         addAdvisorMessage,
         setDebriefData,
         resetGame,

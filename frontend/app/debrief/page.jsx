@@ -36,9 +36,7 @@ function DebriefContent() {
   }, [debriefData, roundHistory, metrics, setDebriefData]);
 
   const debrief = debriefData || MOCK_DEBRIEF;
-  const netWorth =
-    metrics.netWorth ??
-    metrics.savingsBalance + metrics.retirementBalance - metrics.totalDebt;
+  const netWorth = metrics.netWorth ?? 0;
   const isPositive = netWorth >= 0;
   const optimalMatches = debrief.optimalPath.filter((x) => x.match).length;
   const matchRate = Math.round(

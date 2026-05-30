@@ -21,7 +21,9 @@ function buildDebriefQueries(session) {
   const retirementStartRound = rounds.findIndex((r) => r.metricsAfter?.retirementBalance > 0) + 1;
 
   // Dominant behavioral pattern from wrong choices
-  const wrongRounds = rounds.filter((r) => r.choice !== getOptimalChoice(r.round));
+  const wrongRounds = rounds.filter(
+    (r) => normalizeChoice(r.choice) !== getOptimalChoice(r.round),
+  );
   const patterns = wrongRounds.map((r) => getBehavioralPattern(r.round)).filter(Boolean);
   const dominantPattern = mode(patterns) || "present_bias";
 
@@ -64,6 +66,12 @@ const BEHAVIORAL_PATTERNS = {
   7: "loss_aversion", 8: "present_bias", 9: "present_bias", 10: "mental_accounting",
 };
 
+function normalizeChoice(choice) {
+  if (choice === "left") return "A";
+  if (choice === "right") return "B";
+  return choice;
+}
+
 function getOptimalChoice(round) { return OPTIMAL_CHOICES[round]; }
 function getBehavioralPattern(round) { return BEHAVIORAL_PATTERNS[round]; }
 function mode(arr) {
@@ -80,7 +88,7 @@ function buildDebriefPrompt(session, chunks) {
     title:       r.title,
     choice:      r.choice,
     optimal:     getOptimalChoice(r.round),
-    isOptimal:   r.choice === getOptimalChoice(r.round),
+    isOptimal:   normalizeChoice(r.choice) === getOptimalChoice(r.round),
     metricsAfter: r.metricsAfter,
   }));
 

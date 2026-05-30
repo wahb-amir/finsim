@@ -172,7 +172,6 @@ function SetupContent() {
     setConfidence,
     goal,
     setGoal,
-    startSimulation,
   } = useGame();
   const [step, setStep] = useState(1);
 
@@ -189,11 +188,7 @@ function SetupContent() {
       "understand-basics": "single-parent",
     };
 
-    const scenarioId = scenarioByGoal[goal] || "baseline";
-    const seed = Date.now();
-
-    startSimulation(scenarioId, seed);
-    router.push("/game");
+    router.push("/setup");
   };
 
   return (
