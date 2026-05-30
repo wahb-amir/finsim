@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
-import Modal from "../components/ui/Modal";
+import { useRouter } from "next/navigation";
 import { Nav, Footer, Ticker } from "../components/layout/HeaderFooter";
+import { useAuth } from "../app/context/AuthContext";
 import {
   HeroSection,
   StatsSection,
@@ -15,10 +15,17 @@ import {
 } from "../components/features/InteractiveTools";
 
 export default function LandingPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
-  // Replaces the old alert() with our shiny new Modal
-  const handleStart = () => setIsModalOpen(true);
+  // Directs users based on their authentication status
+  const handleStart = () => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      router.push("/auth");
+    }
+  };
 
   return (
     <div
@@ -57,13 +64,6 @@ export default function LandingPage() {
         <FinalCTA onStart={handleStart} />
         <Footer />
       </div>
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Simulation Starting"
-        message="You are about to enter the full 10-year financial simulator. You will be redirected to connect your account."
-      />
     </div>
   );
 }
