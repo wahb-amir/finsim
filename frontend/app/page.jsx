@@ -7,6 +7,7 @@ import {
   StatsSection,
   MythBusterSection,
   HowItWorksSection,
+  LeaderboardSection,
   FinalCTA,
 } from "../components/sections/CoreSections";
 import {
@@ -22,6 +23,14 @@ export default function LandingPage() {
   const handleStart = () => {
     if (user) {
       router.push("/dashboard");
+    } else {
+      router.push("/auth");
+    }
+  };
+
+  const handleViewLeaderboard = () => {
+    if (user) {
+      router.push("/leaderboard");
     } else {
       router.push("/auth");
     }
@@ -61,6 +70,7 @@ export default function LandingPage() {
         <DecisionSimulator />
         <MythBusterSection />
         <HowItWorksSection />
+        <LeaderboardSection onViewLeaderboard={handleViewLeaderboard} />
         <FinalCTA onStart={handleStart} />
         <Footer />
       </div>

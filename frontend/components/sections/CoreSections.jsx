@@ -380,6 +380,12 @@ export function HowItWorksSection() {
       desc: "Every decision, good or bad, teaches the underlying financial principle.",
       icon: "💡",
     },
+    {
+      n: "05",
+      title: "Climb the leaderboard",
+      desc: "Your best completed run is ranked against other players by net worth and credit score.",
+      icon: "🏆",
+    },
   ];
   return (
     <section style={{ padding: "80px 32px", maxWidth: 1000, margin: "0 auto" }}>
@@ -441,6 +447,92 @@ export function HowItWorksSection() {
             </div>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+export function LeaderboardSection({ onViewLeaderboard }) {
+  return (
+    <section
+      style={{
+        padding: "80px 32px",
+        background: "rgba(245,158,11,0.03)",
+        borderTop: "1px solid rgba(245,158,11,0.08)",
+        borderBottom: "1px solid rgba(245,158,11,0.08)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 860,
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "5px 14px",
+            borderRadius: 9999,
+            border: "1px solid rgba(245,158,11,0.2)",
+            background: "rgba(245,158,11,0.05)",
+            marginBottom: 24,
+          }}
+        >
+          <span style={{ fontSize: 16 }}>🏆</span>
+          <span
+            style={{
+              color: "#F59E0B",
+              fontSize: 11,
+              fontWeight: 510,
+              letterSpacing: "0.08em",
+            }}
+          >
+            COMPETE & COMPARE
+          </span>
+        </div>
+        <h2
+          style={{
+            color: "#F7F8F8",
+            fontSize: 36,
+            fontWeight: 510,
+            letterSpacing: "-0.7px",
+            margin: "0 0 12px",
+          }}
+        >
+          Climb the all-time leaderboard
+        </h2>
+        <p
+          style={{
+            color: "#8A8F98",
+            fontSize: 16,
+            lineHeight: 1.6,
+            maxWidth: 520,
+            margin: "0 auto 32px",
+          }}
+        >
+          Complete a 10-round simulation and see how your best run stacks up
+          against other players. Ranked by composite score from net worth and
+          credit score.
+        </p>
+        <button
+          onClick={onViewLeaderboard}
+          style={{
+            background: "transparent",
+            border: "1px solid rgba(245,158,11,0.35)",
+            color: "#F59E0B",
+            fontSize: 15,
+            fontWeight: 590,
+            cursor: "pointer",
+            padding: "12px 28px",
+            borderRadius: 8,
+            letterSpacing: "-0.165px",
+          }}
+        >
+          View Leaderboard
+        </button>
       </div>
     </section>
   );
