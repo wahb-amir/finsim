@@ -271,7 +271,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/profile")}
-            className="group mb-8 w-full rounded-2xl border border-[#242424] bg-[#101010] p-5 text-left transition-all duration-200 hover:border-[#F59E0B]/40 hover:bg-[#131313] hover:shadow-[0_0_30px_rgba(245,158,11,0.06)]"
+            className="group mb-4 w-full rounded-2xl border border-[#242424] bg-[#101010] p-5 text-left transition-all duration-200 hover:border-[#F59E0B]/40 hover:bg-[#131313] hover:shadow-[0_0_30px_rgba(245,158,11,0.06)]"
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex min-w-0 flex-1 items-center gap-4">
@@ -295,6 +295,46 @@ export default function DashboardPage() {
                   <p className="mt-1 text-sm text-[#6B6B6B]">
                     View your account details, financial metrics, and sign out
                     from your profile page.
+                  </p>
+                </div>
+              </div>
+              <div className="flex-shrink-0 text-[#6B6B6B] transition group-hover:translate-x-0.5 group-hover:text-[#F59E0B]">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M7 4l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/leaderboard")}
+            className="group mb-8 w-full rounded-2xl border border-[#242424] bg-[#101010] p-5 text-left transition-all duration-200 hover:border-[#F59E0B]/40 hover:bg-[#131313] hover:shadow-[0_0_30px_rgba(245,158,11,0.06)]"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#F59E0B]/20 to-[#D97706]/10 text-xl">
+                  🏆
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[#F59E0B]">
+                    Leaderboard
+                  </p>
+                  <h2
+                    className="mt-1 text-lg font-bold text-[#F5F5F5] group-hover:text-white"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    See how you rank
+                  </h2>
+                  <p className="mt-1 text-sm text-[#6B6B6B]">
+                    Compare your best simulation score against other players on
+                    the all-time leaderboard.
                   </p>
                 </div>
               </div>
