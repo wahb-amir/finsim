@@ -8,6 +8,7 @@ const {
   getSessionDebrief,
   getSession,
   listSessions,
+  getLeaderboard,
   userData,
 } = require("../controller/game");
 const { requestAdvisor } = require("../controller/advisor");
@@ -32,6 +33,9 @@ router.get("/session/:id", authMiddleware, getSession);
 
 // GET  /api/game/sessions         — list user's past sessions
 router.get("/sessions", authMiddleware, listSessions);
+
+// GET  /api/game/leaderboard      — top players by best completed run
+router.get("/leaderboard", authMiddleware, getLeaderboard);
 
 router.get("/sessions/userData", authMiddleware, userData);
 

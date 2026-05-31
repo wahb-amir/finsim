@@ -343,6 +343,74 @@ const listSessions = async (req, res) => {
   }
 };
 
+const getLeaderboard = async (req, res) => {
+  try {
+    const entries = await GameSession.aggregate([
+      {
+        $match: {
+          status: "completed",
+          "finalMetrics.netWorth": { $exists: true },
+          "finalMetrics.creditScore": { $exists: true },
+        },
+      },
+      {
+        $addFields: {
+          score: {
+            $floor: {
+              $add: [
+                { $divide: ["$finalMetrics.netWorth", 8] },
+                { $multiply: ["$finalMetrics.creditScore", 2] },
+              ],
+            },
+          },
+        },
+      },
+      { $sort: { score: -1, updatedAt: -1 } },
+      {
+        $group: {
+          _id: "$userId",
+          sessionId: { $first: "$_id" },
+          playerName: { $first: "$playerName" },
+          netWorth: { $first: "$finalMetrics.netWorth" },
+          creditScore: { $first: "$finalMetrics.creditScore" },
+          score: { $first: "$score" },
+        },
+      },
+      { $sort: { score: -1 } },
+      { $limit: 50 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+    ]);
+
+    const currentUserId = String(req.user._id);
+
+    const leaderboard = entries.map((entry, index) => ({
+      rank: index + 1,
+      userId: String(entry._id),
+      name: entry.user?.name || entry.playerName || "Player",
+      netWorth: entry.netWorth ?? 0,
+      creditScore: entry.creditScore ?? 0,
+      score: entry.score ?? 0,
+      sessionId: entry.sessionId ? String(entry.sessionId) : null,
+      isCurrentPlayer: String(entry._id) === currentUserId,
+    }));
+
+    res.status(200).json({ success: true, leaderboard });
+  } catch (err) {
+    console.error("[getLeaderboard]", err.message);
+    res
+      .status(500)
+      .json({ message: "Failed to load leaderboard", error: err.message });
+  }
+};
+
 const userData = async (req, res) => {
   try {
     const gameData = await GameSession.find({ userId: req.user._id }).sort({
@@ -375,5 +443,6 @@ module.exports = {
   getSessionDebrief,
   getSession,
   listSessions,
+  getLeaderboard,
   userData,
 };
