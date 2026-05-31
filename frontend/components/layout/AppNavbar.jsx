@@ -18,7 +18,7 @@ export function AppNavbar() {
     <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0A0A0A]/92 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between gap-4 px-4">
         <Link
-          href="/dashboard"
+          href="/"
           className="rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#F59E0B]/50"
           aria-label="FinSim dashboard"
         >
