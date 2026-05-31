@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/profile", label: "Profile" },
 ];
 
