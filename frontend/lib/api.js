@@ -487,3 +487,16 @@ export async function getFinalDebrief(roundHistory, finalMetrics) {
   await new Promise((r) => setTimeout(r, 1200));
   return MOCK_DEBRIEF;
 }
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+export async function fetchLeaderboard() {
+  const res = await fetch(`${API_BASE}/game/leaderboard`, {
+    credentials: "include",
+  });
+  const data = await res.json();
+  if (!res.ok || !data?.success) {
+    throw new Error(data?.message || "Failed to load leaderboard");
+  }
+  return data.leaderboard ?? [];
+}
